@@ -19,6 +19,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },  {
+                "glob": "**/*",
+                "input": "assets/images/"
               }
             ],
             "styles": [
