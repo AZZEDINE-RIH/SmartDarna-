@@ -1,0 +1,29 @@
+<nav class="w-full fixed top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+    <!-- Logo -->
+    <div class="text-2xl font-bold text-black">
+      Smart<span class="text-[#60CED6]">Darna</span>
+    </div>
+
+    <!-- Links -->
+    <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+      <li><a routerLink="/" class="hover:text-black transition">Home</a></li>
+      <li><a routerLink="/store" class="hover:text-black transition">Store</a></li>
+      <li><a routerLink="/about" class="hover:text-black transition">About</a></li>
+      <li><a routerLink="/contact" class="hover:text-black transition">Contact</a></li>
+    </ul>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-4">
+      <a routerLink="/login" class="text-sm font-medium hover:text-black transition">
+        Login
+      </a>
+      <a routerLink="/cart"
+         class="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition">
+        Cart
+      </a>
+    </div>
+
+  </div>
+</nav>
