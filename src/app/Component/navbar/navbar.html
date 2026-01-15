@@ -7,23 +7,49 @@
     </div>
 
     <!-- Links -->
-    <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
-      <li><a routerLink="/" class="hover:text-black transition">Home</a></li>
-      <li><a routerLink="/store" class="hover:text-black transition">Store</a></li>
-      <li><a routerLink="/about" class="hover:text-black transition">About</a></li>
-      <li><a routerLink="/contact" class="hover:text-black transition">Contact</a></li>
-    </ul>
+   <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+  <li><a routerLink="/" class="hover:text-black transition">Home</a></li>
+  <li><a routerLink="/about" class="hover:text-black transition">About Us</a></li>
+  <li><a routerLink="/collection" class="hover:text-black transition">Collection</a></li>
+  <li><a routerLink="/services" class="hover:text-black transition">Services</a></li>
+  <li><a routerLink="/contact" class="hover:text-black transition">Contact Us</a></li>
+</ul>
 
-    <!-- Actions -->
-    <div class="flex items-center gap-4">
-      <a routerLink="/login" class="text-sm font-medium hover:text-black transition">
-        Login
-      </a>
-      <a routerLink="/cart"
-         class="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition">
-        Cart
-      </a>
-    </div>
+   <!-- Actions -->
+<div class="flex items-center gap-4">
+  
+  <!-- Login -->
+  <a
+    routerLink="/login"
+    class="text-sm font-medium hover:text-black transition"
+  >
+    Login
+  </a>
+
+  <!-- Cart -->
+  <div class="relative">
+    
+    <!-- Cart Button -->
+    <a
+      routerLink="/cart"
+      class="px-4 py-2 rounded-xl bg-black text-white text-sm hover:bg-gray-800 transition"
+    >
+      Cart
+    </a>
+
+    <!-- Badge -->
+    <span
+      *ngIf="cartCount > 0"
+      class="absolute -top-2 -right-2 w-5 h-5 rounded-full
+             bg-[#60CED6] text-black text-xs font-bold
+             flex items-center justify-center"
+    >
+      {{ cartCount }}
+    </span>
+
+  </div>
+
+</div>
 
   </div>
 </nav>
