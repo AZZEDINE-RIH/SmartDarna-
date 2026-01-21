@@ -1,8 +1,8 @@
 {
-    "products":[
+    "products": [
         {
             "id": 0,
-            "image": ,
+            "image": "./images/Amazon Echo Dot DEEP SEA.png",
             "title": "Amazon Echo Dot",
             "description": "Strong audio and even stronger smart home skills make the new Amazon Echo the most well-rounded smart speaker you can buy",
             "price": 1300,
@@ -14,10 +14,10 @@
         },
         {
             "id": 1,
-            "image": ,
+            "image": "./images/amazon echo studio graphite.png",
             "title": "Amazon Echo Studio (newest model)", 
             "description": "Turn your space into a concert hall. The new Echo Studio delivers rich, immersive sound with spatial audio and Dolby Atmos, packed into a sleek, compact design. Powerful bass, clear vocals, and smart room adaptation bring your music and movies to life. With built-in smart home hub, Omnisense technology, and Alexa+ Early Access, it’s the perfect blend of premium audio and intelligent control for your home.",
-            "price": 1125,           
+            "price": 1125,            
             "color": ["Graphite", "Glacier White"],   
             "mark": "Amazon",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
@@ -26,7 +26,7 @@
         },
         {
             "id": 2,
-            "image": ,
+            "image": "./images/Amazon Echo Dot Kids dragon.png",
             "title": "Amazon Echo Dot Kids",
             "description": "A fun, screen-free smart speaker made just for kids. Echo Dot Kids brings Alexa+ to your child’s room, helping them learn, imagine, and play through interactive stories, games, music, and fun facts. With built-in parental controls and 1 year of Amazon Kids+, parents stay in control while kids explore safely. Cute on the outside, smart on the inside—perfect for playrooms and bedrooms.",
             "price": 1099,
@@ -38,9 +38,9 @@
         },
         {
             "id": 3,
-            "image": ,
+            "image": "./images/google Nest Hub (2nd gen) Chalk.png",
             "title": "Google Nest Hub (2nd gen)",
-            "description": "",
+            "description": "Smart display with motion sensing for sleep tracking and gesture control.",
             "price": 1250,
             "color": ["Chalk", "Charcoal", "mist", "sand"],
             "mark": "Google",
@@ -50,7 +50,7 @@
         },
         {
             "id": 4,
-            "image": ,
+            "image": "./images/google Nest Audio chalk.png",
             "title": "Google Nest Audio",
             "description": "Nest Audio is a smart speaker designed for rich, room-filling sound with clear vocals and deep bass. Powered by Google Assistant, it lets you play music, get answers, manage your day, and control compatible smart home devices using just your voice. With a modern, compact design and multiple color options, Nest Audio fits seamlessly into any room while delivering powerful audio performance.",
             "price": 950,
@@ -62,7 +62,7 @@
         },
         {
             "id": 5,
-            "image": ,
+            "image": "./images/google nest mini.png",
             "title": "Google Nest Mini (2nd gen)",
             "description": "Audio Anywhere Package (2 Nest Mini Bundle) is an easy way to start or expand your home audio system. It includes two compact Nest Mini speakers that deliver rich sound with powerful bass. Use them together for room-to-room audio, control music with your voice using Google Assistant, and stream your favorite music, podcasts, and more throughout your home. Perfect for flexible, everyday listening in any space.",
             "price": 1200,
@@ -74,7 +74,7 @@
         },
         {
             "id": 6,
-            "image": ,
+            "image": "./images/google Nest Hub max.png",
             "title": "Google Nest Hub Max",
             "description": "Google Nest Hub Max is a smart home display that brings entertainment, connection, and home control together in one device. Featuring a 10-inch HD touchscreen, powerful stereo speakers, and built-in Google Assistant, it lets you watch videos, stream music, make video calls, manage your day, and control compatible smart home devices. With a built-in Nest Cam for home monitoring and personalized features like Face Match, it’s designed to keep your home connected, secure, and organized.",
             "price": 3000,
@@ -85,7 +85,7 @@
         },
         {
             "id": 7,
-            "image": ,
+            "image": "./images/google home.png",
             "title": "Google Home",
             "description": "Google Home Speaker with Gemini is a next-generation smart speaker that combines rich 360° sound with the power of Gemini AI. Designed to make everyday life easier, it lets you chat naturally with your AI assistant, get expert help hands-free, stream your favorite music, and manage your smart home with simple voice commands. With a thoughtful design, enhanced privacy controls, and immersive audio, it’s a smart speaker built for a more helpful, connected home.",
             "price": 1550,
@@ -97,7 +97,7 @@
         },
         {
             "id": 8,
-            "image": ,
+            "image": "./images/homepod midnight.png",
             "title": "Apple HomePod",
             "description": "A compact smart speaker with powerful 360-degree sound, HomePod mini fills your room with rich audio while fitting perfectly anywhere in your home. Powered by Siri, it helps you control your smart home, manage daily tasks, and enjoy seamless integration with iPhone, Apple TV, and other Apple devices. Private, secure, and available in five bold colors, it’s small in size but big on experience.",
             "price": 3000,
@@ -109,7 +109,7 @@
         },
         {
             "id": 9,
-            "image": ,
+            "image": "./images/homepod mini Blue.png",
             "title": "Apple HomePod Mini",
             "description": "Don’t let the size fool you. HomePod mini delivers rich 360-degree sound, an intelligent Siri assistant, and seamless Apple ecosystem integration. Control your smart home, enjoy personalized music, make calls, and stay connected across rooms with ease. Private, secure, and available in five bold colors, it’s the perfect smart speaker for everyday life.",
             "price": 1500,
@@ -121,7 +121,7 @@
         },
         {
             "id": 10,
-            "image": ,
+            "image": "./images/google nest thermostat Charcoal.png",
             "title": "Google Nest Thermostat",
             "description": "Smart comfort that saves energy and money. The Nest Thermostat automatically adjusts when you’re home or away to help lower your energy bills, while giving you full control from anywhere with the Google Home app. Easy to install, sleek in design, and built to work with most HVAC systems—it keeps your home cozy, efficient, and smarter every day.",
             "price": 1500,
@@ -133,7 +133,7 @@
         },
         {
             "id": 11,
-            "image": ,
+            "image": "./images/nest learning thermostat polished silver.png",
             "title": "Nest Learning Thermostat (4th gen)",
             "description": "A smart thermostat that learns your schedule and helps you save energy without lifting a finger. It automatically programs itself based on your habits, adjusts the temperature when you’re away, and helps lower heating and cooling costs — all controllable from the Google Home app. With a crisp display and advanced energy-saving features, it’s an upgrade that makes your home more comfortable and efficient.",
             "price": 3000,
@@ -145,7 +145,7 @@
         },
         {
             "id": 12,
-            "image": ,
+            "image": "./images/ecobee smart thermostat premium.png",
             "title": "Ecobee SmartThermostat premium",
             "description": "A top-tier smart thermostat that goes beyond basic temperature control to make your home smarter, healthier, and more efficient. It learns your routines to save energy and helps create a comfortable climate automatically — with advanced features that put modern control and convenience at your fingertips.",
             "price": 3500,
@@ -157,7 +157,7 @@
         },
         {
             "id": 13,
-            "image": ,
+            "image": "./images/ecobee smart thermostat enhanced.png",
             "title": "Ecobee Smart Thermostat Enhanced",
             "description": "A smarter way to control your home’s temperature with energy savings and comfort built in. The ecobee Smart Thermostat Enhanced adapts to your routine, automatically adjusts heating and cooling to save energy, and lets you control your system from anywhere via the ecobee app. It’s designed with advanced sensors and works with your favorite smart home platforms.",
             "price": 2500,
@@ -169,7 +169,7 @@
         },
         {
             "id": 14,
-            "image": ,
+            "image": "./images/ecobee smart thermostat essential.png",
             "title": "Ecobee Smart Thermostat Essential",
             "description": "A simple, affordable smart thermostat that brings smart comfort and energy savings to your home without complexity. It’s designed to be easy to install and use — with a full-color touchscreen and intuitive controls that help you maintain your ideal temperature while helping cut heating and cooling costs.",
             "price": 2000,
@@ -181,7 +181,7 @@
         },
         {
             "id": 15,
-            "image": ,
+            "image": "./images/wyze thermostat.png",
             "title": "Wyze Thermostat, Programmable Wi-Fi Thermostat with Energy Reports",
             "description": "A budget-friendly smart thermostat that makes controlling your home’s heating and cooling simple and efficient. With built-in Wi-Fi and app control, you can adjust your comfort from anywhere, get personalized energy usage insights, and create schedules that help lower your utility bills.",
             "price": 1000,
@@ -193,7 +193,7 @@
         },
         {
             "id": 16,
-            "image": ,
+            "image": "./images/Google Nest Doorbell battery Snow.png",
             "title": "Nest Doorbell (battery)",
             "description": "A smart doorbell that lets you see, hear, and speak to visitors from anywhere. With high-definition video, intelligent alerts, and easy installation, the Nest Doorbell (battery) keeps your home secure and connected—whether you’re home or away.",
             "price": 2300,
@@ -205,9 +205,9 @@
         },
         {
             "id": 17,
-            "image": ,
+            "image": "./images/arlo video doorbell 2.png",
             "title": "Wired Doorbell Pro",
-            "description": "Meet the next generation of home security. This advanced wired doorbell delivers stunning 4K video with enhanced zoom, letting you see every detail day or night. With real-time Live View, Two-Way Talk with Audio+, and precise 3D Motion Detection, you’ll always know what’s happening at your door. Sleek, powerful, and built for the modern home, it keeps you connected, informed, and protected—at a glance.",
+            "description": "Advanced wired doorbell with 4K video and 3D Motion Detection.",
             "price": "2700",
             "color": ["Deep Silver", "Polished Sandstone", "Polished Night Navy", "Polished Mocha"],
             "mark": "Ring",
@@ -217,9 +217,9 @@
         },
         {
             "id": 18,
-            "image": ,
+            "image": "./images/arlo video doorbell.png",
             "title": "Arlo Video Doorbell",
-            "description": "Arlo’s 2nd Generation Video Doorbells give you complete visibility of your front door and beyond. With head-to-toe coverage, a wide 180° field of view, and motion alerts sent straight to your phone, you’ll never miss a moment. Choose 2K resolution to get the clarity you need, right in the palm of your hand. Trusted protection, built by Arlo America’s smart security leader.",
+            "description": "Arlo’s 2nd Generation Video Doorbells give you complete visibility of your front door and beyond. With head-to-toe coverage, a wide 180° field of view, and motion alerts sent straight to your phone, you’ll never miss a moment.",
             "price": 700,
             "color": "White",
             "mark": "Arlo",
@@ -229,9 +229,9 @@
         },
         {
             "id": 19,
-            "image": ,
+            "image": "./images/nestxyale lock Satin nickel.png",
             "title": "Nest x Yale Lock",
-            "description": "When the Nest × Yale Lock is connected to the Nest app, you can unlock your door from your phone. Create passcodes for family, guests and people you trust. Get alerts whenever someone unlocks and locks the door. And when Nest knows you’re away, your door can lock automatically.",
+            "description": "When the Nest × Yale Lock is connected to the Nest app, you can unlock your door from your phone. Create passcodes for family, guests and people you trust.",
             "price": 2800,
             "color": ["Satin Nickel", "Oil Rubbed Bronze", "Polished Brass", "Black Suede"],
             "mark": "Yale",
@@ -241,9 +241,9 @@
         },
         {
             "id": 20,
-            "image": ,
+            "image": "./images/nestxyale lock Black suede.png",
             "title": "Yale Assure Lock 2",
-            "description": "The Yale Assure Lock 2 is a sleek, key-free smart lock that offers advanced security and convenience for your home. With features like touchscreen keypad, voice assistant compatibility, and remote access via the Yale app, you can easily manage who enters your home and when. Its modern design and robust security features make it a reliable choice for enhancing your home's safety.",
+            "description": "The Yale Assure Lock 2 is a sleek, key-free smart lock that offers advanced security and convenience for your home.",
             "price": 3000,
             "color": ["Daim black", "Oil Rubbed Bronze", "Satin Nickel"],
             "mark": "Yale",
@@ -251,7 +251,5 @@
             "rating": 1,
             "in_stock": true
         }
-
-
     ]
 }
