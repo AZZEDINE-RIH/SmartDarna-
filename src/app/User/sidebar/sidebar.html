@@ -1,0 +1,97 @@
+    <style>
+        .bg-tealCustom {
+            background-color: #60CED6;
+        }
+
+        .bg-grisClair {
+            background-color: #E0E0E0;
+        }
+
+        .bg-grisFonce {
+            background-color: #2B2B2B;
+        }
+
+        .text-tealCustom {
+            color: #60CED6;
+        }
+
+        .text-grisClair {
+            color: #E0E0E0;
+        }
+
+        .text-grisFonce {
+            color: #2B2B2B;
+        }
+    </style>
+
+    <body class="flex">
+        <aside class="w-64 h-screen bg-grisClair border-r fixed left-0 top-0 overflow-y-auto">
+            <div class="p-6 flex items-center gap-2">
+            <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background-color: #60CED6;">
+                <img src="/src/assets/images/logo light without bg.png" class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+        </div>
+        <span class="text-2xl font-bold text-gray-900">SmartDarna</span>
+    </div>
+    <!-- Main Section -->
+    <div class="px-4">
+            <div class="text-xs font-semibold text-gray-500 mb-3 px-3">MAIN</div>
+            <!-- Dashboards -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center justify-between mb-2 hover:bg-gray-50"> 
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </div>
+                    <i class="fas fa-chevron-up text-sm"></i>
+                </button>
+            <!-- order -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center gap-3 mb-2 hover:bg-gray-50 transition">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </button>
+
+            <!-- Pack order -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center gap-3 mb-2 hover:bg-gray-50 transition">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Pack order</span>
+                </button>
+            <!-- Problem declaration -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center gap-3 mb-2 hover:bg-gray-50 transition">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Problem declaration</span>
+                </button>
+    </div>
+    <!-- Pages Section -->
+    <div class="px-4 mt-6">
+            <div class="text-xs font-semibold text-gray-500 mb-3 px-3">PAGES</div>    
+            <!-- Settings -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center justify-between mb-2 hover:bg-gray-50 transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-user"></i>
+                        <span>Settings</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                </button>
+    </div>
+
+    <!-- status Section -->
+    <div class="px-4 mt-6 pb-6">
+            <div class="text-xs font-semibold text-gray-500 mb-3 px-3">COMPONENTS</div>
+            <!-- statut  -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-cube"></i>
+                        <span>Statut</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                </button>
+            <!-- log out  -->
+                <button class="w-full text-gray-600 rounded-lg px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-cube"></i>
+                        <span>Log Out</span>
+                    </div>
+                    <i class="fas fa-chevron-down text-sm"></i>
+                    </button>
+                </div>
+        </aside>
+    </body>

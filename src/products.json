@@ -1,0 +1,74 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "image": "images/smart-bulb.jpg",
+      "title": "Smart LED Bulb",
+      "description": "Energy-efficient smart LED bulb with Wi-Fi control and voice assistant support.",
+      "price": 15.99,
+      "color_size": {
+        "color": ["White", "Warm White", "RGB"],
+        "size": "Standard E27"
+      },
+      "mark": "Philips Hue",
+      "categories": ["Lighting", "Smart Home"],
+      "rating": 4.5
+    },
+    {
+      "id": 2,
+      "image": "images/smart-thermostat.jpg",
+      "title": "Smart Thermostat",
+      "description": "Smart thermostat that learns your schedule and helps save energy.",
+      "price": 199.99,
+      "color_size": {
+        "color": ["Black", "White"],
+        "size": "Wall-mounted"
+      },
+      "mark": "Google Nest",
+      "categories": ["Climate Control", "Smart Home"],
+      "rating": 4.7
+    },
+    {
+      "id": 3,
+      "image": "images/smart-camera.jpg",
+      "title": "Smart Security Camera",
+      "description": "Indoor smart camera with HD video, night vision, and motion detection.",
+      "price": 89.99,
+      "color_size": {
+        "color": ["White", "Black"],
+        "size": "Compact"
+      },
+      "mark": "Xiaomi",
+      "categories": ["Security", "Smart Home"],
+      "rating": 4.3
+    },
+    {
+      "id": 4,
+      "image": "images/smart-lock.jpg",
+      "title": "Smart Door Lock",
+      "description": "Keyless smart lock with fingerprint, PIN, and mobile app access.",
+      "price": 249.99,
+      "color_size": {
+        "color": ["Silver", "Black"],
+        "size": "Standard Door Size"
+      },
+      "mark": "Samsung",
+      "categories": ["Security", "Access Control"],
+      "rating": 4.6
+    },
+    {
+      "id": 5,
+      "image": "images/smart-speaker.jpg",
+      "title": "Smart Speaker",
+      "description": "Voice-controlled smart speaker with high-quality sound and smart home integration.",
+      "price": 59.99,
+      "color_size": {
+        "color": ["Black", "Gray", "Blue"],
+        "size": "Small"
+      },
+      "mark": "Amazon Echo",
+      "categories": ["Entertainment", "Smart Home"],
+      "rating": 4.4
+    }
+  ]
+}

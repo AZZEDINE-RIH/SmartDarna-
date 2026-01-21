@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:SmartDarna": "node dist/SmartDarna/server/server.mjs"
+    "serve:ssr:smart-darna": "node dist/smart-darna/server/server.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -31,14 +31,15 @@
     "@angular/platform-browser": "^21.0.0",
     "@angular/platform-server": "^21.0.0",
     "@angular/router": "^21.0.0",
-    "@angular/ssr": "^21.0.4",
+    "@angular/ssr": "^21.0.2",
     "express": "^5.1.0",
+    "gsap": "^3.14.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@angular/build": "^21.0.4",
-    "@angular/cli": "^21.0.4",
+    "@angular/build": "^21.0.2",
+    "@angular/cli": "^21.0.2",
     "@angular/compiler-cli": "^21.0.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/express": "^5.0.1",
