@@ -17,7 +17,7 @@
                 <ion-icon [name]="item.icon" class="text-[20px]"></ion-icon>
 
               <span>{{ item.label }}</span>
-              <span *ngIf="item.type === 'submenu'" class="ml-auto h-0.2">▼</span>
+              <ion-icon *ngIf="item.type === 'submenu'" [name]="'chevron-down-outline'" class="ml-auto text-[20px]"></ion-icon>
             </button>
 
             <!-- SUBMENU -->
@@ -68,7 +68,7 @@
             >
               <ion-icon [name]="settingsItem.icon" class="text-[20px]"></ion-icon>
               <span>{{ settingsItem.label }}</span>
-              <span *ngIf="settingsItem.type === 'submenu'" class="ml-auto h-0.2">▲</span>
+              <ion-icon *ngIf="settingsItem.type === 'submenu'" [name]="'chevron-up-outline'" class="ml-auto text-[20px]"></ion-icon>
             </button>
           </li>
 
