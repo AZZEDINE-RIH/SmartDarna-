@@ -9,17 +9,17 @@ aside button {
       padding: 0 16px;
       background: transparent;
       border: none;
-      color: rgb(255 255 255 / 0.95);
+      color: rgb(55 65 81 / 1);
       transition: 0.3s;
       cursor: pointer;
     }
 
     aside button.active {
-      background: rgb(0 0 0 / 0.18);
+      background: rgb(229 231 235 / 1);
     }
 
     aside button:not(.active):hover {
-      background: rgb(0 0 0 / 0.08);
+      background: rgb(243 244 246 / 1);
     }
 
     aside button ion-icon:last-child {
