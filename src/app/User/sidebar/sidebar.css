@@ -1,0 +1,65 @@
+aside button {
+      position: relative;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      height: 50px;
+      width: 100%;
+      border-radius: 6px;
+      padding: 0 16px;
+      background: transparent;
+      border: none;
+      color: rgb(255 255 255 / 0.95);
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    aside button.active {
+      background: rgb(0 0 0 / 0.18);
+    }
+
+    aside button:not(.active):hover {
+      background: rgb(0 0 0 / 0.08);
+    }
+
+    aside button ion-icon:last-child {
+      margin-left: auto;
+      transition: 0.3s;
+    }
+
+    aside button.active ion-icon:last-child {
+      rotate: -180deg;
+    }
+
+    aside ul ul button {
+      padding-left: 48px;
+    }
+
+    aside ul ul button::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgb(255 255 255 / 0.35);
+    }
+
+    aside header img {
+      transition: transform 0.3s ease;
+      transform: scale(3);
+    }
+
+    aside header span {
+        font-family: "Corinthia", cursive;
+    }
+
+    aside header span span {
+        color: #60CED6;
+    }
+
+    ul li {
+        font-family: "Montserrat", sans-serif;
+    }
