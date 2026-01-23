@@ -1,15 +1,39 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
+type Product = {
+  id: number;
+  image: string;
+  title: string;
+  description: string;
+  price: number | string;
+  mark: string;
+  in_stock: boolean;
+};
+
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [HttpClientModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements AfterViewInit {
+
+  products: Product[] = [];
+  constructor(private http: HttpClient) {}
+  
+  ngOnInit(): void {
+    this.http.get<{products: Product[]}>('assets/products.json').subscribe({
+      next: (data) => {
+        this.products = data.products.slice(0, 3); 
+      },
+      error: (err) => console.error('Error loading products', err)
+    });
+  }
+
   ngAfterViewInit(): void {
     
     // Get the canvas element
@@ -29,8 +53,8 @@ export class Dashboard implements AfterViewInit {
 
     // Gradient for the chart
     const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, 'rgba(103, 232, 249, 0.3)');
-    gradient.addColorStop(1, 'rgba(103, 232, 249, 0)');
+    gradient.addColorStop(0, 'rgba(96, 206, 214, 0.3)');
+    gradient.addColorStop(1, 'rgba(96, 206, 214, 0)');
 
     // Initialize the chart
     new Chart(ctx, {
@@ -39,14 +63,14 @@ export class Dashboard implements AfterViewInit {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
         datasets: [{
           data: [32000, 48000, 38000, 52000, 42000, 35000, 28000, 58000, 45000, 35000, 48000],
-          borderColor: '#22d3ee',
+          borderColor: '#60CED6',
           backgroundColor: gradient,
           borderWidth: 3,
           fill: true,
           tension: 0.4,
           pointRadius: 0,
           pointHoverRadius: 6,
-          pointHoverBackgroundColor: '#22d3ee',
+          pointHoverBackgroundColor: '#60CED6',
           pointHoverBorderColor: '#fff',
           pointHoverBorderWidth: 2
         }]
@@ -68,7 +92,7 @@ export class Dashboard implements AfterViewInit {
             displayColors: false,
             callbacks: {
               label: function(context: any) {
-                return '$' + (context.parsed?.y ?? 0).toLocaleString();
+                return (context.parsed?.y ?? 0).toLocaleString() + ' MAD';
               }
             }
           }
