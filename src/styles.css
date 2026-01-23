@@ -1,1 +1,10 @@
+/* stylelint-disable at-rule-no-unknown */
+/* Tailwind base, components, utilities */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* You can add global styles to this file, and also import other style files */
+
+/* stylelint-enable at-rule-no-unknown */
+
