@@ -14,8 +14,8 @@
         *ngFor="let cat of categories"
         (click)="selectedCategory.set(cat.name); currentPage = 1"
         [class]="selectedCategory() === cat.name
-          ? 'w-full flex items-center gap-3 p-2 rounded-lg border-none font-bold uppercase bg-[#E0F7F4] text-[#0D9488]'
-          : 'w-full flex items-center gap-3 p-2 rounded-lg border-none font-bold uppercase bg-transparent text-[#1F2937] hover:text-[#14B8A6]'">
+          ? 'w-full flex items-center gap-3 p-2 rounded-lg border-none text-sm font-bold bg-[#E0F7F4] text-[#60CED6]'
+          : 'w-full flex items-center gap-3 p-2 rounded-lg border-none text-sm font-bold bg-transparent text-[#1F2937] hover:text-[#60CED6]'">
         <!-- Icon -->
         <span *ngIf="cat.icon === 'grid'" class="w-5 h-5">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
@@ -63,9 +63,9 @@
         [max]="maxPrice"
         [ngModel]="selectedPrice()"
         (ngModelChange)="selectedPrice.set($event)"
-        class="w-full accent-teal-600">
+        class="w-full accent-[#60CED6]">
 
-      <div class="flex justify-between text-xs text-gray-700 mt-2">
+      <div class="flex justify-between text-sm font-bold text-gray-700 mt-2">
         <span>{{ minPrice }} DH</span>
         <span>{{ selectedPrice() }} DH</span>
       </div>
@@ -77,9 +77,9 @@
 
       <label *ngFor="let b of brands"
              [class]="b.selected 
-               ? 'flex items-center gap-3 p-2 rounded-lg text-sm bg-[#E0F7F4] text-[#0D9488] hover:text-[#14B8A6] cursor-pointer'
-               : 'flex items-center gap-3 p-2 rounded-lg text-sm text-gray-700 hover:text-[#14B8A6] cursor-pointer'">
-        <input type="checkbox" [(ngModel)]="b.selected" class="accent-teal-500 w-5 h-5">
+               ? 'flex items-center gap-3 p-2 rounded-lg text-sm bg-[#E0F7F4] text-[#60CED6] hover:text-[#60CED6] cursor-pointer'
+               : 'flex items-center gap-3 p-2 rounded-lg text-sm text-gray-700 hover:text-[#60CED6] cursor-pointer'">
+        <input type="checkbox" [(ngModel)]="b.selected" class="accent-[#60CED6] w-5 h-5">
         {{ b.name }}
       </label>
     </div>
@@ -87,7 +87,7 @@
     <!-- Clear -->
     <button
       (click)="clearFilters()"
-      class="bg-teal-600 hover:bg-teal-500 text-white py-3 rounded-xl font-bold">
+      class="bg-[#60CED6] hover:bg-[#60CED6] text-white py-3 rounded-xl font-bold">
       Clear Filters
     </button>
 
@@ -110,19 +110,19 @@
         </div>
 
         <!-- Info -->
-        <span class="px-3 py-1 bg-blue-50 text-blue-600
-                     text-[10px] font-bold rounded-full">
+        <span class="px-3 py-1 bg-blue-50 text-[#60CED6]
+                     text-[10px]  rounded-full">
           {{ p.category }}
         </span>
 
-        <h3 class="text-xl font-bold mt-3">
+        <h4 class="text-xl  mt-3">
           {{ p.name }}
-        </h3>
+        </h4>
 
         <div class="flex justify-between items-center mt-4">
 
           <div>
-            <div class="text-2xl font-black">
+            <div class="text-xl">
               {{ p.price }} DH
             </div>
 
@@ -144,8 +144,8 @@
           <!-- add -->
           <button
   class="group relative overflow-hidden
-         bg-gradient-to-br from-teal-500 to-teal-300
-         text-black h-14 w-14 rounded-2xl
+         bg-gradient-to-br from-[#60CED6] to-teal-300
+         text-white h-14 w-14 rounded-2xl
          shadow-lg shadow-gray-200
          flex items-center justify-center
          transition-all duration-300
@@ -183,7 +183,7 @@
       <button
         (click)="changePage(currentPage - 1)"
         [disabled]="currentPage === 1"
-        class="px-3 py-1 bg-teal-500 rounded text-black hover:text-teal-500 
+        class="px-3 py-1 bg-[#60CED6] rounded text-black hover:text-[#60CED6] 
         disabled:opacity-50 disabled:cursor-not-allowed">
         ‹
       </button>
@@ -192,14 +192,14 @@
         *ngFor="let p of totalPagesArray()"
         (click)="changePage(p)"
         [class.bg-white]="p === currentPage"
-        class="px-3 py-1 rounded text-black hover:text-black hover:bg-teal-500">
+        class="px-3 py-1 rounded text-black hover:text-black hover:bg-[#60CED6]">
         {{ p }}
       </button>
 
       <button
         (click)="changePage(currentPage + 1)"
         [disabled]="currentPage === totalPages"
-        class="px-3 py-1 bg-teal-500 rounded text-black hover:text-teal-500 disabled:opacity-50 disabled:cursor-not-allowed">
+        class="px-3 py-1 bg-[#60CED6] rounded text-black hover:text-[#60CED6] disabled:opacity-50 disabled:cursor-not-allowed">
         ›
       </button>
     </div>
