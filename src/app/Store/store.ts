@@ -21,10 +21,19 @@ export class Store {
   // ==========================
   // CATEGORIES
   // ==========================
+  private readonly categoryIconMap: Record<string, string> = {
+    'Smart Hub': 'devices',
+    Thermostat: 'thermostat',
+    Doorbell: 'notifications',
+    Lock: 'lock',
+  };
+
   categories = [
     { name: 'All', icon: 'grid' },
-    ...Array.from(new Set(this.products.map(p => p.category)))
-      .map(name => ({ name, icon: 'circle' }))
+    ...Array.from(new Set(this.products.map(p => p.category))).map(name => ({
+      name,
+      icon: this.categoryIconMap[name] ?? 'circle',
+    })),
   ];
 
   selectedCategory = signal<string>('All');
