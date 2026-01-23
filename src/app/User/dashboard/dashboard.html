@@ -1,11 +1,11 @@
-<body class="bg-gray-100 p-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+<div class="dashboard-root bg-gray-100 px-8 ">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-5 pt-3">
         <!-- Total Sales Card -->
         <div class="bg-white rounded-2xl p-6 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <h3 class="text-gray-500 text-sm font-medium">Total Sales</h3>
-                <div class="bg-cyan-100 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 rounded-lg" style="background-color: rgba(96, 206, 214, 0.2);">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #60CED6;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
                 </div>
@@ -25,8 +25,8 @@
         <div class="bg-white rounded-2xl p-6 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <h3 class="text-gray-500 text-sm font-medium">Active Orders</h3>
-                <div class="bg-cyan-100 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 rounded-lg" style="background-color: rgba(96, 206, 214, 0.2);">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #60CED6;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
                 </div>
@@ -46,8 +46,8 @@
         <div class="bg-white rounded-2xl p-6 shadow-sm">
             <div class="flex items-start justify-between mb-4">
                 <h3 class="text-gray-500 text-sm font-medium">Avg. Order Value</h3>
-                <div class="bg-cyan-100 p-2 rounded-lg">
-                    <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="p-2 rounded-lg" style="background-color: rgba(96, 206, 214, 0.2);">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #60CED6;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
@@ -85,4 +85,32 @@
             </div>
         </div>
     </div>
-</body>
+
+        <div class="lg:w-3/5 bg-white rounded-2xl p-6 shadow-sm">
+            <div class="flex items-start justify-between mb-6">
+                <!-- Title & Subtitle -->
+                 <div>
+                    <h2 class="text-lg font-semibold text-gray-900 mb-1">
+                    Monthly Revenue
+                    </h2>
+                    <p class="text-sm text-gray-400">
+                    Revenue performance for the last months
+                    </p>
+                </div>
+                <!-- Monthly / Weekly toggle -->
+                <div class="flex bg-gray-100 rounded-lg p-1">
+                    <button class="px-4 py-2 text-white rounded-md text-sm font-medium" style="background-color: #60CED6;">
+                    Monthly
+                    </button>
+                    <button class="px-4 py-2 text-gray-600 rounded-md text-sm font-medium hover:bg-gray-200">
+                    Weekly
+                    </button>
+                </div>
+            </div>
+            <div class="h-64">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+        
+
+</div>

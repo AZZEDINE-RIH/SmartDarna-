@@ -1,7 +1,5 @@
-<div class="min-h-screen">
-      
-      <!-- SIDEBAR -->
-      <aside class="fixed top-2 left-2 bottom-2 flex flex-col gap-2 w-[260px] rounded-2xl px-4 bg-white">
+<!-- SIDEBAR -->
+<aside class="fixed top-0 left-0 h-screen w-[260px] flex flex-col gap-2 px-4 bg-white">
         <header class="flex items-center gap-3 h-[70px] pt-2.5 pb-1.5 border-b border-gray-100">
           <img [src]="logoSrc" alt="Logo" class="h-8 ml-0" />
           <span class="text-gray-900 pt-3.5 font-bold h-10 text-2xl">Smart<span>D</span>arna</span>
@@ -14,10 +12,10 @@
               [class]="getButtonClass(item.id)"
               (click)="handleItemClick(item)"
             >
-                <ion-icon [name]="item.icon" class="text-[20px]"></ion-icon>
+                <ion-icon [attr.name]="item.icon" class="text-[20px]"></ion-icon>
 
               <span>{{ item.label }}</span>
-              <ion-icon *ngIf="item.type === 'submenu'" [name]="'chevron-down-outline'" class="ml-auto text-[20px]"></ion-icon>
+              <ion-icon *ngIf="item.type === 'submenu'" [attr.name]="'chevron-down-outline'" class="ml-auto text-[20px]"></ion-icon>
             </button>
 
             <!-- SUBMENU -->
@@ -66,9 +64,9 @@
               [class]="getButtonClass(settingsItem.id)"
               (click)="handleItemClick(settingsItem)"
             >
-              <ion-icon [name]="settingsItem.icon" class="text-[20px]"></ion-icon>
+              <ion-icon [attr.name]="settingsItem.icon" class="text-[20px]"></ion-icon>
               <span>{{ settingsItem.label }}</span>
-              <ion-icon *ngIf="settingsItem.type === 'submenu'" [name]="'chevron-up-outline'" class="ml-auto text-[20px]"></ion-icon>
+              <ion-icon *ngIf="settingsItem.type === 'submenu'" [attr.name]="'chevron-up-outline'" class="ml-auto text-[20px]"></ion-icon>
             </button>
           </li>
 
@@ -78,11 +76,9 @@
               [class]="getButtonClass(profileItem.id)"
               (click)="handleItemClick(profileItem)"
             >
-              <ion-icon [name]="profileItem.icon" class="text-[20px]"></ion-icon>
+              <ion-icon [attr.name]="profileItem.icon" class="text-[20px]"></ion-icon>
               <span>{{ profileItem.label }}</span>
             </button>
           </li>
         </ul>
       </aside>
-
-    
