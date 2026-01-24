@@ -5,22 +5,22 @@
       <h2>SmartDarna</h2>
     </div>
     <nav class="nav-menu">
-      <a routerLink="/admin-dashboard" routerLinkActive="active" class="nav-item">
+      <a routerLink="overview" routerLinkActive="active" class="nav-item">
         <i class="icon-dashboard"></i> Dashboard
       </a>
-      <a class="nav-item">
+      <a routerLink="users" routerLinkActive="active" class="nav-item">
         <i class="icon-users"></i> Users
       </a>
-      <a class="nav-item">
+      <a routerLink="sellers" routerLinkActive="active" class="nav-item">
         <i class="icon-sellers"></i> Sellers
       </a>
-      <a class="nav-item">
+      <a routerLink="products" routerLinkActive="active" class="nav-item">
         <i class="icon-products"></i> Products
       </a>
-      <a class="nav-item">
+      <a routerLink="orders" routerLinkActive="active" class="nav-item">
         <i class="icon-orders"></i> Orders
       </a>
-      <a class="nav-item">
+      <a routerLink="settings" routerLinkActive="active" class="nav-item">
         <i class="icon-settings"></i> Settings
       </a>
     </nav>
@@ -38,53 +38,6 @@
 
   <!-- Main Content -->
   <main class="main-content">
-    <header class="top-bar">
-      <h1>Dashboard Overview</h1>
-      <div class="date">{{ today | date:'fullDate' }}</div>
-    </header>
-
-    <div class="dashboard-grid">
-      <!-- KPIs -->
-      <div class="kpi-section">
-        <app-admin-stat-card
-          title="Total Users"
-          [value]="totalUsers"
-          icon="icon-users"
-          iconClass="blue"
-          [loading]="isLoading">
-        </app-admin-stat-card>
-        
-        <app-admin-stat-card
-          title="Total Sellers"
-          [value]="totalSellers"
-          icon="icon-sellers"
-          iconClass="green"
-          [loading]="isLoading">
-        </app-admin-stat-card>
-        
-        <app-admin-stat-card
-          title="Total Revenue"
-          [value]="totalRevenue"
-          icon="icon-revenue"
-          iconClass="purple"
-          [loading]="isLoading">
-        </app-admin-stat-card>
-      </div>
-
-      <!-- Charts & Requests -->
-      <div class="mid-section">
-        <div class="chart-area">
-          <app-product-performance></app-product-performance>
-        </div>
-        <div class="requests-area">
-          <app-seller-requests></app-seller-requests>
-        </div>
-      </div>
-
-      <!-- Recent Transactions -->
-      <div class="bottom-section">
-        <app-recent-transactions></app-recent-transactions>
-      </div>
-    </div>
+    <router-outlet></router-outlet>
   </main>
 </div>
