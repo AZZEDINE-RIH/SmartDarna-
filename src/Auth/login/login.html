@@ -1,72 +1,66 @@
 <div class="auth-container">
-  <div class="auth-wrapper" [class.flipped]="isFlipped()">
-    <!-- Login Side -->
-    <div class="auth-card login-side">
-      <div class="form-content">
-        <h1>Login</h1>
-
-        <form (ngSubmit)="onLogin()" class="auth-form">
-          <div class="form-group">
-            <input
-              type="email"
-              id="email"
-              [(ngModel)]="email"
-              name="email"
-              placeholder="Username"
-              required
-              class="input-field"
-            />
-           
-          </div>
-
-          <div class="form-group">
-            <input
-              type="password"
-              id="password"
-              [(ngModel)]="password"
-              name="password"
-              placeholder="Password"
-              required
-              class="input-field"
-            />
-            
-          </div>
-
-          @if (errorMessage()) {
-            <div class="error-message">{{ errorMessage() }}</div>
-          }
-
-          <button type="submit" [disabled]="isLoading()" class="auth-btn">
-            @if (isLoading()) {
-              <span>Logging in...</span>
-            } @else {
-              <span>Login</span>
-            }
-          </button>
-        </form>
-
-        <div class="signup-link">
-          <p>Don't have an account? <a (click)="toggleFlip()">Sign Up</a></p>
-        </div>
-      </div>
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>SmartDarna</h1>
+      <p>Welcome back! Please login to your account.</p>
     </div>
 
-    <!-- Welcome Side -->
-    <div class="auth-card welcome-side">
-      <div class="welcome-content">
-        <h2>WELCOME<br />BACK!</h2>
+    <form (ngSubmit)="onLogin()" class="auth-form">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <i class='bx bx-envelope'></i>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            class="input-field"
+          />
+        </div>
       </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <i class='bx bx-lock-alt'></i>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">
+          <i class='bx bx-error-circle'></i>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button type="submit" [disabled]="isLoading()" class="auth-btn">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Logging in...</span>
+        } @else {
+          <span>Login</span>
+        }
+      </button>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a routerLink="/register">Sign Up</a></p>
+      </div>
+    </form>
+    
+    <div class="demo-credentials">
+      <small>Demo: admin@example.com / password123</small>
     </div>
   </div>
 </div>
-
-    <!-- <div class="demo-credentials">
-      <p><strong>Demo Credentials:</strong></p>
-      <ul>
-        @for (cred of demoCredentials; track $index) {
-          <li>
-            <strong>{{ cred.role }}:</strong> {{ cred.email }} / password123
-          </li>
-        }
-      </ul>
-</div> -->

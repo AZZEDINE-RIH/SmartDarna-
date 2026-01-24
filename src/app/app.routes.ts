@@ -39,6 +39,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['admin'] }
   },
+  // Temporary route for testing the new dashboard without login/guards
+  {
+    path: 'new-dashboard',
+    component: AdminDashboardComponent
+  },
   {
     path: '**',
     redirectTo: '/login'

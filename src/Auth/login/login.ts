@@ -1,13 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../app/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -16,7 +16,6 @@ export class LoginComponent {
   password = signal('');
   errorMessage = signal('');
   isLoading = signal(false);
-  isFlipped = signal(false);
 
   constructor(
     private authService: AuthService,
@@ -26,11 +25,6 @@ export class LoginComponent {
     if (this.authService.isLoggedIn()) {
       this.redirectToDashboard();
     }
-  }
-
-  toggleFlip(): void {
-    this.isFlipped.set(!this.isFlipped());
-    this.router.navigate(['/register']);
   }
 
   onLogin(): void {

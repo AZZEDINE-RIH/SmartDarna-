@@ -1,13 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../app/services/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { SupabaseAuthService } from '../../app/services/supabase-auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -17,20 +17,13 @@ export class RegisterComponent {
   password = signal('');
   passwordConfirm = signal('');
   errorMessage = signal('');
+  successMessage = signal('');
   isLoading = signal(false);
-  isFlipped = signal(false);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  private supabaseAuthService = inject(SupabaseAuthService);
+  private router = inject(Router);
 
-  toggleFlip(): void {
-    this.isFlipped.set(!this.isFlipped());
-    this.router.navigate(['/login']);
-  }
-
-  onRegister(): void {
+  async onRegister(): Promise<void> {
     const name = this.name().trim();
     const email = this.email().trim();
     const password = this.password();
@@ -39,16 +32,19 @@ export class RegisterComponent {
     // Validation
     if (!name || !email || !password || !passwordConfirm) {
       this.errorMessage.set('All fields are required');
+      this.successMessage.set('');
       return;
     }
 
     if (password !== passwordConfirm) {
       this.errorMessage.set('Passwords do not match');
+      this.successMessage.set('');
       return;
     }
 
     if (password.length < 6) {
       this.errorMessage.set('Password must be at least 6 characters long');
+      this.successMessage.set('');
       return;
     }
 
@@ -56,24 +52,46 @@ export class RegisterComponent {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       this.errorMessage.set('Please enter a valid email address');
+      this.successMessage.set('');
       return;
     }
 
-    // Clear error message and set loading
+    // Clear messages and set loading
     this.errorMessage.set('');
+    this.successMessage.set('');
     this.isLoading.set(true);
 
-    // Simulate API call delay
-    setTimeout(() => {
-      try {
-        this.authService.register(name, email, password);
-        this.isLoading.set(false);
+    try {
+      // Register with Supabase
+      const result = await this.supabaseAuthService.signUp(email, password, name, 'user');
+
+      if (result.success) {
+        this.successMessage.set('Registration successful! Redirecting to login...');
+        console.log('✅ User registered successfully:', result.data);
+        
         // Redirect to login after successful registration
-        this.router.navigate(['/login']);
-      } catch (error: any) {
-        this.isLoading.set(false);
-        this.errorMessage.set(error.message || 'Registration failed. Please try again.');
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1500);
+      } else {
+        // Handle error message from different error types
+        let errorMsg = 'Registration failed. Please try again.';
+        if (result.error) {
+          if (typeof result.error === 'string') {
+            errorMsg = result.error;
+          } else if (typeof result.error === 'object' && result.error !== null && 'message' in result.error) {
+            errorMsg = (result.error as any).message;
+          }
+        }
+        this.errorMessage.set(errorMsg);
+        console.error('❌ Registration error:', result.error);
       }
-    }, 500);
+    } catch (error: any) {
+      const errorMsg = error?.message || 'Registration failed. Please try again.';
+      this.errorMessage.set(errorMsg);
+      console.error('❌ Unexpected error during registration:', error);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 }

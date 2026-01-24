@@ -1,88 +1,101 @@
 <div class="auth-container">
-  <div class="auth-wrapper" [class.flipped]="isFlipped()">
-    <!-- Register Side -->
-    <div class="auth-card register-side">
-      <div class="form-content">
-        <h1>Register</h1>
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>SmartDarna</h1>
+      <p>Create your account to get started.</p>
+    </div>
 
-        <form (ngSubmit)="onRegister()" class="auth-form">
-          <div class="form-group">
-            <input
-              type="text"
-              id="name"
-              
-              [(ngModel)]="name"
-              name="name"
-              placeholder="Full Name"
-              required
-              class="input-field"
-            />
-           
-          </div>
-
-          <div class="form-group">
-            <input
-              type="email"
-              id="email"
-              [(ngModel)]="email"
-              name="email"
-              placeholder="Email"
-              required
-              class="input-field"
-            />
-            
-          </div>
-
-          <div class="form-group">
-            <input
-              type="password"
-              id="password"
-              [(ngModel)]="password"
-              name="password"
-              placeholder="Password"
-              required
-              class="input-field"
-            />
-           
-          </div>
-
-          <div class="form-group">
-            <input
-              type="password"
-              id="passwordConfirm"
-              [(ngModel)]="passwordConfirm"
-              name="passwordConfirm"
-              placeholder="Confirm Password"
-              required
-              class="input-field"
-            />
-            
-          </div>
-
-          @if (errorMessage()) {
-            <div class="error-message">{{ errorMessage() }}</div>
-          }
-
-          <button type="submit" [disabled]="isLoading()" class="auth-btn">
-            @if (isLoading()) {
-              <span>Creating Account...</span>
-            } @else {
-              <span>Sign Up</span>
-            }
-          </button>
-        </form>
-
-        <div class="signup-link">
-          <p>Already have an account? <a (click)="toggleFlip()">Log In</a></p>
+    <form (ngSubmit)="onRegister()" class="auth-form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <div class="input-wrapper">
+          <i class='bx bx-user'></i>
+          <input
+            type="text"
+            id="name"
+            [(ngModel)]="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+            class="input-field"
+          />
         </div>
       </div>
-    </div>
 
-    <!-- Welcome Side -->
-    <div class="auth-card welcome-side">
-      <div class="welcome-content">
-        <h2>JOIN US<br />TODAY!</h2>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <i class='bx bx-envelope'></i>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            class="input-field"
+          />
+        </div>
       </div>
-    </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <i class='bx bx-lock-alt'></i>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Create a password"
+            required
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="passwordConfirm">Confirm Password</label>
+        <div class="input-wrapper">
+          <i class='bx bx-lock-check'></i>
+          <input
+            type="password"
+            id="passwordConfirm"
+            [(ngModel)]="passwordConfirm"
+            name="passwordConfirm"
+            placeholder="Confirm your password"
+            required
+            class="input-field"
+          />
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">
+          <i class='bx bx-error-circle'></i>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="success-message">
+          <i class='bx bx-check-circle'></i>
+          {{ successMessage() }}
+        </div>
+      }
+
+      <button type="submit" [disabled]="isLoading()" class="auth-btn">
+        @if (isLoading()) {
+          <span class="spinner"></span>
+          <span>Creating Account...</span>
+        } @else {
+          <span>Sign Up</span>
+        }
+      </button>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a routerLink="/login">Log In</a></p>
+      </div>
+    </form>
   </div>
 </div>
