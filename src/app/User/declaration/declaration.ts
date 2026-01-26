@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { HistoryComponent } from './history/history';
 
 @Component({
   selector: 'app-declaration',
-  imports: [],
+  imports: [HistoryComponent],
   templateUrl: './declaration.html',
   styleUrl: './declaration.css',
 })
