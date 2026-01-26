@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterModule, Router } from '@angular/router';
 
 interface SidebarChild {
   id: string;
@@ -11,13 +12,14 @@ interface SidebarItem {
   id: string;
   label: string;
   icon: string;
-  type: 'page' | 'submenu';
+  type: 'page' | 'submenu' | 'link';
+  route?: string;
   children?: SidebarChild[];
 }
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
@@ -31,7 +33,9 @@ export class Sidebar {
       id: 'dashboard',
       label: 'Dashboard',
       icon: 'stats-chart-outline',
-      type: 'page'
+      type: 'link',
+      route: '/user/dashboard'
+      
     },
     {
       id: 'analytics',
@@ -54,7 +58,8 @@ export class Sidebar {
       id: 'declarations',
       label: 'Declarations',
       icon: 'trash-bin-outline',
-      type: 'page'
+      type: 'link',
+      route: '/user/declarations'
     },
     
   ];
@@ -94,10 +99,25 @@ export class Sidebar {
     return this.activeItem === childId ? 'active' : '';
   }
 
+  constructor(private router: Router) {}
+
   handleItemClick(item: SidebarItem): void {
+    // If it's a link => navigate
+    if (item.type === 'link' && item.route) {
+      this.activeItem = item.id;
+      this.openSubmenu = null;
+      this.router.navigate([item.route]);
+      return;
+    }
+
+    // If it's a page => keep your logic
     if (item.type === 'page') {
       this.handlePageClick(item.id);
-    } else {
+      return;
+    }
+
+    // If it's submenu => toggle submenu
+    if (item.type === 'submenu') {
       this.handleSubmenuToggle(item.id);
     }
   }

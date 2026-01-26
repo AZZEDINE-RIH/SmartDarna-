@@ -1,6 +1,6 @@
 
-<nav class="fixed top-0 left-[260px] w-[calc(100%-260px)] h-[70px] bg-white border-b border-gray-200 z-50">
-      <div class="flex items-center justify-between px-8 h-full gap-4">
+<nav class="fixed top-1 left-[275px] w-[calc(100%-260px)] h-[70px] bg-white rounded-2xl border border-gray-200 z-50 ">
+      <div class="flex items-center justify-between px-8 py-3 gap-4">
         
     <!-- Center Section: Search Bar -->
         <div class="flex-1 max-w-2xl">
@@ -44,7 +44,7 @@
             class="cursor-pointer relative w-20 h-10 bg-gray-100 rounded-full border border-gray-300 flex items-center px-1 transition-all overflow-hidden"
           >
             <div
-              class="absolute w-8 h-8 rounded-full transition-transform duration-300"
+              class="absolute w-8 h-8 rounded-full bg-yellow-400 z-10 transition-transform duration-300"
               [ngClass]="isDarkMode ? 'bg-slate-700' : 'bg-yellow-400'"
               [style.transform]="isDarkMode ? 'translateX(40px)' : 'translateX(0)'"
             ></div>
