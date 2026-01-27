@@ -10,7 +10,7 @@
             "mark": "Amazon",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1,
-            "in_stock": true 
+            "stock": 15
         },
         {
             "id": 1,
@@ -22,7 +22,7 @@
             "mark": "Amazon",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1, 
-            "in_stock": true
+            "stock": 8
         },
         {
             "id": 2,
@@ -34,7 +34,7 @@
             "mark": "Amazon",
             "category": ["Smart Hub", "Voice Assistant", "speaker", "Kids"],
             "rating": 1,
-            "in_stock": true
+            "stock": 22
         },
         {
             "id": 3,
@@ -46,7 +46,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1,
-            "in_stock": true
+            "stock": 12
         },
         {
             "id": 4,
@@ -58,7 +58,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1,
-            "in_stock": true
+            "stock": 30
         },
         {
             "id": 5,
@@ -70,7 +70,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1,
-            "in_stock": true
+            "stock": 45
         },
         {
             "id": 6,
@@ -81,7 +81,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Voice Assistant"],
             "rating": 1,
-            "in_stock": true
+            "stock": 5
         },
         {
             "id": 7,
@@ -93,7 +93,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Voice Assistant", "speaker"],
             "rating": 1,
-            "in_stock": true
+            "stock": 10
         },
         {
             "id": 8,
@@ -105,7 +105,7 @@
             "mark": "Apple",
             "category": ["Smart Hub", "Voice Assistant", "speaker", "siri"],
             "rating": 1,
-            "in_stock": true
+            "stock": 7
         },
         {
             "id": 9,
@@ -117,7 +117,7 @@
             "mark": "Apple",
             "category": ["Smart Hub", "Voice Assistant", "speaker", "siri"],
             "rating": 1,
-            "in_stock": true
+            "stock": 25
         },
         {
             "id": 10,
@@ -129,7 +129,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 18
         },
         {
             "id": 11,
@@ -141,7 +141,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 11
         },
         {
             "id": 12,
@@ -153,7 +153,7 @@
             "mark": "Ecobee",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 9
         },
         {
             "id": 13,
@@ -165,7 +165,7 @@
             "mark": "Ecobee",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 14
         },
         {
             "id": 14,
@@ -177,7 +177,7 @@
             "mark": "Ecobee",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 20
         },
         {
             "id": 15,
@@ -189,7 +189,7 @@
             "mark": "Wyze",
             "category": ["Smart Hub", "Thermostat"],
             "rating": 1,
-            "in_stock": true
+            "stock": 50
         },
         {
             "id": 16,
@@ -201,7 +201,7 @@
             "mark": "Google",
             "category": ["Smart Hub", "Doorbell", "Security"], 
             "rating": 1,
-            "in_stock": true 
+            "stock": 13 
         },
         {
             "id": 17,
@@ -213,7 +213,7 @@
             "mark": "Ring",
             "category": ["Smart Hub", "Doorbell", "Security"],
             "rating": 1,
-            "in_stock": true
+            "stock": 6
         },
         {
             "id": 18,
@@ -225,7 +225,7 @@
             "mark": "Arlo",
             "category": ["Smart Hub", "Doorbell", "Security"],
             "rating": 1,
-            "in_stock": true
+            "stock": 35
         },
         {
             "id": 19,
@@ -237,7 +237,7 @@
             "mark": "Yale",
             "category": ["Smart Hub", "Lock", "Security"],
             "rating": 1,
-            "in_stock": true
+            "stock": 4
         },
         {
             "id": 20,
@@ -249,7 +249,7 @@
             "mark": "Yale",
             "category": ["Smart Hub", "Lock", "Security"],
             "rating": 1,
-            "in_stock": true
+            "stock": 17
         }
     ]
 }

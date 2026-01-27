@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
+import { ThemeService } from '../../theme.service';
 
 interface SidebarChild {
   id: string;
@@ -25,7 +26,9 @@ interface SidebarItem {
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
+  private themeService: ThemeService;
   logoSrc: string = '/assets/images/logo light without bg.png';
+  isDarkMode = computed(() => this.themeService.isDarkMode());
 
   sidebarItems: SidebarItem[] = 
   [
@@ -85,6 +88,10 @@ export class Sidebar {
   activeItem: string = 'dashboard';
   openSubmenu: string | null = null;
 
+  constructor(private router: Router, themeService: ThemeService) {
+    this.themeService = themeService;
+  }
+
   getButtonClass(itemId: string): string {
     return this.activeItem === itemId ? 'active' : '';
   }
@@ -94,12 +101,10 @@ export class Sidebar {
       this.activeItem === itemId ? 'rotate-180' : ''
     }`;
   }
-  
+
   getSubmenuButtonClass(childId: string): string {
     return this.activeItem === childId ? 'active' : '';
   }
-
-  constructor(private router: Router) {}
 
   handleItemClick(item: SidebarItem): void {
     // If it's a link => navigate

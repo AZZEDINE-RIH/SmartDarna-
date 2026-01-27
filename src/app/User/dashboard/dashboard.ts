@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, computed } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
+import { ThemeService } from '../../theme.service';
 
 Chart.register(...registerables);
 
@@ -20,17 +21,22 @@ type Product = {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements AfterViewInit {
+export class Dashboard implements OnInit, AfterViewInit {
 
+  private themeService: ThemeService;
   products: Product[] = [];
-  constructor(private http: HttpClient) {}
-  
+  isDarkMode = computed(() => this.themeService.isDarkMode());
+  constructor(private http: HttpClient, themeService: ThemeService) {
+    this.themeService = themeService;
+  }
+
   ngOnInit(): void {
+
     this.http.get<{products: Product[]}>('assets/products.json').subscribe({
-      next: (data) => {
-        this.products = data.products.slice(0, 3); 
+      next: (data: {products: Product[]}) => {
+        this.products = data.products.slice(0, 3);
       },
-      error: (err) => console.error('Error loading products', err)
+      error: (err: any) => console.error('Error loading products', err)
     });
   }
 

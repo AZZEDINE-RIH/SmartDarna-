@@ -1,5 +1,6 @@
 
-<nav class="fixed top-1 left-[275px] w-[calc(100%-260px)] h-[70px] bg-white rounded-2xl border border-gray-200 z-50 ">
+<nav class="fixed top-1 left-[275px] w-[calc(100%-260px)] h-[70px] rounded-2xl border z-50"
+      [ngClass]="isDarkMode() ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'">
       <div class="flex items-center justify-between px-8 py-3 gap-4">
         
     <!-- Center Section: Search Bar -->
@@ -11,12 +12,17 @@
             <input
               type="text"
               placeholder="Search"
-              class="w-full pl-10 pr-24 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
+              class="w-full pl-10 pr-24 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
+              [ngClass]="isDarkMode() ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500'"
             />
-            <div class="absolute right-3 flex items-center gap-1 bg-white border border-gray-300 rounded px-2 py-1">
-              <kbd class="text-xs font-semibold text-gray-600">CTRL</kbd>
-              <span class="text-xs text-gray-400">+</span>
-              <kbd class="text-xs font-semibold text-gray-600">D</kbd>
+            <div class="absolute right-3 flex items-center gap-1 rounded px-2 py-1"
+              [ngClass]="isDarkMode() ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'">
+              <kbd class="text-xs font-semibold"
+                [ngClass]="isDarkMode() ? 'text-gray-300' : 'text-gray-600'">CTRL</kbd>
+              <span class="text-xs"
+                [ngClass]="isDarkMode() ? 'text-gray-500' : 'text-gray-400'">+</span>
+              <kbd class="text-xs font-semibold"
+                [ngClass]="isDarkMode() ? 'text-gray-300' : 'text-gray-600'">D</kbd>
             </div>
           </div>
         </div>
@@ -25,40 +31,50 @@
         <div class="flex items-center gap-3">
           <!-- Action Icons -->
           <div class="flex items-center gap-2">
-            <button class="relative w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer">
-              <ion-icon name="notifications-outline" class="text-[20px] text-gray-700"></ion-icon>
+            <button class="relative w-10 h-10 rounded-full border flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer"
+              [ngClass]="isDarkMode() ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'">
+              <ion-icon name="notifications-outline" class="text-[20px]"
+                [ngClass]="isDarkMode() ? 'text-gray-300' : 'text-gray-700'"></ion-icon>
               <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button class="relative w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer">
-              <ion-icon name="cart-outline" class="text-[20px] text-gray-700"></ion-icon>
+            <button class="relative w-10 h-10 rounded-full border flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer"
+              [ngClass]="isDarkMode() ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'">
+              <ion-icon name="cart-outline" class="text-[20px]"
+                [ngClass]="isDarkMode() ? 'text-gray-300' : 'text-gray-700'"></ion-icon>
               <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer">
-              <ion-icon name="settings-outline" class="text-[20px] text-gray-700"></ion-icon>
+            <button class="w-10 h-10 rounded-full border flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer"
+              [ngClass]="isDarkMode() ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'">
+              <ion-icon name="settings-outline" class="text-[20px]"
+                [ngClass]="isDarkMode() ? 'text-gray-300' : 'text-gray-700'"></ion-icon>
             </button>
           </div>
 
           <!-- Theme Toggle -->
           <button
             (click)="toggleTheme()"
-            class="cursor-pointer relative w-20 h-10 bg-gray-100 rounded-full border border-gray-300 flex items-center px-1 transition-all overflow-hidden"
+            class="cursor-pointer relative w-20 h-10 rounded-full border flex items-center px-1 transition-all overflow-hidden"
+            [ngClass]="isDarkMode() ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'"
           >
             <div
               class="absolute w-8 h-8 rounded-full z-10 transition-transform duration-300"
-              [ngClass]="isDarkMode ? 'bg-slate-700' : 'bg-yellow-400'"
-              [style.transform]="isDarkMode ? 'translateX(40px)' : 'translateX(0)'"
+              [ngClass]="isDarkMode() ? 'bg-slate-700' : 'bg-yellow-400'"
+              [style.transform]="isDarkMode() ? 'translateX(40px)' : 'translateX(0)'"
             ></div>
             <div class="relative w-full flex items-center justify-between px-2 z-10">
-              <ion-icon name="sunny-outline" class="transition-colors text-[16px]" [ngClass]="!isDarkMode ? 'text-white' : 'text-gray-600'"></ion-icon>
-              <ion-icon name="moon-outline" class="transition-colors text-[16px]" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-600'"></ion-icon>
+              <ion-icon name="sunny-outline" class="transition-colors text-[16px]" [ngClass]="!isDarkMode() ? 'text-white' : 'text-gray-600'"></ion-icon>
+              <ion-icon name="moon-outline" class="transition-colors text-[16px]" [ngClass]="isDarkMode() ? 'text-white' : 'text-gray-600'"></ion-icon>
             </div>
           </button>
 
           <!-- User Profile -->
-          <div class="flex items-center gap-3 pl-3 pr-2 py-1.5 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer">
+          <div class="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-lg border transition-colors cursor-pointer"
+            [ngClass]="isDarkMode() ? 'bg-gray-700 border-gray-600 hover:bg-gray-600' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'">
             <div class="text-left">
-              <div class="text-sm font-semibold text-gray-900">Sara Jamal</div>
-              <div class="text-xs text-gray-500">Sarajamal@example.com</div>
+              <div class="text-sm font-semibold"
+                [ngClass]="isDarkMode() ? 'text-white' : 'text-gray-900'">Sara Jamal</div>
+              <div class="text-xs"
+                [ngClass]="isDarkMode() ? 'text-gray-400' : 'text-gray-500'">Sarajamal@example.com</div>
             </div>
             <div class="w-10 h-10 rounded-full bg-linear-to-br from-[#60CED6] to-purple-900 flex items-center justify-center text-white font-semibold">
               SJ

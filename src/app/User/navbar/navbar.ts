@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ThemeService } from '../../theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,9 +11,20 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  isDarkMode: boolean = false;
+  private themeService: ThemeService;
+  isDarkMode = signal(false);
 
-  toggleTheme() : void {
-    this.isDarkMode = !this.isDarkMode;
+  constructor(themeService: ThemeService) {
+    this.themeService = themeService;
+
+    // Use effect to react to theme changes
+    effect(() => {
+      const isDark = this.themeService.isDarkMode();
+      this.isDarkMode.set(isDark);
+    });
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 }
