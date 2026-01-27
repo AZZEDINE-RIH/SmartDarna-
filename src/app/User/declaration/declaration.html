@@ -1,57 +1,123 @@
-<div class="bg-gray-100 px-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-5 pt-3">
-        <!-- Total Pending Card -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-            <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                Total Pending
-            </div>
-            <div class="flex items-baseline gap-3">
-                <div class="text-5xl font-bold text-gray-900">03</div>
-                <div class="text-orange-500 font-semibold text-sm">Requires Action</div>
-            </div>
+<div
+  class="px-8 transition-colors duration-300"
+  [ngClass]="isDarkMode ? 'bg-gray-900' : 'bg-gray-100'"
+>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-5 pt-3"
+  >
+    <!-- Total Pending Card -->
+    <div
+      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
+      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
+    >
+      <div
+        class="text-xs font-semibold uppercase tracking-wider mb-2"
+        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
+      >
+        Total Pending
+      </div>
+      <div class="flex items-baseline gap-3">
+        <div
+          class="text-5xl font-bold"
+          [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
+        >
+          03
         </div>
-
-        <!-- Next Deadline Card -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-            <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                Next Deadline
-            </div>
-            <div class="flex items-baseline gap-3">
-                <div class="text-5xl font-bold text-gray-900">Nov 15</div>
-                <div class="text-gray-500 font-medium text-sm">VAT Q4 Report</div>
-            </div>
+        <div class="text-orange-500 font-semibold text-sm">
+          Requires Action
         </div>
-
-        <!-- Status Compliance Card -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm">
-            <div class="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                Status Compliance
-            </div>
-            <div class="flex items-baseline gap-3">
-                <div class="text-5xl font-bold text-green-500">98%</div>
-                <div class="text-gray-500 font-medium text-sm">Excellent</div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- History Component -->
-    <app-history></app-history>
-    
-        <div class="max-w-6xl mx-auto mt-3">
-        <div class="bg-cyan-50 border border-cyan-400 rounded-2xl p-6">
-            <div class="flex gap-4">
-                <div class="shrink-0">
-                    <div class="w-8 h-8 bg-[#60CED6] rounded-full flex items-center justify-center">
-                        <span class="text-white text-sm font-semibold">i</span>
-                    </div>
-                </div>
-                <div>
-                    <h3 class="text-gray-900 font-semibold text-lg mb-2">Important Note for Sellers</h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Please ensure all VAT declarations are submitted by the 15th of the following month to avoid late processing fees. Rejected declarations must be corrected and resubmitted within 48 hours of notification.
-                    </p>
-                </div>
-            </div>
+    <!-- Next Deadline Card -->
+    <div
+      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
+      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
+    >
+      <div
+        class="text-xs font-semibold uppercase tracking-wider mb-2"
+        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
+      >
+        Next Deadline
+      </div>
+      <div class="flex items-baseline gap-3">
+        <div
+          class="text-5xl font-bold"
+          [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
+        >
+          Nov 15
         </div>
-    </div> 
+        <div
+          class="font-medium text-sm"
+          [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+        >
+          VAT Q4 Report
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Compliance Card -->
+    <div
+      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
+      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
+    >
+      <div
+        class="text-xs font-semibold uppercase tracking-wider mb-2"
+        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
+      >
+        Status Compliance
+      </div>
+      <div class="flex items-baseline gap-3">
+        <div class="text-5xl font-bold text-green-500">98%</div>
+        <div
+          class="font-medium text-sm"
+          [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
+        >
+          Excellent
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Component -->
+  <app-history></app-history>
+
+  <!-- Info Box -->
+  <div class=" mx-auto py-8">
+    <div
+      class="border rounded-2xl p-6 transition-colors duration-300"
+      [ngClass]="
+        isDarkMode
+          ? 'bg-cyan-900/20 border-[#60CED6]'
+          : 'bg-cyan-50 border-cyan-400'
+      "
+    >
+      <div class="flex gap-4">
+        <div class="flex-shrink-0">
+          <div
+            class="w-8 h-8 bg-[#60CED6] rounded-full flex items-center justify-center"
+          >
+            <span class="text-white text-sm font-light">i</span>
+          </div>
+        </div>
+
+        <div>
+          <h3
+            class="font-semibold text-lg mb-2"
+            [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
+          >
+            Important Note for Sellers
+          </h3>
+          <p
+            class="leading-relaxed"
+            [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-600'"
+          >
+            Please ensure all VAT declarations are submitted by the 15th of the
+            following month to avoid late processing fees. Rejected declarations
+            must be corrected and resubmitted within 48 hours of notification.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

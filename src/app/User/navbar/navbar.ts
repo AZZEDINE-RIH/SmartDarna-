@@ -1,7 +1,8 @@
-import { Component, effect, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ThemeService } from '../../theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -10,18 +11,21 @@ import { ThemeService } from '../../theme.service';
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
-export class Navbar {
-  private themeService: ThemeService;
-  isDarkMode = signal(false);
+export class Navbar implements OnInit, OnDestroy {
+  isDarkMode: boolean = false;
+  private themeSubscription?: Subscription;
 
-  constructor(themeService: ThemeService) {
-    this.themeService = themeService;
+  constructor(private themeService: ThemeService) {}
 
-    // Use effect to react to theme changes
-    effect(() => {
-      const isDark = this.themeService.isDarkMode();
-      this.isDarkMode.set(isDark);
+  ngOnInit() {
+    // Subscribe to theme changes
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
     });
+  }
+
+  ngOnDestroy() {
+    this.themeSubscription?.unsubscribe();
   }
 
   toggleTheme(): void {

@@ -1,8 +1,9 @@
-import { Component, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../theme.service';
+import { Subscription } from 'rxjs';
 
 interface SidebarChild {
   id: string;
@@ -25,10 +26,22 @@ interface SidebarItem {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class Sidebar {
-  private themeService: ThemeService;
+export class Sidebar implements OnInit, OnDestroy {
   logoSrc: string = '/assets/images/logo light without bg.png';
-  isDarkMode = computed(() => this.themeService.isDarkMode());
+  isDarkMode: boolean = false;
+  private themeSubscription?: Subscription;
+
+  constructor(private router: Router, private themeService: ThemeService) {}
+
+  ngOnInit() {
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark: boolean) => {
+      this.isDarkMode = isDark;
+    });
+  }
+
+  ngOnDestroy() {
+    this.themeSubscription?.unsubscribe();
+  }
 
   sidebarItems: SidebarItem[] = 
   [
@@ -88,10 +101,6 @@ export class Sidebar {
   activeItem: string = 'dashboard';
   openSubmenu: string | null = null;
 
-  constructor(private router: Router, themeService: ThemeService) {
-    this.themeService = themeService;
-  }
-
   getButtonClass(itemId: string): string {
     return this.activeItem === itemId ? 'active' : '';
   }
@@ -101,7 +110,7 @@ export class Sidebar {
       this.activeItem === itemId ? 'rotate-180' : ''
     }`;
   }
-
+  
   getSubmenuButtonClass(childId: string): string {
     return this.activeItem === childId ? 'active' : '';
   }

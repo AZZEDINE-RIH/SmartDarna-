@@ -1,84 +1,164 @@
-<!-- SIDEBAR -->
-<aside class="fixed top-0 left-0 h-screen w-[260px] flex flex-col gap-2 px-4 bg-white dark-mode:bg-gray-800">
-        <header class="flex items-center gap-3 h-[70px] pt-2.5 pb-1.5 border-b border-gray-100 dark-mode:border-gray-700">
-          <img [src]="logoSrc" alt="Logo" class="h-8 ml-0" />
-          <span class="text-gray-900 dark-mode:text-white pt-3.5 font-bold h-10 text-2xl">Smart<span class="text-[#60CED6]">D</span>arna</span>
-        </header>
+<aside
+  class="fixed top-0 left-0 h-screen w-[260px] flex flex-col gap-2 px-4 transition-colors duration-300 border-r"
+  [ngClass]="isDarkMode ? 'bg-[#111827] border-gray-800' : 'bg-white border-gray-100'"
+>
+  <!-- Header -->
+  <header
+    class="flex items-center gap-3 h-[70px] pt-2.5 pb-1.5 border-b transition-colors duration-300"
+    [ngClass]="isDarkMode ? 'border-gray-800' : 'border-gray-100'"
+  >
+    <img [src]="logoSrc" alt="Logo" class="h-8 ml-0" />
+    <span
+      class="pt-3.5 font-bold h-10 text-2xl"
+      [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
+    >
+      Smart<span class="text-[#60CED6]">D</span>arna
+    </span>
+  </header>
 
-        <ul class="list-none p-0 m-0 flex-1 overflow-y-auto">
-          <li *ngFor="let item of sidebarItems">
-            
+  <!-- Main Menu -->
+  <ul class="list-none p-0 m-0 mt-4 flex-1 overflow-y-auto space-y-1">
+    <li *ngFor="let item of sidebarItems">
+      <button
+        class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
+        [ngClass]="{
+          'bg-gray-800 text-[#60CED6]': isDarkMode && activeItem === item.id,
+          'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === item.id,
+          'text-gray-400 hover:bg-gray-800 hover:text-[#60CED6]': isDarkMode && activeItem !== item.id,
+          'text-gray-500 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== item.id
+          
+        }"
+        (click)="handleItemClick(item)"
+      >
+        <ion-icon
+          [attr.name]="item.icon"
+          class="text-[20px] transition-colors"
+          [ngClass]="
+            activeItem === item.id
+              ? 'text-[#60CED6]'
+              : isDarkMode
+                ? 'text-gray-400 group-hover:text-[#60CED6]'
+                : 'text-gray-500 group-hover:text-[#60CED6]'
+          "
+        ></ion-icon>
+
+        <span>{{ item.label }}</span>
+
+        <ion-icon
+          *ngIf="item.type === 'submenu'"
+          name="chevron-down-outline"
+          class="ml-auto text-[16px] transition-transform duration-300"
+          [ngClass]="{ 'rotate-180': openSubmenu === item.id }"
+        ></ion-icon>
+      </button>
+
+      <!-- Submenu -->
+      <div
+        *ngIf="item.type === 'submenu'"
+        class="overflow-hidden transition-all duration-300 ease-in-out"
+        [style.height]="openSubmenu === item.id ? 'auto' : '0px'"
+      >
+        <ul class="pl-9 mt-1 space-y-1">
+          <li *ngFor="let child of item.children">
             <button
-              [class]="getButtonClass(item.id)"
-              (click)="handleItemClick(item)"
+              class="w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200"
+              [ngClass]="{
+                'text-[#60CED6] bg-transparent font-semibold': activeItem === child.id,
+                'text-gray-500 hover:text-[#60CED6]': activeItem !== child.id,
+                'text-gray-400 hover:bg-gray-800 hover:text-[#60CED6]': isDarkMode && activeItem !== settingsItem.id,
+          'text-gray-600 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== settingsItem.id
+              }"
+              (click)="handlePageClick(child.id)"
             >
-                <ion-icon [attr.name]="item.icon" class="text-[20px]"></ion-icon>
-
-              <span>{{ item.label }}</span>
-              <ion-icon *ngIf="item.type === 'submenu'" [attr.name]="'chevron-down-outline'" class="ml-auto text-[20px]"></ion-icon>
-            </button>
-
-            <!-- SUBMENU -->
-            <div
-              *ngIf="item.type === 'submenu'"
-              class="overflow-hidden transition-[height] duration-500 ease-in-out"
-              [style.height]="openSubmenu === item.id ? 'auto' : '0px'"
-            >
-              <ul class="pl-0">
-                <li *ngFor="let child of item.children">
-                  <button
-                    [class]="getSubmenuButtonClass(child.id)"
-                    (click)="handlePageClick(child.id)"
-                  >
-                    {{ child.label }}
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-          </li>
-        </ul>
-
-        <!-- SETTINGS ITEM - FIXED AT BOTTOM -->
-        <ul class="list-none p-0 m-0 mt-auto">
-          <li>
-            <!-- SUBMENU - APPEARS ABOVE BUTTON -->
-            <div
-              *ngIf="settingsItem.type === 'submenu'"
-              class="overflow-hidden transition-[height] duration-500 ease-in-out"
-              [style.height]="openSubmenu === settingsItem.id ? 'auto' : '0px'"
-            >
-              <ul class="pl-0">
-                <li *ngFor="let child of settingsItem.children">
-                  <button
-                    [class]="getSubmenuButtonClass(child.id)"
-                    (click)="handlePageClick(child.id)"
-                  >
-                    {{ child.label }}
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <button
-              [class]="getButtonClass(settingsItem.id)"
-              (click)="handleItemClick(settingsItem)"
-            >
-              <ion-icon [attr.name]="settingsItem.icon" class="text-[20px]"></ion-icon>
-              <span>{{ settingsItem.label }}</span>
-              <ion-icon *ngIf="settingsItem.type === 'submenu'" [attr.name]="'chevron-up-outline'" class="ml-auto text-[20px]"></ion-icon>
-            </button>
-          </li>
-
-          <!-- PROFILE ITEM -->
-          <li class="pb-4">
-            <button
-              [class]="getButtonClass(profileItem.id)"
-              (click)="handleItemClick(profileItem)"
-            >
-              <ion-icon [attr.name]="profileItem.icon" class="text-[20px]"></ion-icon>
-              <span>{{ profileItem.label }}</span>
+              {{ child.label }}
             </button>
           </li>
         </ul>
-      </aside>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Bottom Section -->
+  <ul
+    class="list-none p-0 m-0 mt-auto border-t pt-4"
+    [ngClass]="isDarkMode ? 'border-gray-800' : 'border-gray-100'"
+  >
+    <li>
+      <button
+        class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
+        [ngClass]="{
+          'bg-gray-800 text-[#60CED6]': isDarkMode && activeItem === settingsItem.id,
+          'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === settingsItem.id,
+          
+        }"
+        (click)="handleItemClick(settingsItem)"
+      >
+        <ion-icon
+          [attr.name]="settingsItem.icon"
+          class="text-[20px]"
+          [ngClass]="
+            activeItem === settingsItem.id
+              ? 'text-[#60CED6]'
+              : isDarkMode
+                ? 'text-gray-400 group-hover:text-[#60CED6]'
+                : 'text-gray-500 group-hover:text-[#60CED6]'
+          "
+        ></ion-icon>
+
+        <span>{{ settingsItem.label }}</span>
+
+        <ion-icon
+          name="chevron-down-outline"
+          class="ml-auto text-[16px] transition-transform duration-300"
+          [ngClass]="{ 'rotate-180': openSubmenu === settingsItem.id }"
+        ></ion-icon>
+      </button>
+
+      <!-- Settings Submenu -->
+      <div
+        class="overflow-hidden transition-all duration-300 ease-in-out"
+        [style.height]="openSubmenu === settingsItem.id ? 'auto' : '0px'"
+      >
+        <ul class="pl-9 mt-1 space-y-1">
+          <li *ngFor="let child of settingsItem.children">
+            <button
+              class="w-full text-left px-3 py-2 rounded-md text-sm transition-all duration-200"
+              [ngClass]="{
+                'text-[#60CED6] bg-transparent font-semibold': activeItem === child.id,
+                'text-gray-500 hover:text-[#60CED6]': activeItem !== child.id
+              }"
+              (click)="handlePageClick(child.id)"
+            >
+              {{ child.label }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Profile -->
+    <li class="pb-4 mt-1">
+      <button
+        class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
+        [ngClass]="
+          isDarkMode
+            ? 'text-gray-400 hover:bg-gray-800 hover:text-[#60CED6]'
+            : 'text-gray-600 hover:bg-gray-50 hover:text-[#60CED6]'
+        "
+        (click)="handleItemClick(profileItem)"
+      >
+        <ion-icon
+          [attr.name]="profileItem.icon"
+          class="text-[20px]"
+          [ngClass]="
+            isDarkMode
+              ? 'text-gray-400 group-hover:text-[#60CED6]'
+              : 'text-gray-500 group-hover:text-[#60CED6]'
+          "
+        ></ion-icon>
+
+        <span>{{ profileItem.label }}</span>
+      </button>
+    </li>
+  </ul>
+</aside>

@@ -1,7 +1,9 @@
-import { Component, AfterViewInit, OnInit, computed } from '@angular/core';
+import { Component, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 import { ThemeService } from '../../theme.service';
+import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 Chart.register(...registerables);
 
@@ -17,27 +19,33 @@ type Product = {
 
 @Component({
   selector: 'app-dashboard',
-  imports: [HttpClientModule],
+  imports: [HttpClientModule, CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit, AfterViewInit {
+export class Dashboard implements OnInit, AfterViewInit, OnDestroy {
 
-  private themeService: ThemeService;
   products: Product[] = [];
-  isDarkMode = computed(() => this.themeService.isDarkMode());
-  constructor(private http: HttpClient, themeService: ThemeService) {
-    this.themeService = themeService;
-  }
+  isDarkMode: boolean = false;
+  private themeSubscription?: Subscription;
+
+  constructor(private http: HttpClient, private themeService: ThemeService) {}
 
   ngOnInit(): void {
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark: boolean) => {
+      this.isDarkMode = isDark;
+    });
 
     this.http.get<{products: Product[]}>('assets/products.json').subscribe({
-      next: (data: {products: Product[]}) => {
+      next: (data) => {
         this.products = data.products.slice(0, 3);
       },
-      error: (err: any) => console.error('Error loading products', err)
+      error: (err) => console.error('Error loading products', err)
     });
+  }
+
+  ngOnDestroy() {
+    this.themeSubscription?.unsubscribe();
   }
 
   ngAfterViewInit(): void {

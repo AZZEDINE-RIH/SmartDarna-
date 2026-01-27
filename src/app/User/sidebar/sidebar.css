@@ -9,7 +9,7 @@ aside button {
       padding: 0 16px;
       background: transparent;
       border: none;
-      color: rgb(55 65 81 / 1);
+    
       transition: 0.3s;
       cursor: pointer;
     }
@@ -63,3 +63,6 @@ aside button {
     ul li {
         font-family: "Montserrat", sans-serif;
     }
+
+
+  
