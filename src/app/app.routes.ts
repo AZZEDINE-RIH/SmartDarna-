@@ -8,6 +8,7 @@ import { AboutComponent } from './Pages/about/about.component';
 import { ServicesComponent } from './Pages/services/services.component';
 import { CheckoutComponent } from './Pages/checkout/checkout.component';
 import { OrderConfirmationComponent } from './Pages/order-confirmation/order-confirmation.component';
+import { LoginComponent } from './Pages/login/login.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,10 @@ export const routes: Routes = [
   {
     path: 'order-confirmation',
     component: OrderConfirmationComponent,
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
   {
     path: '**',

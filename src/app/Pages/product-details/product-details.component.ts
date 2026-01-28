@@ -18,6 +18,8 @@ export class ProductDetailsComponent implements OnInit {
     quantity: number = 1;
     selectedColor: string = '';
     selectedImage: string = '';
+    isLoading: boolean = true;
+    error: string = '';
 
     constructor(
         private route: ActivatedRoute,
@@ -33,11 +35,23 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     loadProduct(id: string) {
-        this.productService.getProductById(id).subscribe(product => {
-            this.product = product;
-            if (this.product) {
-                this.selectedImage = this.product.images[0];
-                this.selectedColor = this.product.colors[0];
+        this.isLoading = true;
+        this.error = '';
+        this.productService.getProductById(id).subscribe({
+            next: (product) => {
+                this.product = product;
+                if (this.product) {
+                    this.selectedImage = this.product.images[0];
+                    this.selectedColor = this.product.colors[0];
+                } else {
+                    this.error = 'Product not found';
+                }
+                this.isLoading = false;
+            },
+            error: (err) => {
+                console.error('Error loading product:', err);
+                this.error = 'Failed to load product. Please try again.';
+                this.isLoading = false;
             }
         });
     }
@@ -55,6 +69,28 @@ export class ProductDetailsComponent implements OnInit {
 
     selectImage(image: string) {
         this.selectedImage = image;
+    }
+
+    getColorCode(color: string): string {
+        const mapping: { [key: string]: string } = {
+            // Basic colors
+            'Black': '#000000',
+            'White': '#ffffff',
+            'Blue': '#4a90e2',
+            'Orange': '#ff8c42',
+            'Yellow': '#ffd93d',
+            // Product-specific colors
+            'Black Suede': '#2c2c2c',
+            'Polished Brass': '#d4af37',
+            'Oil Rubbed Bronze': '#3b3121',
+            'Snow': '#f5f5f5',
+            'Ash': '#b2beb5',
+            'Linen': '#faf0e6',
+            'Mist': '#90afc5',
+            'Sand': '#c2b280',
+            'Charcoal': '#36454f'
+        };
+        return mapping[color] || color.toLowerCase();
     }
 
     getStars(): number[] {

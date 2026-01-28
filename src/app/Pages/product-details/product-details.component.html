@@ -1,114 +1,130 @@
-<div class="product-details-page fade-in" *ngIf="product">
+<div class="product-details-page fade-in">
     <div class="container">
-        <!-- Breadcrumbs -->
-        <nav class="breadcrumb">
-            <a routerLink="/collection">Collection</a>
-            <span class="separator">/</span>
-            <span class="current">{{ product.name }}</span>
-        </nav>
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-container">
+            <div class="spinner"></div>
+            <p>Loading product details...</p>
+        </div>
 
-        <div class="product-main-grid">
-            <!-- Media Gallery -->
-            <div class="product-gallery">
-                <div class="main-image-container">
-                    <img [src]="selectedImage" [alt]="product.name" class="main-image" />
-                </div>
-                <div class="thumbnail-list">
-                    <div *ngFor="let thumb of product.images" class="thumbnail-item"
-                        [class.active]="thumb === selectedImage" (click)="selectImage(thumb)">
-                        <img [src]="thumb" alt="Product thumbnail" />
+        <!-- Error State -->
+        <div *ngIf="error && !isLoading" class="error-container">
+            <h2>Oops!</h2>
+            <p>{{ error }}</p>
+            <a routerLink="/collection" class="btn main">Back to Collection</a>
+        </div>
+
+        <!-- Product Content -->
+        <div *ngIf="product && !isLoading && !error">
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumb">
+                <a routerLink="/collection">Collection</a>
+                <span class="separator">/</span>
+                <span class="current">{{ product.name }}</span>
+            </nav>
+
+            <div class="product-main-grid">
+                <!-- Media Gallery -->
+                <div class="product-gallery">
+                    <div class="main-image-container">
+                        <img [src]="selectedImage" [alt]="product.name" class="main-image" />
                     </div>
-                </div>
-            </div>
-
-            <!-- Content -->
-            <div class="product-info-container">
-                <div class="product-header">
-                    <span class="product-brand">{{ product.brand }}</span>
-                    <h1 class="product-title">{{ product.name }}</h1>
-
-                    <div class="product-rating">
-                        <div class="stars">
-                            <span *ngFor="let star of getStars()" class="star" [class.filled]="star < product.rating">
-                                ★
-                            </span>
-                        </div>
-                        <span class="rating-text">{{ product.rating }} (Verified Buyer Reviews)</span>
-                    </div>
-
-                    <div class="product-price">{{ product.price }} MAD</div>
-                </div>
-
-                <p class="product-description">
-                    {{ product.description }}
-                </p>
-
-                <!-- Product Options -->
-                <div class="product-options">
-                    <!-- Color Selection -->
-                    <div class="option-group">
-                        <span class="option-label">Color: <strong>{{ selectedColor }}</strong></span>
-                        <div class="color-swatches">
-                            <button *ngFor="let color of product.colors" class="swatch"
-                                [class.active]="selectedColor === color" [style.background-color]="color.toLowerCase()"
-                                (click)="selectColor(color)" [title]="color"></button>
-                        </div>
-                    </div>
-
-                    <!-- Quantity -->
-                    <div class="option-group">
-                        <span class="option-label">Quantity</span>
-                        <div class="quantity-selector">
-                            <button class="qty-btn" (click)="updateQuantity(-1)">-</button>
-                            <input type="number" [(ngModel)]="quantity" readonly class="qty-input">
-                            <button class="qty-btn" (click)="updateQuantity(1)">+</button>
+                    <div class="thumbnail-list">
+                        <div *ngFor="let thumb of product.images" class="thumbnail-item"
+                            [class.active]="thumb === selectedImage" (click)="selectImage(thumb)">
+                            <img [src]="thumb" alt="Product thumbnail" />
                         </div>
                     </div>
                 </div>
 
-                <div class="product-actions">
-                    <button (click)="onAddToCart()" class="btn main add-to-cart">
-                        Add To Cart
-                    </button>
-                    <button class="btn secondary wishlist">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
+                <!-- Content -->
+                <div class="product-info-container">
+                    <div class="product-header">
+                        <span class="product-brand">{{ product.brand }}</span>
+                        <h1 class="product-title">{{ product.name }}</h1>
 
-                <!-- Meta Info -->
-                <div class="product-meta">
-                    <div class="meta-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
-                            <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
-                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
-                            <line x1="12" y1="20" x2="12.01" y2="20"></line>
-                        </svg>
-                        <span>Smart Connectivity Enabled</span>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <span *ngFor="let star of getStars()" class="star"
+                                    [class.filled]="star < product.rating">
+                                    ★
+                                </span>
+                            </div>
+                            <span class="rating-text">{{ product.rating }} (Verified Buyer Reviews)</span>
+                        </div>
+
+                        <div class="product-price">{{ product.price }} MAD</div>
                     </div>
-                    <div class="meta-item">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="1" y="3" width="15" height="13"></rect>
-                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                        </svg>
-                        <span>Free Installation Included</span>
+
+                    <p class="product-description">
+                        {{ product.description }}
+                    </p>
+
+                    <!-- Product Options -->
+                    <div class="product-options">
+                        <!-- Color Selection -->
+                        <div class="option-group">
+                            <span class="option-label">Color: <strong>{{ selectedColor }}</strong></span>
+                            <div class="color-swatches">
+                                <button *ngFor="let color of product.colors" class="swatch"
+                                    [class.active]="selectedColor === color"
+                                    [style.background-color]="getColorCode(color)" (click)="selectColor(color)"
+                                    [title]="color"></button>
+                            </div>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="option-group">
+                            <span class="option-label">Quantity</span>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" (click)="updateQuantity(-1)">-</button>
+                                <input type="number" [(ngModel)]="quantity" readonly class="qty-input">
+                                <button class="qty-btn" (click)="updateQuantity(1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        <button (click)="onAddToCart()" class="btn main add-to-cart">
+                            Add To Cart
+                        </button>
+                        <button class="btn secondary wishlist">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Meta Info -->
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                                <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                            </svg>
+                            <span>Smart Connectivity Enabled</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                            <span>Free Installation Included</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="loading-state" *ngIf="!product">
-    <div class="spinner"></div>
-    <p>Loading Product Excellence...</p>
 </div>

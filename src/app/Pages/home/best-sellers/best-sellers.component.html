@@ -8,7 +8,7 @@
         <div class="product-grid">
             <div *ngFor="let product of bestSellers; let i = index" class="product-card-wrapper fade-up"
                 [style.animation-delay]="(i * 0.15) + 's'">
-                <app-product-card [product]="product" (addToCart)="onAddToCart($event)">
+                <app-product-card [product]="product" [showBadge]="true" (addToCart)="onAddToCart($event)">
                 </app-product-card>
             </div>
         </div>

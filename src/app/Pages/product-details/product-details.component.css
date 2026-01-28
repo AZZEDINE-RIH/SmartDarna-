@@ -16,7 +16,6 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: var(--spacing-xl);
-    font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
@@ -105,7 +104,6 @@
 }
 
 .product-brand {
-    font-family: var(--font-heading);
     font-weight: 700;
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -114,9 +112,8 @@
 }
 
 .product-title {
-    font-family: var(--font-heading);
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 3.5rem;
+    font-weight: 400;
     color: var(--text-color);
     margin-bottom: 0.5rem;
 }
@@ -133,13 +130,11 @@
 }
 
 .rating-text {
-    font-family: var(--font-body);
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
 .product-price {
-    font-family: var(--font-heading);
     font-size: 2rem;
     font-weight: 800;
     color: var(--text-color);
@@ -147,7 +142,6 @@
 }
 
 .product-description {
-    font-family: var(--font-body);
     font-size: 1.05rem;
     line-height: 1.8;
     color: var(--text-secondary);
@@ -155,7 +149,6 @@
 
 /* ===== OPTIONS ===== */
 .option-label {
-    font-family: var(--font-heading);
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--text-color);
@@ -203,7 +196,6 @@
     height: 45px;
     border: none;
     text-align: center;
-    font-family: var(--font-heading);
     font-weight: 700;
     background-color: transparent;
     color: var(--text-color);
@@ -223,7 +215,6 @@
     align-items: center;
     gap: 0.75rem;
     color: var(--text-secondary);
-    font-family: var(--font-body);
     font-size: 0.9rem;
 }
 

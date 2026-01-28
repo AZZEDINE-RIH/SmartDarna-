@@ -6,10 +6,43 @@
         </div>
 
         <div class="checkout-grid">
-            <!-- Main Content: Payment Methods -->
-            <div class="payment-selection">
+            <!-- Main Content: Forms -->
+            <div class="payment-selection" [formGroup]="checkoutForm">
+
+                <!-- 1. Customer Information -->
+                <div class="section-card card mb-6">
+                    <h2 class="card-title">1. Customer Information</h2>
+                    <div class="card-form">
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label>Full Name</label>
+                                <input type="text" formControlName="fullName" placeholder="John Doe"
+                                    [class.error]="checkoutForm.get('fullName')?.touched && checkoutForm.get('fullName')?.invalid">
+                            </div>
+                            <div class="form-group half">
+                                <label>Phone Number</label>
+                                <input type="tel" formControlName="phone" placeholder="+212 600 000 000"
+                                    [class.error]="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group half">
+                                <label>City</label>
+                                <input type="text" formControlName="city" placeholder="Casablanca"
+                                    [class.error]="checkoutForm.get('city')?.touched && checkoutForm.get('city')?.invalid">
+                            </div>
+                            <div class="form-group half">
+                                <label>Full Address</label>
+                                <input type="text" formControlName="address" placeholder="Appt 4, Building 12, Main St"
+                                    [class.error]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Payment Method -->
                 <div class="section-card card">
-                    <h2 class="card-title">1. Selection Payment Method</h2>
+                    <h2 class="card-title">2. Payment Method</h2>
 
                     <div class="method-options">
                         <!-- COD Option -->
@@ -66,28 +99,28 @@
                         </div>
 
                         <!-- Credit Card Form -->
-                        <div class="card-form" *ngIf="onlineMethod === 'card'" [formGroup]="paymentForm">
+                        <div class="card-form" *ngIf="onlineMethod === 'card'">
                             <div class="form-group full">
                                 <label>Cardholder Name</label>
                                 <input type="text" formControlName="cardName" placeholder="Full name as on card"
-                                    [class.error]="paymentForm.get('cardName')?.touched && paymentForm.get('cardName')?.invalid">
+                                    [class.error]="checkoutForm.get('cardName')?.touched && checkoutForm.get('cardName')?.invalid">
                             </div>
                             <div class="form-group full">
                                 <label>Card Number</label>
                                 <input type="text" formControlName="cardNumber" placeholder="0000 0000 0000 0000"
                                     maxlength="16"
-                                    [class.error]="paymentForm.get('cardNumber')?.touched && paymentForm.get('cardNumber')?.invalid">
+                                    [class.error]="checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid">
                             </div>
                             <div class="form-row">
                                 <div class="form-group half">
                                     <label>Expiry Date</label>
                                     <input type="text" formControlName="expiryDate" placeholder="MM/YY" maxlength="5"
-                                        [class.error]="paymentForm.get('expiryDate')?.touched && paymentForm.get('expiryDate')?.invalid">
+                                        [class.error]="checkoutForm.get('expiryDate')?.touched && checkoutForm.get('expiryDate')?.invalid">
                                 </div>
                                 <div class="form-group half">
                                     <label>CVV</label>
                                     <input type="password" formControlName="cvv" placeholder="123" maxlength="4"
-                                        [class.error]="paymentForm.get('cvv')?.touched && paymentForm.get('cvv')?.invalid">
+                                        [class.error]="checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid">
                                 </div>
                             </div>
                         </div>
@@ -155,8 +188,8 @@
                         </div>
                     </div>
 
-                    <button class="btn main w-full mt-6 place-order-btn" [disabled]="!selectedMethod || isLoading"
-                        (click)="onPlaceOrder()">
+                    <button class="btn main w-full mt-6 place-order-btn" [disabled]="isLoading"
+                        (click)="requestPlaceOrder()">
                         <span *ngIf="!isLoading">Place Order</span>
                         <div class="spinner-small" *ngIf="isLoading"></div>
                     </button>
@@ -171,6 +204,26 @@
                     </p>
                 </div>
             </aside>
+
+            <!-- Login Required Modal -->
+            <div class="modal-overlay fade-in" *ngIf="showLoginModal">
+                <div class="modal-content scale-in">
+                    <div class="modal-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                            <polyline points="10 17 15 12 10 7" />
+                            <line x1="15" y1="12" x2="3" y2="12" />
+                        </svg>
+                    </div>
+                    <h2>Login Required</h2>
+                    <p>You must log in to complete your order.</p>
+                    <p class="text-sm text-muted">Login is required before checkout.</p>
+                    <div class="modal-actions">
+                        <button class="btn main full-width" (click)="goToLogin()">OK</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
