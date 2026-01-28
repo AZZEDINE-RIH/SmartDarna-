@@ -68,7 +68,8 @@ export class Sidebar implements OnInit, OnDestroy {
       id: 'messages',
       label: 'Messages',
       icon: 'mail-outline',
-      type: 'page'
+      type: 'link',
+      route: '/user/messages'
     },
     {
       id: 'declarations',
