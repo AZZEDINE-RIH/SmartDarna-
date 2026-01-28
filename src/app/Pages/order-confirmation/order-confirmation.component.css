@@ -1,0 +1,134 @@
+.confirmation-page {
+    padding: var(--spacing-3xl) 0;
+    background-color: var(--bg-primary);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+.confirmation-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--spacing-3xl);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.success-icon-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-ring {
+    position: absolute;
+    inset: 0;
+    border: 4px solid var(--accent-color);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: pulseRing 2s infinite;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(96, 206, 214, 0.4);
+    animation: scaleCheck 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.confirmation-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+}
+
+.confirmation-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.order-id-badge {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--bg-color);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-xl);
+}
+
+.confirmation-details {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-2xl);
+    font-size: 0.95rem;
+}
+
+.confirmation-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.support-footer {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.support-footer a {
+    color: var(--accent-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+@keyframes pulseRing {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+@keyframes scaleCheck {
+    from {
+        transform: scale(0);
+        rotate: -45deg;
+    }
+
+    to {
+        transform: scale(1);
+        rotate: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .confirmation-title {
+        font-size: 1.75rem;
+    }
+
+    .confirmation-actions {
+        flex-direction: column;
+    }
+
+    .confirmation-card {
+        padding: var(--spacing-xl);
+    }
+}

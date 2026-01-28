@@ -1,0 +1,16 @@
+<section class="best-sellers section" id="best-sellers">
+    <div class="container">
+        <div class="section-header text-center slide-up">
+            <h2 class="section-title">Best Sellers</h2>
+            <p class="subtitle">Our most loved smart home products</p>
+        </div>
+
+        <div class="product-grid">
+            <div *ngFor="let product of bestSellers; let i = index" class="product-card-wrapper fade-up"
+                [style.animation-delay]="(i * 0.15) + 's'">
+                <app-product-card [product]="product" (addToCart)="onAddToCart($event)">
+                </app-product-card>
+            </div>
+        </div>
+    </div>
+</section>

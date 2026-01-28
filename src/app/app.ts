@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './Component/navbar/navbar';
-import { Footer } from './Component/footer/footer';
-import { ScrollTop} from './Component/scroll-top/scroll-top';
+import { Navbar } from './core/navbar/navbar';
+import { Footer } from './core/footer/footer';
+// import { ScrollTop } from './Component/scroll-top/scroll-top';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +10,11 @@ import { ScrollTop} from './Component/scroll-top/scroll-top';
   imports: [
     RouterOutlet,
     Navbar,
-    Footer,
-    ScrollTop
+    Footer
+    // ScrollTop
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class AppComponent {}
+export class AppComponent { }
 

@@ -1,0 +1,36 @@
+<div class="confirmation-page">
+    <div class="container">
+        <div class="confirmation-card card slide-up">
+            <div class="success-icon-wrapper">
+                <div class="success-ring"></div>
+                <div class="success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="confirmation-title">Order <span class="text-primary">Confirmed!</span></h1>
+            <p class="confirmation-subtitle">Thank you for choosing SmartDarna. Your smart life starts now.</p>
+
+            <div class="order-id-badge">
+                Order ID: <strong>{{ orderId }}</strong>
+            </div>
+
+            <div class="confirmation-details">
+                <p>We've received your order and are currently processing it. You will receive a confirmation email with
+                    your order details and tracking information shortly.</p>
+            </div>
+
+            <div class="confirmation-actions">
+                <button routerLink="/collection" class="btn main">Continue Shopping</button>
+                <button routerLink="/" class="btn ghost">Back to Home</button>
+            </div>
+
+            <div class="support-footer">
+                <p>Need help with your order? <a routerLink="/contact">Contact Support</a></p>
+            </div>
+        </div>
+    </div>
+</div>
