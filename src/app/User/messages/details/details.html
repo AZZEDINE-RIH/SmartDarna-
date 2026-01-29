@@ -24,13 +24,13 @@
           <button
             (click)="toggleMessageStatus()"
             class="px-4 py-2 text-sm font-medium rounded-lg bg-[#60CED6] hover:bg-[#4db8c2] text-white transition-colors">
-            {{ message.status === 'unread' ? 'Mark as Read' : 'Mark as Unread' }}
+            {{ message.isRead ? 'Mark as Unread' : 'Mark as Read' }}
           </button>
 
           <!-- Archive -->
           <button
             (click)="archiveMessage()"
-            *ngIf="message.status !== 'archived'"
+            *ngIf="!message.isArchived"
             class="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-colors">
             Archive
           </button>
@@ -58,11 +58,9 @@
 
               <!-- Status badge -->
               <div class="mt-2 flex items-center space-x-2">
-                <span
-                  [class]="'w-3 h-3 rounded-full ' + getStatusInfo(message.status).color">
-                </span>
+                <span [class]="'w-3 h-3 rounded-full ' + getStatusInfo().color"></span>
                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  {{ getStatusInfo(message.status).label }}
+                  {{ getStatusInfo().label }}
                 </span>
               </div>
             </div>

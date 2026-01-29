@@ -12,8 +12,10 @@ interface Message {
   date: string;
   time: string;
   avatarUrl: string;
-  status: 'unread' | 'read' | 'archived';
   relativeTime: string;
+
+  isRead: boolean;
+  isArchived: boolean;
 }
 
 @Component({
@@ -29,16 +31,6 @@ export class Details {
   @Input() message!: Message;
   @Output() backToList = new EventEmitter<void>();
 
-  // Available statuses
-  statuses = [
-    { value: 'unread', label: 'Unread', color: 'bg-cyan-400' },
-    { value: 'read', label: 'Read', color: 'bg-green-400' },
-    { value: 'archived', label: 'Archived', color: 'bg-gray-400' }
-  ];
-
-  showDetails = false;
-
-
   // Reply draft
   replyContent = '';
 
@@ -48,32 +40,34 @@ export class Details {
   }
 
   toggleMessageStatus(): void {
-    if (this.message.status === 'unread') {
-      this.message.status = 'read';
-    } else if (this.message.status === 'read') {
-      this.message.status = 'unread';
-    }
+    // Toggle read/unread
+    this.message.isRead = !this.message.isRead;
   }
 
   archiveMessage(): void {
-    this.message.status = 'archived';
+    this.message.isArchived = true;
   }
 
   sendReply(): void {
     if (this.replyContent.trim()) {
       console.log('Reply sent:', this.replyContent);
-      // In a real app, this would send the reply
       this.replyContent = '';
+
       // Mark as read when replying
-      if (this.message.status === 'unread') {
-        this.message.status = 'read';
+      if (!this.message.isRead) {
+        this.message.isRead = true;
       }
     }
   }
 
-  // Get status display info
-  getStatusInfo(status: string): { label: string, color: string } {
-    const statusObj = this.statuses.find(s => s.value === status);
-    return statusObj || { label: 'Unknown', color: 'bg-gray-400' };
+  // Optional: helper to get display label
+  getStatusInfo(): { label: string, color: string } {
+    if (this.message.isArchived) {
+      return { label: 'Archived', color: 'bg-gray-400' };
+    } else if (this.message.isRead) {
+      return { label: 'Read', color: 'bg-green-400' };
+    } else {
+      return { label: 'Unread', color: 'bg-cyan-400' };
+    }
   }
 }

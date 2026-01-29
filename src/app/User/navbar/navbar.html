@@ -58,11 +58,11 @@
           >
             <div
               class="absolute w-8 h-8 rounded-full z-10 transition-transform duration-300"
-              [ngClass]="isDarkMode ? 'bg-slate-700' : 'bg-yellow-400'"
+              [ngClass]="isDarkMode ? 'bg-[#60CED6]' : 'bg-yellow-400'"
               [style.transform]="isDarkMode ? 'translateX(40px)' : 'translateX(0)'"
             ></div>
-            <div class="relative w-full flex items-center justify-between px-2 z-10">
-              <ion-icon name="sunny-outline" class="transition-colors text-[16px]" [ngClass]="!isDarkMode ? 'text-white' : 'text-gray-600'"></ion-icon>
+            <div class="relative w-full flex items-center justify-between pl-2 pr-1.5 z-10">
+              <ion-icon name="sunny-outline" class="transition-colors text-[16px]" [ngClass]="!isDarkMode ? 'text-white' : 'text-gray-500'"></ion-icon>
               <ion-icon name="moon-outline" class="transition-colors text-[16px]" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-600'"></ion-icon>
             </div>
           </button>
