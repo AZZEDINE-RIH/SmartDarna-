@@ -49,9 +49,9 @@ export interface RevenueGrowth {
   providedIn: 'root'
 })
 export class DashboardStatsService {
-  private readonly ADMIN_ID = '09bd3487-7e50-42c1-a3eb-edaa5f6743f1';
-
   constructor(private supabaseService: SupabaseService) {}
+
+  private readonly finalizedOrderStatuses = ['completed', 'delivered'];
 
   /**
    * Get all dashboard statistics from database
@@ -93,13 +93,41 @@ export class DashboardStatsService {
         totalOrders: 0
       };
     }
+
+  }
+
+  async getSellersGrowth(): Promise<{ growth: number; percentage: string }> {
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const previousMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const previousMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    try {
+      const [currentMonthSellers, previousMonthSellers] = await Promise.all([
+        this.getProfilesCountInDateRange(currentMonthStart, now, 'seller'),
+        this.getProfilesCountInDateRange(previousMonthStart, previousMonthEnd, 'seller')
+      ]);
+
+      const growth = currentMonthSellers - previousMonthSellers;
+      const percentage = previousMonthSellers > 0
+        ? ((growth / previousMonthSellers) * 100).toFixed(1)
+        : '0';
+
+      return {
+        growth,
+        percentage: growth >= 0 ? `+${percentage}%` : `${percentage}%`
+      };
+    } catch (error) {
+      console.error('Error calculating sellers growth:', error);
+      return { growth: 0, percentage: '0%' };
+    }
   }
 
   /**
    * Get total users count
    */
   async getTotalUsers(): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('profiles')
       .select('id', { count: 'exact', head: true })
       .eq('role', 'user');
@@ -109,14 +137,14 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
    * Get total sellers count
    */
   async getTotalSellers(): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('profiles')
       .select('id', { count: 'exact', head: true })
       .eq('role', 'seller');
@@ -126,14 +154,14 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
    * Get total products count
    */
   async getTotalProducts(): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('products')
       .select('id', { count: 'exact', head: true });
 
@@ -142,14 +170,14 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
    * Get total orders count
    */
   async getTotalOrders(): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('orders')
       .select('id', { count: 'exact', head: true });
 
@@ -158,14 +186,14 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
    * Get pending sellers count
    */
   async getPendingSellers(): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('profiles')
       .select('id', { count: 'exact', head: true })
       .eq('role', 'seller')
@@ -176,7 +204,7 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
@@ -184,51 +212,77 @@ export class DashboardStatsService {
    */
   async getTotalRevenue(): Promise<number> {
     const { data, error } = await this.supabaseService.getClient()
-      .from('orders')
-      .select('total_amount')
-      .eq('status', 'completed');
+      .from('order_items')
+      .select('quantity, price_per_item');
 
     if (error) {
       console.error('Error fetching total revenue:', error);
       return 0;
     }
 
-    return data?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+    return data?.reduce((sum: number, item: any) => {
+      const qty = item?.quantity ?? 0;
+      const price = item?.price_per_item ?? 0;
+      return sum + qty * price;
+    }, 0) || 0;
   }
 
   /**
    * Get revenue by category
    */
   async getRevenueByCategory(): Promise<CategoryRevenue[]> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { data: ordersData, error: ordersError } = await this.supabaseService.getClient()
       .from('orders')
+      .select('id')
+      .in('status', this.finalizedOrderStatuses);
+
+    if (ordersError) {
+      console.error('Error fetching finalized orders for revenue by category:', ordersError);
+      return [];
+    }
+
+    const orderIds = (ordersData || []).map((o: any) => o.id).filter(Boolean);
+    if (orderIds.length === 0) {
+      return [];
+    }
+
+    const { data, error } = await this.supabaseService.getClient()
+      .from('order_items')
       .select(`
-        total_amount,
-        order_items!inner(
-          products!inner(
-            category
-          )
+        quantity,
+        price_per_item,
+        products(
+          category_id
         )
       `)
-      .eq('status', 'completed');
+      .in('order_id', orderIds);
 
     if (error) {
       console.error('Error fetching revenue by category:', error);
       return [];
     }
 
-    // Group revenue by category
+    const { data: categoriesData, error: categoriesError } = await this.supabaseService.getClient()
+      .from('categories')
+      .select('id, name');
+
+    if (categoriesError) {
+      console.error('Error fetching categories:', categoriesError);
+    }
+
+    const categoryNameById = new Map<string, string>();
+    (categoriesData || []).forEach((c: any) => {
+      if (c?.id) categoryNameById.set(c.id, c.name || 'Other');
+    });
+
     const categoryRevenue: { [key: string]: number } = {};
-    
-    data?.forEach((order: any) => {
-      // Handle the nested structure correctly
-      const orderItems = order.order_items as any[];
-      if (orderItems && orderItems.length > 0) {
-        const firstItem = orderItems[0];
-        const product = firstItem.products as any;
-        const category = product?.category || 'Other';
-        categoryRevenue[category] = (categoryRevenue[category] || 0) + (order.total_amount || 0);
-      }
+
+    data?.forEach((row: any) => {
+      const product = row.products as any;
+      const categoryId = product?.category_id as string | undefined;
+      const categoryName = (categoryId && categoryNameById.get(categoryId)) || 'Other';
+      const amount = (row.quantity || 0) * (row.price_per_item || 0);
+      categoryRevenue[categoryName] = (categoryRevenue[categoryName] || 0) + amount;
     });
 
     return Object.entries(categoryRevenue).map(([category_name, revenue]) => ({
@@ -248,8 +302,8 @@ export class DashboardStatsService {
 
     try {
       const [currentMonthUsers, previousMonthUsers] = await Promise.all([
-        this.getUsersCountInDateRange(currentMonthStart, now),
-        this.getUsersCountInDateRange(previousMonthStart, previousMonthEnd)
+        this.getProfilesCountInDateRange(currentMonthStart, now, 'user'),
+        this.getProfilesCountInDateRange(previousMonthStart, previousMonthEnd, 'user')
       ]);
 
       const growth = currentMonthUsers - previousMonthUsers;
@@ -338,7 +392,7 @@ export class DashboardStatsService {
         total_amount,
         status,
         created_at,
-        profiles!inner(
+        profiles:profiles!orders_customer_id_fkey(
           name
         ),
         order_items!inner(
@@ -383,25 +437,39 @@ export class DashboardStatsService {
    * Helper method to get users count in date range
    */
   private async getUsersCountInDateRange(startDate: Date, endDate: Date): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    return this.getProfilesCountInDateRange(startDate, endDate, 'user');
+  }
+
+  private async getProfilesCountInDateRange(
+    startDate: Date,
+    endDate: Date,
+    role?: 'user' | 'seller' | 'admin'
+  ): Promise<number> {
+    let query = this.supabaseService.getClient()
       .from('profiles')
       .select('id', { count: 'exact', head: true })
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString());
 
+    if (role) {
+      query = query.eq('role', role);
+    }
+
+    const { count, error } = await query;
+
     if (error) {
-      console.error('Error fetching users count in date range:', error);
+      console.error('Error fetching profiles count in date range:', error);
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
    * Helper method to get orders count in date range
    */
   private async getOrdersCountInDateRange(startDate: Date, endDate: Date): Promise<number> {
-    const { data, error } = await this.supabaseService.getClient()
+    const { count, error } = await this.supabaseService.getClient()
       .from('orders')
       .select('id', { count: 'exact', head: true })
       .gte('created_at', startDate.toISOString())
@@ -412,7 +480,7 @@ export class DashboardStatsService {
       return 0;
     }
 
-    return data?.length || 0;
+    return count ?? 0;
   }
 
   /**
@@ -422,7 +490,7 @@ export class DashboardStatsService {
     const { data, error } = await this.supabaseService.getClient()
       .from('orders')
       .select('total_amount')
-      .eq('status', 'completed')
+      .in('status', this.finalizedOrderStatuses)
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString());
 
@@ -444,7 +512,7 @@ export class DashboardStatsService {
     const { data, error } = await this.supabaseService.getClient()
       .from('orders')
       .select('total_amount, created_at')
-      .eq('status', 'completed')
+      .in('status', this.finalizedOrderStatuses)
       .gte('created_at', weekStart.toISOString())
       .lte('created_at', now.toISOString())
       .order('created_at', { ascending: true });

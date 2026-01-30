@@ -225,7 +225,7 @@ export class AuthService {
       
       switch (userRole) {
         case 'admin':
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard/overview']);
           break;
         case 'seller':
           this.router.navigate(['/vendeur-dashboard']);

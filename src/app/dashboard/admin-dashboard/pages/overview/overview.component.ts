@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardStatsService } from '../../../../services/dashboard-stats.service';
 
@@ -11,7 +11,12 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
       <!-- Stats Cards -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon blue">👥</div>
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M4 21a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="stat-content">
             <h3>Total Users</h3>
             <p class="stat-number">{{ stats.totalUsers.toLocaleString() }}</p>
@@ -22,16 +27,28 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon green">🏪</div>
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M3 7h18l-1 13H4L3 7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M8 7a4 4 0 0 1 8 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="stat-content">
             <h3>Total Sellers</h3>
             <p class="stat-number">{{ stats.totalSellers.toLocaleString() }}</p>
-            <span class="stat-change positive">+8.2%</span>
+            <span class="stat-change" [class.positive]="sellersGrowth.growth >= 0">
+              {{ sellersGrowth.percentage }}
+            </span>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon purple">💰</div>
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M16 7.5c0-1.93-1.79-3.5-4-3.5s-4 1.57-4 3.5S9.79 11 12 11s4 1.57 4 3.5S14.21 18 12 18s-4-1.57-4-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="stat-content">
             <h3>Total Revenue</h3>
             <p class="stat-number">{{ stats.totalRevenue.toLocaleString() }}</p>
@@ -42,7 +59,13 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon orange">📦</div>
+          <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M21 8l-9-5-9 5 9 5 9-5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M3 8v8l9 5 9-5V8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M12 13v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
           <div class="stat-content">
             <h3>Total Orders</h3>
             <p class="stat-number">{{ stats.totalOrders.toLocaleString() }}</p>
@@ -188,13 +211,19 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
+      color: #3b82f6;
     }
 
-    .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .stat-icon.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .stat-icon svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(59, 130, 246, 0.06) 100%); }
+    .stat-icon.green { background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(59, 130, 246, 0.06) 100%); }
+    .stat-icon.purple { background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(59, 130, 246, 0.06) 100%); }
+    .stat-icon.orange { background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(59, 130, 246, 0.06) 100%); }
 
     .stat-content h3 {
       margin: 0 0 0.5rem 0;
@@ -215,7 +244,7 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
       font-weight: 600;
     }
 
-    .stat-change.positive { color: #10b981; }
+    .stat-change.positive { color: #3b82f6; }
     .stat-change.negative { color: #ef4444; }
 
     .charts-section {
@@ -438,7 +467,7 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
     }
   `]
 })
-export class AdminOverviewComponent implements OnInit {
+export class AdminOverviewComponent implements OnInit, AfterViewInit {
   stats = {
     totalUsers: 0,
     totalSellers: 0,
@@ -466,13 +495,22 @@ export class AdminOverviewComponent implements OnInit {
     await this.loadDashboardData();
   }
 
+  async ngAfterViewInit() {
+    // Refresh data after view is initialized to ensure correct user context
+    await this.loadDashboardData();
+  }
+
   async loadDashboardData() {
     try {
       this.isLoading = true;
 
+      // Add a small delay to ensure auth context is properly set
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const [
         statsData,
         usersGrowthData,
+        sellersGrowthData,
         ordersGrowthData,
         revenueGrowthData,
         weeklyRevenueData,
@@ -481,6 +519,7 @@ export class AdminOverviewComponent implements OnInit {
       ] = await Promise.all([
         this.dashboardStatsService.getDashboardStats(),
         this.dashboardStatsService.getUsersGrowth(),
+        this.dashboardStatsService.getSellersGrowth(),
         this.dashboardStatsService.getOrdersGrowth(),
         this.dashboardStatsService.getRevenueGrowth(),
         this.dashboardStatsService.getWeeklyRevenue(),
@@ -490,6 +529,7 @@ export class AdminOverviewComponent implements OnInit {
 
       this.stats = statsData;
       this.usersGrowth = usersGrowthData;
+      this.sellersGrowth = sellersGrowthData;
       this.ordersGrowth = ordersGrowthData;
       this.revenueGrowth = revenueGrowthData;
       this.weeklyRevenue = weeklyRevenueData;

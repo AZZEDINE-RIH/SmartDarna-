@@ -17,7 +17,7 @@ import { RoleGuard } from './guards/role.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo:'/dashboard',
+    redirectTo:'/dashboard/overview',
     pathMatch: 'full'
   },
   {
@@ -83,6 +83,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/dashboard'
+    redirectTo: '/dashboard/overview'
   }
 ];
