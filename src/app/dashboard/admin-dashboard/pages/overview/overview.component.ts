@@ -1,148 +1,548 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
-import { AdminDashboardService } from '../../../../services/admin-dashboard.service';
-import { AdminStatCardComponent } from '../../components/stat-card/stat-card.component';
-import { ProductPerformanceComponent } from '../../components/product-performance-chart/product-performance-chart.component';
-import { SellerRequestsComponent } from '../../components/seller-requests/seller-requests.component';
-import { RecentTransactionsComponent } from '../../components/recent-transactions/recent-transactions.component';
+import { DashboardStatsService } from '../../../../services/dashboard-stats.service';
 
 @Component({
   selector: 'app-admin-overview',
   standalone: true,
-  imports: [
-    CommonModule,
-    AdminStatCardComponent,
-    ProductPerformanceComponent,
-    SellerRequestsComponent,
-    RecentTransactionsComponent
-  ],
+  imports: [CommonModule],
   template: `
-    <header class="top-bar">
-      <h1>Dashboard Overview</h1>
-      <div class="date">{{ today | date:'fullDate' }}</div>
-    </header>
+    <div class="overview-dashboard" *ngIf="!isLoading; else loadingTemplate">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">👥</div>
+          <div class="stat-content">
+            <h3>Total Users</h3>
+            <p class="stat-number">{{ stats.totalUsers.toLocaleString() }}</p>
+            <span class="stat-change" [class.positive]="usersGrowth.growth >= 0">
+              {{ usersGrowth.percentage }}
+            </span>
+          </div>
+        </div>
 
-    <div class="dashboard-grid">
-      <!-- KPIs -->
-      <div class="kpi-section">
-        <app-admin-stat-card
-          title="Total Users"
-          [value]="totalUsers"
-          icon="icon-users"
-          iconClass="blue"
-          [loading]="isLoading">
-        </app-admin-stat-card>
-        
-        <app-admin-stat-card
-          title="Total Sellers"
-          [value]="totalSellers"
-          icon="icon-sellers"
-          iconClass="green"
-          [loading]="isLoading">
-        </app-admin-stat-card>
-        
-        <app-admin-stat-card
-          title="Total Revenue"
-          [value]="totalRevenue"
-          icon="icon-revenue"
-          iconClass="purple"
-          [loading]="isLoading">
-        </app-admin-stat-card>
+        <div class="stat-card">
+          <div class="stat-icon green">🏪</div>
+          <div class="stat-content">
+            <h3>Total Sellers</h3>
+            <p class="stat-number">{{ stats.totalSellers.toLocaleString() }}</p>
+            <span class="stat-change positive">+8.2%</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">💰</div>
+          <div class="stat-content">
+            <h3>Total Revenue</h3>
+            <p class="stat-number">{{ stats.totalRevenue.toLocaleString() }}</p>
+            <span class="stat-change" [class.positive]="revenueGrowth.growth >= 0">
+              {{ revenueGrowth.percentage }}
+            </span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon orange">📦</div>
+          <div class="stat-content">
+            <h3>Total Orders</h3>
+            <p class="stat-number">{{ stats.totalOrders.toLocaleString() }}</p>
+            <span class="stat-change" [class.positive]="ordersGrowth.growth >= 0">
+              {{ ordersGrowth.percentage }}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <!-- Charts & Requests -->
-      <div class="mid-section">
-        <div class="chart-area">
-          <app-product-performance></app-product-performance>
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Revenue Overview</h3>
+            <select class="period-select">
+              <option>Last 7 days</option>
+              <option>Last 30 days</option>
+            </select>
+          </div>
+          <div class="chart-content">
+            <div class="chart-placeholder">
+              <div class="chart-bars">
+                <div class="bar" 
+                     *ngFor="let item of weeklyRevenue" 
+                     [style.height.%]="getBarHeight(item.revenue)">
+                </div>
+              </div>
+              <div class="chart-labels">
+                <span *ngFor="let item of weeklyRevenue">{{ item.day }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="requests-area">
-          <app-seller-requests></app-seller-requests>
+
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Product Categories</h3>
+          </div>
+          <div class="chart-content">
+            <div class="category-list">
+              <div class="category-item" *ngFor="let category of categoryRevenue">
+                <div class="category-info">
+                  <span class="category-dot" [ngClass]="getCategoryColor(category.category_name)"></span>
+                  <span>{{ category.category_name }}</span>
+                </div>
+                <span class="category-value">{{ getCategoryPercentage(category.revenue) }}%</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Recent Transactions -->
-      <div class="bottom-section">
-        <app-recent-transactions></app-recent-transactions>
+      <!-- Recent Activity -->
+      <div class="activity-section">
+        <div class="activity-card">
+          <div class="activity-header">
+            <h3>Recent Transactions</h3>
+            <button class="view-all-btn">View All</button>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item" *ngFor="let transaction of recentTransactions">
+              <div class="activity-icon" [ngClass]="getActivityIconClass(transaction.status)">
+                ✓
+              </div>
+              <div class="activity-content">
+                <p class="activity-title">Order #{{ transaction.order_id.slice(0, 8) }}</p>
+                <p class="activity-desc">{{ transaction.product_name }} - {{ transaction.customer_name }}</p>
+              
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Loading Template -->
+    <ng-template #loadingTemplate>
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading dashboard data...</p>
+      </div>
+    </ng-template>
   `,
   styles: [`
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .top-bar h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #0f172a;
-    }
-
-    .date {
-      color: #64748b;
-    }
-
-    .dashboard-grid {
+    .overview-dashboard {
       display: flex;
       flex-direction: column;
       gap: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
     }
 
-    .kpi-section {
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 400px;
+      color: #64748b;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
     }
 
-    .mid-section {
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .stat-icon.blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .stat-icon.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+    .stat-content h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .stat-change {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .stat-change.positive { color: #10b981; }
+    .stat-change.negative { color: #ef4444; }
+
+    .charts-section {
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 1.5rem;
     }
 
+    .chart-container {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .chart-header h3 {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .period-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: white;
+      font-size: 0.875rem;
+      color: #64748b;
+      cursor: pointer;
+    }
+
+    .chart-placeholder {
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      height: 150px;
+      width: 100%;
+    }
+
+    .bar {
+      flex: 1;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 4px 4px 0 0;
+      min-height: 20px;
+      transition: all 0.2s;
+    }
+
+    .chart-labels {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .category-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .category-dot.blue { background: #667eea; }
+    .category-dot.green { background: #10b981; }
+    .category-dot.purple { background: #8b5cf6; }
+    .category-dot.orange { background: #f59e0b; }
+
+    .category-value {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .activity-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .activity-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .activity-header h3 {
+      margin: 0;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .view-all-btn {
+      background: none;
+      border: 1px solid #e2e8f0;
+      color: #667eea;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-all-btn:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .activity-item:hover {
+      background: #f8fafc;
+    }
+
+    .activity-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    .activity-icon.green { background: #10b981; }
+    .activity-icon.blue { background: #3b82f6; }
+    .activity-icon.orange { background: #f59e0b; }
+    .activity-icon.red { background: #ef4444; }
+
+    .activity-content {
+      flex: 1;
+    }
+
+    .activity-title {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .activity-desc {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .activity-time {
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
     @media (max-width: 1024px) {
-      .mid-section {
+      .charts-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
         grid-template-columns: 1fr;
       }
     }
   `]
 })
 export class AdminOverviewComponent implements OnInit {
-  today = new Date();
-  totalUsers: number | null = null;
-  totalSellers: number | null = null;
-  totalRevenue: number | null = null;
+  stats = {
+    totalUsers: 0,
+    totalSellers: 0,
+    totalProducts: 0,
+    totalRevenue: 0,
+    pendingSellers: 0,
+    totalOrders: 0
+  };
+
+  usersGrowth = { growth: 0, percentage: '0%' };
+  sellersGrowth = { growth: 0, percentage: '0%' };
+  revenueGrowth = { growth: 0, percentage: '0%' };
+  ordersGrowth = { growth: 0, percentage: '0%' };
+
+  weeklyRevenue: { day: string; revenue: number }[] = [];
+  categoryRevenue: { category_name: string; revenue: number }[] = [];
+  recentTransactions: any[] = [];
+
   isLoading = true;
+  totalRevenue = 0;
 
-  constructor(private adminService: AdminDashboardService) {}
+  constructor(private dashboardStatsService: DashboardStatsService) {}
 
-  ngOnInit(): void {
-    this.loadDashboardData();
+  async ngOnInit() {
+    await this.loadDashboardData();
   }
 
-  loadDashboardData(): void {
-    this.isLoading = true;
-    
-    forkJoin({
-      users: this.adminService.getTotalUsers(),
-      sellers: this.adminService.getTotalSellers(),
-      revenue: this.adminService.getTotalRevenue()
-    }).subscribe({
-      next: (data) => {
-        this.totalUsers = data.users;
-        this.totalSellers = data.sellers;
-        this.totalRevenue = data.revenue;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Error loading KPIs:', err);
-        this.isLoading = false;
-      }
-    });
+  async loadDashboardData() {
+    try {
+      this.isLoading = true;
+
+      const [
+        statsData,
+        usersGrowthData,
+        ordersGrowthData,
+        revenueGrowthData,
+        weeklyRevenueData,
+        categoryRevenueData,
+        recentTransactionsData
+      ] = await Promise.all([
+        this.dashboardStatsService.getDashboardStats(),
+        this.dashboardStatsService.getUsersGrowth(),
+        this.dashboardStatsService.getOrdersGrowth(),
+        this.dashboardStatsService.getRevenueGrowth(),
+        this.dashboardStatsService.getWeeklyRevenue(),
+        this.dashboardStatsService.getRevenueByCategory(),
+        this.dashboardStatsService.getRecentTransactions(5)
+      ]);
+
+      this.stats = statsData;
+      this.usersGrowth = usersGrowthData;
+      this.ordersGrowth = ordersGrowthData;
+      this.revenueGrowth = revenueGrowthData;
+      this.weeklyRevenue = weeklyRevenueData;
+      this.categoryRevenue = categoryRevenueData;
+      this.recentTransactions = recentTransactionsData;
+      this.totalRevenue = statsData.totalRevenue;
+
+    } catch (error) {
+      console.error('Error loading dashboard data:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  getBarHeight(revenue: number): number {
+    if (this.weeklyRevenue.length === 0) return 0;
+    const maxRevenue = Math.max(...this.weeklyRevenue.map(item => item.revenue));
+    return maxRevenue > 0 ? (revenue / maxRevenue) * 100 : 0;
+  }
+
+  getCategoryPercentage(revenue: number): string {
+    if (this.totalRevenue === 0) return '0';
+    return ((revenue / this.totalRevenue) * 100).toFixed(1);
+  }
+
+  getCategoryColor(categoryName: string): string {
+    const colors: { [key: string]: string } = {
+      'Electronics': 'blue',
+      'Clothing': 'green',
+      'Food': 'purple',
+      'Other': 'orange'
+    };
+    return colors[categoryName] || 'orange';
+  }
+
+  getActivityIconClass(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'completed': 'green',
+      'pending': 'blue',
+      'processing': 'orange',
+      'cancelled': 'red'
+    };
+    return statusMap[status] || 'blue';
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
   }
 }

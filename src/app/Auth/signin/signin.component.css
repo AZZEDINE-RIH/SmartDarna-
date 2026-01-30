@@ -1,0 +1,18 @@
+.btn.btn-outline-secondary {
+  background-color: transparent;
+  border: 2px solid #6c757d;
+  color: #6c757d;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.form-outline {
+  min-height: 100vh;
+}

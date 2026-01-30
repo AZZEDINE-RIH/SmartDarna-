@@ -1,60 +1,54 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SupabaseAuthService } from '../../app/services/supabase-auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class RegisterComponent {
-  name = signal('');
-  email = signal('');
-  password = signal('');
-  passwordConfirm = signal('');
+  registerForm: FormGroup;
   errorMessage = signal('');
   successMessage = signal('');
   isLoading = signal(false);
+  isFlipped = signal(false);
 
   private supabaseAuthService = inject(SupabaseAuthService);
   private router = inject(Router);
+  private fb = inject(FormBuilder);
+
+  constructor() {
+    this.registerForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      passwordConfirm: ['', [Validators.required]],
+      role: ['', [Validators.required]],
+      phone: [''],
+      address: ['']
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  toggleFlip(): void {
+    this.isFlipped.set(!this.isFlipped());
+    this.router.navigate(['/login']);
+  }
 
   async onRegister(): Promise<void> {
-    const name = this.name().trim();
-    const email = this.email().trim();
-    const password = this.password();
-    const passwordConfirm = this.passwordConfirm();
-
-    // Validation
-    if (!name || !email || !password || !passwordConfirm) {
-      this.errorMessage.set('All fields are required');
+    if (this.registerForm.invalid) {
+      this.markFormGroupTouched(this.registerForm);
+      this.errorMessage.set('Please fill in all required fields correctly');
       this.successMessage.set('');
       return;
     }
 
-    if (password !== passwordConfirm) {
-      this.errorMessage.set('Passwords do not match');
-      this.successMessage.set('');
-      return;
-    }
-
-    if (password.length < 6) {
-      this.errorMessage.set('Password must be at least 6 characters long');
-      this.successMessage.set('');
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      this.errorMessage.set('Please enter a valid email address');
-      this.successMessage.set('');
-      return;
-    }
+    const formValues = this.registerForm.value;
+    const { name, email, password, role, phone, address } = formValues;
 
     // Clear messages and set loading
     this.errorMessage.set('');
@@ -63,7 +57,7 @@ export class RegisterComponent {
 
     try {
       // Register with Supabase
-      const result = await this.supabaseAuthService.signUp(email, password, name, 'user');
+      const result = await this.supabaseAuthService.signUp(email, password, name, phone || undefined, address || undefined, role);
 
       if (result.success) {
         this.successMessage.set('Registration successful! Redirecting to login...');
@@ -93,5 +87,23 @@ export class RegisterComponent {
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  private passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const passwordConfirm = form.get('passwordConfirm')?.value;
+    
+    if (password && passwordConfirm && password !== passwordConfirm) {
+      form.get('passwordConfirm')?.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    
+    return null;
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+    });
   }
 }

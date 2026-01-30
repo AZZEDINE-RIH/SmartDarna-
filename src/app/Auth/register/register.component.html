@@ -1,0 +1,117 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h2>Create Account</h2>
+      <p>Join our platform today</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="formData.name"
+          name="name"
+          required
+          placeholder="Enter your full name"
+          class="form-control"
+        />
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="formData.email"
+          name="email"
+          required
+          placeholder="Enter your email"
+          class="form-control"
+        />
+      </div>
+
+      <!-- Role Field -->
+      <div class="form-group">
+        <label for="role">Account Type</label>
+        <select
+          id="role"
+          [(ngModel)]="formData.role"
+          name="role"
+          class="form-control"
+        >
+          <option value="user">Customer</option>
+          <option value="seller">Seller</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="formData.password"
+          name="password"
+          required
+          placeholder="Enter your password (min 6 characters)"
+          class="form-control"
+        />
+        <div class="password-strength">
+          <span *ngIf="formData.password.length < 6 && formData.password" class="weak">
+            Password must be at least 6 characters
+          </span>
+          <span *ngIf="formData.password.length >= 6" class="strong">
+            Password strength: Good
+          </span>
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+          placeholder="Confirm your password"
+          class="form-control"
+        />
+        <div *ngIf="confirmPassword && formData.password !== confirmPassword" class="password-mismatch">
+          Passwords do not match
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading || !isFormValid"
+        class="btn btn-primary btn-block"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading">Creating Account...</span>
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="auth-footer">
+      <p>Already have an account? <a href="#" (click)="goToLogin()">Sign in</a></p>
+    </div>
+  </div>
+</div>

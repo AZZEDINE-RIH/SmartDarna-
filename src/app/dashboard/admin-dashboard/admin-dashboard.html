@@ -1,43 +1,71 @@
-<div class="admin-container">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="logo">
-      <h2>SmartDarna</h2>
-    </div>
-    <nav class="nav-menu">
-      <a routerLink="overview" routerLinkActive="active" class="nav-item">
-        <i class="icon-dashboard"></i> Dashboard
-      </a>
-      <a routerLink="users" routerLinkActive="active" class="nav-item">
-        <i class="icon-users"></i> Users
-      </a>
-      <a routerLink="sellers" routerLinkActive="active" class="nav-item">
-        <i class="icon-sellers"></i> Sellers
-      </a>
-      <a routerLink="products" routerLinkActive="active" class="nav-item">
-        <i class="icon-products"></i> Products
-      </a>
-      <a routerLink="orders" routerLinkActive="active" class="nav-item">
-        <i class="icon-orders"></i> Orders
-      </a>
-      <a routerLink="settings" routerLinkActive="active" class="nav-item">
-        <i class="icon-settings"></i> Settings
-      </a>
-    </nav>
-    <div class="user-profile">
-      <div class="avatar">{{ user?.name?.charAt(0) || 'A' }}</div>
-      <div class="info">
-        <p class="name">{{ user?.name || 'Admin' }}</p>
-        <p class="role">Administrator</p>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-top">
+      <h1>SmartDarna Admin Dashboard</h1>
+      <div class="header-info">
+        <span class="user-name">{{ user?.name }}</span>
+        <span class="user-email">{{ user?.email }}</span>
+        <button (click)="refreshData()" class="refresh-btn" [disabled]="isLoading">
+          {{ isLoading ? 'Loading...' : 'Refresh' }}
+        </button>
       </div>
-      <button (click)="logout()" class="logout-btn">
-        Logout
-      </button>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-banner">
+    <p>⚠️ {{ error }}</p>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <p>📊 Loading dashboard data from database...</p>
+    </div>
+
+    <!-- KPI Cards Section -->
+    <div class="stats-grid" *ngIf="!isLoading">
+      <app-dashboard-stat-card
+        icon="👥"
+        title="Total Users"
+        [value]="kpis.totalUsers"
+        subtitle="Active registered users"
+        [isCurrency]="false">
+      </app-dashboard-stat-card>
+
+      <app-dashboard-stat-card
+        icon="🏪"
+        title="Total Sellers"
+        [value]="kpis.totalSellers"
+        subtitle="Approved sellers"
+        [isCurrency]="false">
+      </app-dashboard-stat-card>
+
+      <app-dashboard-stat-card
+        icon="💰"
+        title="Total Revenue"
+        [value]="kpis.totalRevenue"
+        subtitle="Total revenue from payments"
+        [isCurrency]="true">
+      </app-dashboard-stat-card>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="main-content-grid" *ngIf="!isLoading">
+      <!-- Left Column: Chart -->
+      <div class="chart-section">
+        <app-product-performance-chart></app-product-performance-chart>
+      </div>
+
+      <!-- Right Column: Seller Requests -->
+      <div class="seller-section">
+        <app-seller-requests></app-seller-requests>
+      </div>
+    </div>
+
+    <!-- Recent Transactions Section -->
+    <div class="transactions-section" *ngIf="!isLoading">
+      <app-recent-transactions></app-recent-transactions>
+    </div>
+  </div>
 </div>

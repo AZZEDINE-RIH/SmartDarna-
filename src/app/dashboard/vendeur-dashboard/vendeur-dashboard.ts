@@ -13,6 +13,6 @@ export class VendeurDashboardComponent {
   user: LoggedInUser | null = null;
 
   constructor(private authService: AuthService) {
-    this.user = this.authService.getUser();
+    this.user = this.authService.getUserSync();
   }
 }

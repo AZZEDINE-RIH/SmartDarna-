@@ -1,42 +1,143 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
-  private authState$ = new BehaviorSubject<any>(null);
+  private authState$ = new BehaviorSubject<Session | null>(null);
+  private isInitialized = false;
+  private initPromise: Promise<void> | null = null;
+  private authListenerRegistered = false;
+  private initRetryCount = 0;
+  private readonly maxInitRetries = 5;
 
   constructor() {
+    // Check if running in browser environment
+    const isBrowser = typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+    
     this.supabase = createClient(
       environment.supabaseUrl,
-      environment.supabaseAnonKey
+      environment.supabaseAnonKey,
+      {
+        auth: {
+          persistSession: isBrowser,
+          autoRefreshToken: isBrowser,
+          detectSessionInUrl: isBrowser,
+          storage: isBrowser ? localStorage : undefined
+        }
+      }
     );
-    this.initAuthState();
+    
+    if (isBrowser) {
+      void this.initializeAuth().catch((error: any) => {
+        const isAbort = error?.name === 'AbortError' || `${error?.message || ''}`.includes('signal is aborted');
+        if (isAbort) {
+          if (this.initRetryCount < this.maxInitRetries) {
+            this.initRetryCount += 1;
+            const delayMs = 250 * this.initRetryCount;
+            console.warn(`Auth initialization aborted (retry ${this.initRetryCount}/${this.maxInitRetries})`);
+            this.initPromise = null;
+            setTimeout(() => {
+              void this.initializeAuth();
+            }, delayMs);
+          }
+          return;
+        }
+
+        console.error('Error initializing auth:', error);
+      });
+    }
   }
 
-  // Initialize auth state
-  private initAuthState() {
-    this.supabase.auth.getSession().then(({ data: { session } }) => {
-      this.authState$.next(session?.user ?? null);
-    });
+  // Initialize authentication state
+  private async initializeAuth() {
+    if (this.isInitialized) return;
+    if (this.initPromise) return this.initPromise;
 
-    this.supabase.auth.onAuthStateChange((_event, session) => {
-      this.authState$.next(session?.user ?? null);
-    });
+    this.initPromise = this.initializeAuthInternal();
+    return this.initPromise;
   }
 
-  // Get auth state observable
-  getAuthState(): Observable<any> {
+  private async initializeAuthInternal() {
+    if (this.isInitialized) return;
+    let aborted = false;
+    
+    try {
+      if (!this.authListenerRegistered) {
+        // Listen for auth changes (set this up early)
+        this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+          console.log('🔍 Auth state changed:', event, session?.user?.id);
+          this.authState$.next(session);
+        });
+        this.authListenerRegistered = true;
+      }
+
+      // Wait for initial session
+      const { data: { session }, error } = await this.supabase.auth.getSession();
+      if (error) {
+        console.error('Error getting initial session:', error);
+      }
+      
+      console.log('🔍 Initial session:', session?.user?.id);
+      this.authState$.next(session);
+    } catch (error: any) {
+      // Supabase uses a lock when accessing storage; in SSR hydration / fast reload this can abort.
+      // This is usually transient and safe to retry.
+      if (error?.name === 'AbortError') {
+        aborted = true;
+        if (this.initRetryCount < this.maxInitRetries) {
+          this.initRetryCount += 1;
+          const delayMs = 250 * this.initRetryCount;
+          console.warn(`Auth initialization aborted (retry ${this.initRetryCount}/${this.maxInitRetries})`);
+          this.initPromise = null;
+          setTimeout(() => {
+            void this.initializeAuth();
+          }, delayMs);
+        }
+        return;
+      }
+
+      console.error('Error initializing auth:', error);
+    } finally {
+      if (!aborted) {
+        this.initRetryCount = 0;
+        this.isInitialized = true;
+      }
+    }
+  }
+
+  // Get session observable (emits only when session exists)
+  getSession(): Observable<Session | null> {
     return this.authState$.asObservable();
+  }
+
+  // Get authenticated session (waits for valid session)
+  getAuthenticatedSession(): Observable<Session> {
+    return this.authState$.pipe(
+      filter((session): session is Session => session !== null && !!session.user),
+      map(session => session as Session)
+    );
+  }
+
+  // Get current session synchronously
+  getCurrentSession(): Session | null {
+    return this.authState$.getValue();
   }
 
   // Get Supabase client
   getClient(): SupabaseClient {
     return this.supabase;
+  }
+
+  // Check if user is authenticated
+  isAuthenticated(): boolean {
+    const session = this.authState$.getValue();
+    return session !== null && !!session.user;
   }
 
   // Tables operations - Profiles (User data)

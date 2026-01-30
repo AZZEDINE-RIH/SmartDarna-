@@ -1,221 +1,248 @@
 import { Injectable } from '@angular/core';
+import { AuthResponse, SupabaseClient, User } from '@supabase/supabase-js';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
+import { SupabaseService } from './supabase.service';
 
-export interface User {
-  id: number;
+export interface LoggedInUser {
+  id: string;
+  email?: string;
+  name?: string;
+  role?: string;
+  user_metadata?: any;
+}
+
+export interface SignUpData {
   email: string;
   password: string;
   name: string;
-  role: 'user' | 'vendeur' | 'admin';
-}
-
-export interface LoggedInUser {
-  id: number;
-  email: string;
-  name: string;
-  role: 'user' | 'vendeur' | 'admin';
+  role?: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private readonly STORAGE_KEY = 'currentUser';
+  user = new BehaviorSubject<User | null>(null);
+  private supabase!: SupabaseClient;
+  private lastRedirectedUserId: string | null = null;
+  private cachedProfile: LoggedInUser | null = null;
 
-  // Hardcoded users database
-  private users: User[] = [
-    {
-      id: 1,
-      email: 'user@example.com',
-      password: 'password123',
-      name: 'John User',
-      role: 'user'
-    },
-    {
-      id: 2,
-      email: 'vendeur@example.com',
-      password: 'password123',
-      name: 'Alice Vendeur',
-      role: 'vendeur'
-    },
-    {
-      id: 3,
-      email: 'admin@example.com',
-      password: 'password123',
-      name: 'Admin Smith',
-      role: 'admin'
-    }
-  ];
+  constructor(
+    private router: Router,
+    private supabaseService: SupabaseService
+  ) {
+    // IMPORTANT: reuse the singleton client to avoid multiple GoTrueClient instances
+    this.supabase = this.supabaseService.getClient();
 
-  constructor() {
-    // Restore user from localStorage on service initialization (browser only)
-    if (this.isBrowser()) {
-      this.restoreUser();
-    }
-  }
+    // Mirror session -> user state, and do role-based redirect once per signed-in user
+    this.supabaseService.getSession().subscribe((session) => {
+      const currentUser = session?.user ?? null;
+      this.user.next(currentUser);
 
-  /**
-   * Check if code is running in browser environment
-   */
-  private isBrowser(): boolean {
-    return typeof localStorage !== 'undefined' && typeof window !== 'undefined';
-  }
-
-  /**
-   * Login with email and password
-   * @param email User email
-   * @param password User password
-   * @returns LoggedInUser object if successful, null if failed
-   */
-  login(email: string, password: string): LoggedInUser | null {
-    const user = this.users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-      const loggedInUser: LoggedInUser = {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      };
-      
-      // Store user in localStorage (browser only)
-      if (this.isBrowser()) {
-        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(loggedInUser));
+      if (!currentUser) {
+        this.lastRedirectedUserId = null;
+        return;
       }
-      return loggedInUser;
-    }
-    
-    return null;
+
+      if (this.lastRedirectedUserId === currentUser.id) {
+        return;
+      }
+
+      // Mark this user as redirected to avoid duplicate redirects
+      this.lastRedirectedUserId = currentUser.id;
+      void this.redirectToUserDashboard();
+    });
   }
 
-  /**
-   * Register a new user
-   * @param name User name
-   * @param email User email
-   * @param password User password
-   * @returns LoggedInUser object if successful
-   */
-  register(name: string, email: string, password: string): LoggedInUser {
-    // Check if user already exists
-    const existingUser = this.users.find(u => u.email === email);
-    if (existingUser) {
-      throw new Error('User with this email already exists');
-    }
-
-    // Create new user
-    const newUser: User = {
-      id: this.users.length + 1,
+  // Email/Password Sign Up
+  async signUp(data: SignUpData): Promise<AuthResponse> {
+    const { email, password, name, role = 'user' } = data;
+    
+    const response = await this.supabase.auth.signUp({
       email,
       password,
-      name,
-      role: 'user' // Default role for new users
-    };
+      options: {
+        data: {
+          name,
+          role
+        }
+      }
+    });
 
-    // Add to users array
-    this.users.push(newUser);
-
-    // Auto-login the new user
-    const loggedInUser: LoggedInUser = {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      role: newUser.role
-    };
-
-    // Store user in localStorage (browser only)
-    if (this.isBrowser()) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(loggedInUser));
+    if (response.error) {
+      throw response.error;
     }
 
-    return loggedInUser;
-  }
-
-  /**
-   * Logout the current user
-   */
-  logout(): void {
-    if (this.isBrowser()) {
-      localStorage.removeItem(this.STORAGE_KEY);
+    if (response.data.user) {
+      await this.ensureProfileExists(response.data.user, { name, role });
     }
+
+    return response;
   }
 
-  /**
-   * Check if user is logged in
-   * @returns true if user is logged in, false otherwise
-   */
+  // Email/Password Sign In
+  async signIn(email: string, password: string): Promise<AuthResponse> {
+    console.log('AuthService.signIn called with:', email);
+    
+    const response = await this.supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    console.log('Supabase response:', response);
+
+    if (response.error) {
+      console.error('Supabase auth error:', response.error);
+      throw response.error;
+    }
+
+    if (response.data.user) {
+      await this.ensureProfileExists(response.data.user, {
+        name: response.data.user.user_metadata?.['name'] || undefined,
+        role: response.data.user.user_metadata?.['role'] || undefined
+      });
+
+      this.lastRedirectedUserId = response.data.user.id;
+      void this.redirectToUserDashboard();
+    }
+
+    return response;
+  }
+
+  // GitHub OAuth (keep existing)
+  async signInWithGithub() {
+    await this.supabase.auth.signInWithOAuth({
+      provider: 'github',
+    });
+  }
+
+  // Sign Out
+  async signOut() {
+    await this.supabase.auth.signOut();
+  }
+
+  get currentUser() {
+    return this.user.asObservable();
+  }
+
+  // Legacy methods for compatibility
   isLoggedIn(): boolean {
-    if (!this.isBrowser()) {
-      return false;
-    }
-    const user = localStorage.getItem(this.STORAGE_KEY);
-    return user !== null;
+    return this.user.value !== null;
   }
 
-  /**
-   * Get the current logged-in user
-   * @returns LoggedInUser object or null if not logged in
-   */
-  getUser(): LoggedInUser | null {
-    if (!this.isBrowser()) {
-      return null;
-    }
-    const user = localStorage.getItem(this.STORAGE_KEY);
-    
-    if (user) {
-      try {
-        return JSON.parse(user) as LoggedInUser;
-      } catch (e) {
-        console.error('Error parsing stored user', e);
-        localStorage.removeItem(this.STORAGE_KEY);
-        return null;
+  async getUser(): Promise<LoggedInUser | null> {
+    const currentUser = this.user.value;
+    if (!currentUser) return null;
+
+    try {
+      const { data: profile, error } = await this.supabase
+        .from('profiles')
+        .select('role, name')
+        .eq('id', currentUser.id)
+        .single();
+
+      const profileError = error as any;
+
+      if (profileError && profileError.code !== 'PGRST116') {
+        console.error('Error fetching user profile:', profileError);
       }
-    }
-    
-    return null;
-  }
 
-  /**
-   * Get the role of the current logged-in user
-   * @returns User role or null if not logged in
-   */
-  getUserRole(): string | null {
-    const user = this.getUser();
-    return user ? user.role : null;
-  }
-
-  /**
-   * Check if user has specific role
-   * @param role Role to check
-   * @returns true if user has the role, false otherwise
-   */
-  hasRole(role: string): boolean {
-    return this.getUserRole() === role;
-  }
-
-  /**
-   * Check if user has any of the specified roles
-   * @param roles Array of roles to check
-   * @returns true if user has any of the roles, false otherwise
-   */
-  hasAnyRole(roles: string[]): boolean {
-    const userRole = this.getUserRole();
-    return userRole ? roles.includes(userRole) : false;
-  }
-
-  /**
-   * Restore user from localStorage (called on service initialization)
-   */
-  private restoreUser(): void {
-    if (!this.isBrowser()) {
-      return;
-    }
-    const user = localStorage.getItem(this.STORAGE_KEY);
-    if (user) {
-      try {
-        JSON.parse(user);
-      } catch (e) {
-        console.error('Error restoring user from localStorage', e);
-        localStorage.removeItem(this.STORAGE_KEY);
+      if ((!profile || profileError?.code === 'PGRST116') && !profileError?.message?.includes('permission denied')) {
+        await this.ensureProfileExists(currentUser, {
+          name: currentUser.user_metadata?.['name'] || undefined,
+          role: currentUser.user_metadata?.['role'] || undefined
+        });
       }
+
+      const resolved: LoggedInUser = {
+        id: currentUser.id,
+        email: currentUser.email || '',
+        name: profile?.name || currentUser.user_metadata?.['name'] || currentUser.email || 'User',
+        role: profile?.role || currentUser.user_metadata?.['role'] || 'user',
+        user_metadata: currentUser.user_metadata
+      };
+      this.cachedProfile = resolved;
+      return resolved;
+    } catch (error) {
+      console.error('Error in getUser:', error);
+      const fallback: LoggedInUser = {
+        id: currentUser.id,
+        email: currentUser.email || '',
+        name: currentUser.user_metadata?.['name'] || currentUser.email || 'User',
+        role: currentUser.user_metadata?.['role'] || 'user',
+        user_metadata: currentUser.user_metadata
+      };
+      this.cachedProfile = fallback;
+      return fallback;
     }
+  }
+
+  getUserSync(): LoggedInUser | null {
+    const currentUser = this.user.value;
+    if (!currentUser) return null;
+
+    if (this.cachedProfile && this.cachedProfile.id === currentUser.id) {
+      return this.cachedProfile;
+    }
+
+    return {
+      id: currentUser.id,
+      email: currentUser.email || '',
+      name: currentUser.user_metadata?.['name'] || currentUser.email || 'User',
+      role: currentUser.user_metadata?.['role'] || 'user',
+      user_metadata: currentUser.user_metadata
+    };
+  }
+
+  private async ensureProfileExists(
+    user: User,
+    data?: { name?: string; role?: string }
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('profiles')
+        .upsert(
+          {
+            id: user.id,
+            name: data?.name ?? user.user_metadata?.['name'] ?? user.email ?? 'User',
+            role: data?.role ?? user.user_metadata?.['role'] ?? 'user'
+          },
+          { onConflict: 'id' }
+        );
+    } catch (e) {
+      console.error('Error ensuring profile exists:', e);
+    }
+  }
+
+  // Role-based redirect method
+  async redirectToUserDashboard(): Promise<void> {
+    try {
+      const userProfile = await this.getUser();
+      const userRole = userProfile?.role || 'user';
+      
+      console.log('Redirecting user with role:', userRole);
+      
+      switch (userRole) {
+        case 'admin':
+          this.router.navigate(['/dashboard']);
+          break;
+        case 'seller':
+          this.router.navigate(['/vendeur-dashboard']);
+          break;
+        case 'user':
+          this.router.navigate(['/home']);
+          break;
+        default:
+          this.router.navigate(['/home']);
+      }
+    } catch (error) {
+      console.error('Error in role-based redirect:', error);
+      this.router.navigate(['/home']);
+    }
+  }
+
+  logout(): void {
+    this.signOut();
   }
 }

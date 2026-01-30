@@ -24,10 +24,10 @@ export class App {
 
   private updateAuthState(): void {
     this.isLoggedIn.set(this.authService.isLoggedIn());
-    const user = this.authService.getUser();
+    const user = this.authService.getUserSync();
     if (user) {
-      this.userName.set(user.name);
-      this.userRole.set(user.role);
+      this.userName.set(user.name || '');
+      this.userRole.set(user.role || '');
     }
   }
 

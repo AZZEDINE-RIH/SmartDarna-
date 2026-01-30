@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -14,46 +16,45 @@ export class RoleGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean {
-    // Check if user is logged in
-    if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/login']);
-      return false;
-    }
-
-    // Check if route requires specific roles
-    const requiredRoles = route.data['roles'] as string[];
+  ): Observable<boolean> {
+    const expectedRoles = route.data['roles'] as string[] || [];
     
-    if (requiredRoles && requiredRoles.length > 0) {
-      if (this.authService.hasAnyRole(requiredRoles)) {
-        return true;
-      }
+    return this.authService.currentUser.pipe(
+      take(1),
+      map(user => {
+        if (!user) {
+          this.router.navigate(['/login']);
+          return false;
+        }
 
-      // User doesn't have required role - redirect to appropriate dashboard
-      const user = this.authService.getUser();
-      if (user) {
-        this.router.navigate([this.getRedirectUrlForRole(user.role)]);
-      } else {
-        this.router.navigate(['/login']);
-      }
-      return false;
-    }
-
-    return true;
+        // Since we can't use async in map, we'll use getUserSync for immediate role checking
+        const userProfile = this.authService.getUserSync();
+        const userRole = userProfile?.role || 'user';
+        
+        if (expectedRoles.includes(userRole)) {
+          return true;
+        } else {
+          // Redirect based on role
+          this.redirectByRole(userRole);
+          return false;
+        }
+      })
+    );
   }
 
-  /**
-   * Get redirect URL based on user role
-   */
-  private getRedirectUrlForRole(role: string): string {
+  private redirectByRole(role: string): void {
     switch (role) {
       case 'admin':
-        return '/admin-dashboard';
-      case 'vendeur':
-        return '/vendeur-dashboard';
+        this.router.navigate(['/dashboard']);
+        break;
+      case 'seller':
+        this.router.navigate(['/vendeur-dashboard']);
+        break;
       case 'user':
+        this.router.navigate(['/home']);
+        break;
       default:
-        return '/home';
+        this.router.navigate(['/home']);
     }
   }
 }

@@ -1,101 +1,213 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>SmartDarna</h1>
-      <p>Create your account to get started.</p>
-    </div>
-
-    <form (ngSubmit)="onRegister()" class="auth-form">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <div class="input-wrapper">
-          <i class='bx bx-user'></i>
-          <input
-            type="text"
-            id="name"
-            [(ngModel)]="name"
-            name="name"
-            placeholder="Enter your full name"
-            required
-            class="input-field"
-          />
+<div class="auth-layout">
+  <!-- Left Side - Register Form -->
+  <div class="auth-left">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="logo">
+          <h2>SmartDarna</h2>
         </div>
+        <h1>Create Account</h1>
+        <p class="auth-subtitle">Join us today and get started</p>
       </div>
 
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <div class="input-wrapper">
-          <i class='bx bx-envelope'></i>
-          <input
-            type="email"
-            id="email"
-            [(ngModel)]="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            class="input-field"
-          />
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Enter your full name"
+              class="form-input"
+              [class.error]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid"
+            />
+            @if (registerForm.get('name')?.touched && registerForm.get('name')?.errors?.['required']) {
+              <small class="error-text">Name is required</small>
+            }
+            @if (registerForm.get('name')?.touched && registerForm.get('name')?.errors?.['minlength']) {
+              <small class="error-text">Name must be at least 2 characters</small>
+            }
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-wrapper">
-          <i class='bx bx-lock-alt'></i>
-          <input
-            type="password"
-            id="password"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="Create a password"
-            required
-            class="input-field"
-          />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="form-input"
+              [class.error]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+            />
+            @if (registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['required']) {
+              <small class="error-text">Email is required</small>
+            }
+            @if (registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['email']) {
+              <small class="error-text">Please enter a valid email</small>
+            }
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="passwordConfirm">Confirm Password</label>
-        <div class="input-wrapper">
-          <i class='bx bx-lock-check'></i>
-          <input
-            type="password"
-            id="passwordConfirm"
-            [(ngModel)]="passwordConfirm"
-            name="passwordConfirm"
-            placeholder="Confirm your password"
-            required
-            class="input-field"
-          />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              formControlName="password"
+              placeholder="Create a password"
+              class="form-input"
+              [class.error]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+            />
+            @if (registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['required']) {
+              <small class="error-text">Password is required</small>
+            }
+            @if (registerForm.get('password')?.touched && registerForm.get('password')?.errors?.['minlength']) {
+              <small class="error-text">Password must be at least 6 characters</small>
+            }
+          </div>
         </div>
-      </div>
 
-      @if (errorMessage()) {
-        <div class="error-message">
-          <i class='bx bx-error-circle'></i>
-          {{ errorMessage() }}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="passwordConfirm" class="form-label">Confirm Password</label>
+            <input
+              type="password"
+              id="passwordConfirm"
+              formControlName="passwordConfirm"
+              placeholder="Confirm your password"
+              class="form-input"
+              [class.error]="registerForm.get('passwordConfirm')?.touched && registerForm.get('passwordConfirm')?.invalid"
+            />
+            @if (registerForm.get('passwordConfirm')?.touched && registerForm.get('passwordConfirm')?.errors?.['required']) {
+              <small class="error-text">Please confirm your password</small>
+            }
+            @if (registerForm.get('passwordConfirm')?.touched && registerForm.get('passwordConfirm')?.errors?.['passwordMismatch']) {
+              <small class="error-text">Passwords do not match</small>
+            }
+          </div>
         </div>
-      }
 
-      @if (successMessage()) {
-        <div class="success-message">
-          <i class='bx bx-check-circle'></i>
-          {{ successMessage() }}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="role" class="form-label">Account Type</label>
+            <select
+              id="role"
+              formControlName="role"
+              class="form-input"
+              [class.error]="registerForm.get('role')?.touched && registerForm.get('role')?.invalid"
+            >
+              <option value="">Select account type</option>
+              <option value="user">Customer - I want to buy products</option>
+              <option value="seller">Seller - I want to sell products</option>
+            </select>
+            @if (registerForm.get('role')?.touched && registerForm.get('role')?.errors?.['required']) {
+              <small class="error-text">Please select an account type</small>
+            }
+          </div>
         </div>
-      }
 
-      <button type="submit" [disabled]="isLoading()" class="auth-btn">
-        @if (isLoading()) {
-          <span class="spinner"></span>
-          <span>Creating Account...</span>
-        } @else {
-          <span>Sign Up</span>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone" class="form-label">Phone Number (Optional)</label>
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              placeholder="Enter your phone number"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="address" class="form-label">Address (Optional)</label>
+            <input
+              type="text"
+              id="address"
+              formControlName="address"
+              placeholder="Enter your address"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="error-alert">
+            <span class="error-icon">⚠️</span>
+            <span>{{ errorMessage() }}</span>
+          </div>
         }
-      </button>
 
-      <div class="auth-footer">
-        <p>Already have an account? <a routerLink="/login">Log In</a></p>
+        @if (successMessage()) {
+          <div class="success-alert">
+            <span class="success-icon">✅</span>
+            <span>{{ successMessage() }}</span>
+          </div>
+        }
+
+        <button type="submit" [disabled]="isLoading() || registerForm.invalid" class="auth-btn">
+          @if (isLoading()) {
+            <span class="btn-spinner"></span>
+            <span>Creating Account...</span>
+          } @else {
+            <span>Create Account</span>
+          }
+        </button>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a (click)="toggleFlip()" class="auth-link">Sign In</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right Side - Branding -->
+  <div class="auth-right">
+    <div class="brand-content">
+      <div class="brand-header">
+        <h2>Join SmartDarna</h2>
+        <p>Start your journey with us</p>
       </div>
-    </form>
+      
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-text">
+            <h3>Easy Setup</h3>
+            <p>Get started in minutes with our simple registration process</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-text">
+            <h3>Secure Platform</h3>
+            <p>Your data is protected with enterprise-grade security</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-text">
+            <h3>Grow With Us</h3>
+            <p>Access powerful tools to scale your business</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="brand-footer">
+        <p>Join our growing community</p>
+        <div class="stats">
+          <span>5K+ New Users</span>
+          <span>98% Satisfaction</span>
+          <span>Free Trial</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

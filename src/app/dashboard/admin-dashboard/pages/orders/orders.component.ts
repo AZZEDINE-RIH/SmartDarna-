@@ -2,30 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-admin-orders',
+  selector: 'app-orders-page',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="page-header">
-      <h1>Orders Management</h1>
-      <p>Track and manage platform orders.</p>
-    </div>
-    <div class="content-placeholder">
-      <p>Order management interface coming soon.</p>
-    </div>
-  `,
-  styles: [`
-    .page-header { margin-bottom: 2rem; }
-    .page-header h1 { margin: 0; font-size: 1.5rem; color: #0f172a; }
-    .page-header p { color: #64748b; margin-top: 0.5rem; }
-    .content-placeholder { 
-      padding: 3rem; 
-      background: white; 
-      border-radius: 12px; 
-      text-align: center;
-      color: #94a3b8;
-      border: 1px dashed #e2e8f0;
-    }
-  `]
+  template: `<div class="page-container"><h1>Orders Management</h1><p>Manage customer orders and fulfillment</p></div>`,
+  styles: [`.page-container{padding:2rem;}`]
 })
-export class AdminOrdersComponent {}
+export class OrdersPageComponent { constructor() {} }

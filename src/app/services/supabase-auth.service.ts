@@ -1,12 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
+import { filter, switchMap, take, tap } from 'rxjs/operators';
+import { Session } from '@supabase/supabase-js';
 
 export interface LoggedInUser {
   id: string;
   email: string;
   name: string;
-  role: 'user' | 'vendeur' | 'admin';
+  role: 'user' | 'seller' | 'admin';
+  phone?: string;
+  address?: string;
+  is_active: boolean;
 }
 
 @Injectable({
@@ -14,48 +19,151 @@ export interface LoggedInUser {
 })
 export class SupabaseAuthService {
   private supabaseService = inject(SupabaseService);
-  private currentUser$ = new BehaviorSubject<LoggedInUser | null>(null);
+  public currentUser$ = new BehaviorSubject<LoggedInUser | null>(null);
   private readonly STORAGE_KEY = 'currentSupabaseUser';
 
   constructor() {
-    this.initAuthState();
+    this.initializeAuth();
   }
 
   /**
-   * Initialize auth state from Supabase
+   * Initialize authentication - listen for authenticated sessions only
    */
-  private initAuthState() {
-    this.supabaseService.getAuthState().subscribe(async (user) => {
-      if (user) {
-        await this.loadUserProfile(user.id);
-      } else {
-        this.currentUser$.next(null);
-        this.clearUserStorage();
+  private initializeAuth() {
+    this.supabaseService.getAuthenticatedSession().pipe(
+      switchMap(async (session: Session) => {
+        console.log('🔍 Authenticated session detected:', session.user.id);
+        await this.loadUserProfile(session.user.id, session.user.email);
+      })
+    ).subscribe({
+      error: (error) => {
+        console.error('🔍 Error in auth initialization:', error);
       }
     });
   }
 
   /**
-   * Load user profile from users table
+   * Load user profile only when we have a valid session
    */
-  private async loadUserProfile(userId: string) {
-    const { data, error } = await this.supabaseService.getUserById(userId);
-    if (data && !error) {
+  private async loadUserProfile(userId: string, userEmail?: string): Promise<void> {
+    console.log('🔍 Loading profile for userId:', userId);
+    console.log('🔍 User email:', userEmail);
+    
+    // Double-check we have a session before querying
+    const currentSession = this.supabaseService.getCurrentSession();
+    if (!currentSession) {
+      console.error('🔍 No session when trying to load profile');
+      this.currentUser$.next(null);
+      return;
+    }
+    
+    console.log('🔍 Session verified, querying profiles...');
+    
+    // Query profile with authenticated client
+    const { data: profileData, error: profileError } = await this.supabaseService.getProfileById(userId);
+    
+    console.log('🔍 Profile query result:', { profileData, profileError });
+    
+    if (profileData && !profileError) {
+      console.log('🔍 Profile loaded successfully:', profileData);
+      
+      // Check if user is active
+      if (!profileData.is_active) {
+        console.warn('User account is inactive:', userId);
+        await this.signOut();
+        return;
+      }
+
+      const normalizedRole: LoggedInUser['role'] = this.normalizeRole(profileData.role);
+      
+      console.log('🔍 Normalized role:', normalizedRole);
+      
       const loggedInUser: LoggedInUser = {
-        id: data.id,
-        email: data.email,
-        name: data.name,
-        role: data.role || 'user'
+        id: profileData.id,
+        email: userEmail || '',
+        name: profileData.name,
+        role: normalizedRole,
+        phone: profileData.phone || undefined,
+        address: profileData.address || undefined,
+        is_active: profileData.is_active
       };
+      
+      console.log('🔍 Setting current user:', loggedInUser);
       this.currentUser$.next(loggedInUser);
       this.storeUserLocally(loggedInUser);
+    } else {
+      console.error('🔍 Error loading user profile:', profileError);
+      // Don't set fallback user - profile must be loaded to proceed
+      this.currentUser$.next(null);
+      this.clearUserStorage();
+      console.error('🔍 ⚠️ Profile fetch failed - RLS policies may be blocking access. Check Supabase RLS settings.');
     }
   }
 
   /**
-   * Sign up with email and password
+   * Normalize role to ensure valid values
    */
-  async signUp(email: string, password: string, name: string, role: 'user' | 'vendeur' = 'user') {
+  private normalizeRole(role: string): LoggedInUser['role'] {
+    switch (role?.toLowerCase()) {
+      case 'admin': return 'admin';
+      case 'seller': return 'seller';
+      case 'customer': return 'user';
+      case 'user': return 'user';
+      default: return 'user';
+    }
+  }
+
+  /**
+   * Sign in with proper session handling
+   */
+  async signIn(email: string, password: string) {
+    try {
+      console.log('🔍 Attempting sign in for:', email);
+      const { data, error } = await this.supabaseService.signIn(email, password);
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        return { success: false, error };
+      }
+
+      if (data.user && data.session) {
+        console.log('🔍 Sign in successful, waiting for profile load...');
+        
+        // Wait for profile to be loaded by the auth listener
+        await this.waitForProfileLoad();
+        
+        return { success: true, data };
+      }
+
+      return { success: false, error: 'Unknown error' };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      return { success: false, error };
+    }
+  }
+
+  /**
+   * Wait for user profile to be loaded
+   */
+  private async waitForProfileLoad(timeout = 3000): Promise<void> {
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < timeout) {
+      const currentUser = this.currentUser$.getValue();
+      if (currentUser) {
+        console.log('🔍 Profile/user loaded:', currentUser.role || 'default');
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    console.warn('🔍 Timeout waiting for profile to load (may be due to RLS policy restrictions)');
+  }
+
+  /**
+   * Sign up with profile creation
+   */
+  async signUp(email: string, password: string, name: string, phone?: string, address?: string, role?: string) {
     try {
       // Sign up with Supabase Auth
       const { data: authData, error: authError } = await this.supabaseService.signUp(email, password);
@@ -67,11 +175,13 @@ export class SupabaseAuthService {
 
       if (authData.user) {
         // Create user profile in profiles table
-        const { data: userData, error: userError } = await this.supabaseService.createUser({
+        const { data: userData, error: userError } = await this.supabaseService.createProfile({
           id: authData.user.id,
-          email: email,
           name: name,
-          role: role,
+          role: role || 'user', // Use provided role or default to 'user'
+          phone: phone || null,
+          address: address || null,
+          is_active: true,
           created_at: new Date().toISOString()
         });
 
@@ -86,30 +196,6 @@ export class SupabaseAuthService {
       return { success: false, error: 'Unknown error' };
     } catch (error) {
       console.error('Sign up error:', error);
-      return { success: false, error };
-    }
-  }
-
-  /**
-   * Sign in with email and password
-   */
-  async signIn(email: string, password: string) {
-    try {
-      const { data, error } = await this.supabaseService.signIn(email, password);
-      
-      if (error) {
-        console.error('Sign in error:', error);
-        return { success: false, error };
-      }
-
-      if (data.user) {
-        await this.loadUserProfile(data.user.id);
-        return { success: true, data };
-      }
-
-      return { success: false, error: 'Unknown error' };
-    } catch (error) {
-      console.error('Sign in error:', error);
       return { success: false, error };
     }
   }
@@ -222,6 +308,6 @@ export class SupabaseAuthService {
    * Check if running in browser
    */
   private isBrowser(): boolean {
-    return typeof localStorage !== 'undefined' && typeof window !== 'undefined';
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 }

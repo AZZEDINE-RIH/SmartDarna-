@@ -1,22 +1,23 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from '../Auth/login/login';
-import { RegisterComponent } from '../Auth/register/register';
+import { LoginComponent } from './Auth/login/login.component';
+import { RegisterComponent } from './Auth/register/register.component';
 import { HomeComponent } from './dashboard/home/home';
 import { VendeurDashboardComponent } from './dashboard/vendeur-dashboard/vendeur-dashboard';
-import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard.component';
 import { AdminOverviewComponent } from './dashboard/admin-dashboard/pages/overview/overview.component';
-import { AdminUsersComponent } from './dashboard/admin-dashboard/pages/users/users.component';
-import { AdminSellersComponent } from './dashboard/admin-dashboard/pages/sellers/sellers.component';
-import { AdminProductsComponent } from './dashboard/admin-dashboard/pages/products/products.component';
-import { AdminOrdersComponent } from './dashboard/admin-dashboard/pages/orders/orders.component';
-import { AdminSettingsComponent } from './dashboard/admin-dashboard/pages/settings/settings.component';
+import { ProductsPageComponent } from './dashboard/admin-dashboard/pages/products/products.component';
+import { UsersPageComponent } from './dashboard/admin-dashboard/pages/users/users.component';
+import { SellersPageComponent } from './dashboard/admin-dashboard/pages/sellers/sellers.component';
+import { OrdersPageComponent } from './dashboard/admin-dashboard/pages/orders/orders.component';
+import { AnalyticsPageComponent } from './dashboard/admin-dashboard/pages/analytics/analytics.component';
+import { SettingsPageComponent } from './dashboard/admin-dashboard/pages/settings/settings.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo:'/login',
+    redirectTo:'/dashboard',
     pathMatch: 'full'
   },
   {
@@ -37,39 +38,51 @@ export const routes: Routes = [
     path: 'vendeur-dashboard',
     component: VendeurDashboardComponent,
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['vendeur'] }
+    data: { roles: ['seller'] }
   },
   {
-    path: 'admin-dashboard',
-    component: AdminDashboardComponent,
+    path: 'dashboard',
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['admin'] },
-    children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: AdminOverviewComponent },
-      { path: 'users', component: AdminUsersComponent },
-      { path: 'sellers', component: AdminSellersComponent },
-      { path: 'products', component: AdminProductsComponent },
-      { path: 'orders', component: AdminOrdersComponent },
-      { path: 'settings', component: AdminSettingsComponent }
-    ]
-  },
-  // Temporary route for testing the new dashboard without login/guards
-  {
-    path: 'new-dashboard',
     component: AdminDashboardComponent,
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: AdminOverviewComponent },
-      { path: 'users', component: AdminUsersComponent },
-      { path: 'sellers', component: AdminSellersComponent },
-      { path: 'products', component: AdminProductsComponent },
-      { path: 'orders', component: AdminOrdersComponent },
-      { path: 'settings', component: AdminSettingsComponent }
+      {
+        path: 'overview',
+        component: AdminOverviewComponent
+      },
+      {
+        path: 'products',
+        component: ProductsPageComponent
+      },
+      {
+        path: 'users',
+        component: UsersPageComponent
+      },
+      {
+        path: 'sellers',
+        component: SellersPageComponent
+      },
+      {
+        path: 'orders',
+        component: OrdersPageComponent
+      },
+      {
+        path: 'analytics',
+        component: AnalyticsPageComponent
+      },
+      {
+        path: 'settings',
+        component: SettingsPageComponent
+      },
+      {
+        path: '',
+        redirectTo: 'overview',
+        pathMatch: 'full'
+      }
     ]
   },
   {
     path: '**',
-    redirectTo: '/login'
+    redirectTo: '/dashboard'
   }
 ];

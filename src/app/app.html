@@ -1,4 +1,22 @@
 <div class="app-wrapper">
+  <!-- Navigation Header -->
+  @if (isLoggedIn()) {
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <span class="app-title">{{ title() }}</span>
+        </div>
+
+        <div class="navbar-right">
+          <span class="user-info">
+            {{ userName() }} <small>({{ userRole() | uppercase }})</small>
+          </span>
+          <button class="logout-btn" (click)="onLogout()">Logout</button>
+        </div>
+      </div>
+    </nav>
+  }
+
   <!-- Main Content -->
   <main [class.with-navbar]="isLoggedIn()">
     <router-outlet></router-outlet>
