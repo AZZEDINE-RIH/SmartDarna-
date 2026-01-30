@@ -5,18 +5,12 @@ import { RouterModule, Router } from '@angular/router';
 import { ThemeService } from '../../theme.service';
 import { Subscription } from 'rxjs';
 
-interface SidebarChild {
-  id: string;
-  label: string;
-}
-
 interface SidebarItem {
   id: string;
   label: string;
   icon: string;
-  type: 'page' | 'submenu' | 'link';
+  type: 'page' | 'link';
   route?: string;
-  children?: SidebarChild[];
 }
 
 @Component({
@@ -54,15 +48,11 @@ export class Sidebar implements OnInit, OnDestroy {
       
     },
     {
-      id: 'analytics',
-      label: 'Analytics',
+      id: 'orders',
+      label: 'Orders',
       icon: 'analytics-outline',
-      type: 'submenu',
-      children: [
-        { id: 'overview', label: 'Overview' },
-        { id: 'reports', label: 'Reports' },
-        { id: 'insights', label: 'Insights' }
-      ]
+      type: 'link',
+      route: '/user/orders'
     },
     {
       id: 'messages',
@@ -85,65 +75,18 @@ export class Sidebar implements OnInit, OnDestroy {
     id: 'settings',
     label: 'Settings',
     icon: 'settings-outline',
-    type: 'submenu',
-    children: [
-      { id: 'preferences', label: 'Preferences' },
-      { id: 'security', label: 'Security' }
-    ]
+    type: 'link',
+    route: '/user/settings'
   };
 
-  profileItem: SidebarItem = {
-    id: 'profile',
-    label: 'Profile',
-    icon: 'person-outline',
-    type: 'page'
-  };
 
   activeItem: string = 'dashboard';
-  openSubmenu: string | null = null;
-
-  getButtonClass(itemId: string): string {
-    return this.activeItem === itemId ? 'active' : '';
-  }
-
-  getChevronClass(itemId: string): string {
-    return `ml-auto transition-transform duration-300 ${
-      this.activeItem === itemId ? 'rotate-180' : ''
-    }`;
-  }
-  
-  getSubmenuButtonClass(childId: string): string {
-    return this.activeItem === childId ? 'active' : '';
-  }
-
   handleItemClick(item: SidebarItem): void {
     // If it's a link => navigate
     if (item.type === 'link' && item.route) {
       this.activeItem = item.id;
-      this.openSubmenu = null;
       this.router.navigate([item.route]);
       return;
     }
-
-    // If it's a page => keep your logic
-    if (item.type === 'page') {
-      this.handlePageClick(item.id);
-      return;
-    }
-
-    // If it's submenu => toggle submenu
-    if (item.type === 'submenu') {
-      this.handleSubmenuToggle(item.id);
-    }
-  }
-
-  handlePageClick(id: string): void {
-    this.activeItem = id;
-    this.openSubmenu = null;
-  }
-
-  handleSubmenuToggle(id: string): void {
-    this.activeItem = this.activeItem === id ? '' : id;
-    this.openSubmenu = this.openSubmenu === id ? null : id;
   }
 }

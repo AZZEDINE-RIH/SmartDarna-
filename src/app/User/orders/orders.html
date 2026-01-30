@@ -1,4 +1,4 @@
-<!-- Messages List View -->
+<!-- Orders List View -->
 <div *ngIf="!showDetails" class="mt-6 py-2 px-6 rounded-2xl">
   <div class="max-w-7xl mx-auto rounded-2xl shadow-sm"
        [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'">
@@ -15,27 +15,37 @@
           [ngClass]="activeTab === 'all'
             ? 'text-[#60CED6] border-[#60CED6]'
             : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
-          All Messages
+          All Orders
         </button>
 
-        <!-- UNREAD -->
+        <!-- PENDING -->
         <button
-          (click)="setActiveTab('unread')"
+          (click)="setActiveTab('pending')"
           class="pb-3 border-b-2 cursor-pointer"
-          [ngClass]="activeTab === 'unread'
+          [ngClass]="activeTab === 'pending'
             ? 'text-[#60CED6] border-[#60CED6]'
             : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
-          Unread ({{ getUnreadCount() }})
+          Pending ({{ getPendingCount() }})
         </button>
 
-        <!-- ARCHIVED -->
+        <!-- SHIPPED -->
         <button
-          (click)="setActiveTab('archived')"
+          (click)="setActiveTab('shipped')"
           class="pb-3 border-b-2 cursor-pointer"
-          [ngClass]="activeTab === 'archived'
+          [ngClass]="activeTab === 'shipped'
             ? 'text-[#60CED6] border-[#60CED6]'
             : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
-          Archived
+          Shipped ({{ getShippedCount() }})
+        </button>
+
+        <!-- DELIVERED -->
+        <button
+          (click)="setActiveTab('delivered')"
+          class="pb-3 border-b-2 cursor-pointer"
+          [ngClass]="activeTab === 'delivered'
+            ? 'text-[#60CED6] border-[#60CED6]'
+            : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
+          Delivered ({{ getDeliveredCount() }})
         </button>
 
       </div>
@@ -49,95 +59,99 @@
           <tr
             class="border-b text-xs uppercase"
             [ngClass]="isDarkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'">
-            <th class="px-4 py-4 text-left font-medium">Customer</th>
-            <th class="px-4 py-4 text-left font-medium">Subject & Message</th>
-            <th class="px-4 py-4 text-left font-medium">Date</th>
-            <th class="px-4 py-4 text-left font-medium">Status</th>
+            <th class="px-4 py-2 text-left font-medium">Order #</th>
+            <th class="px-4 py-2 text-left font-medium">Customer</th>
+            <th class="px-4 py-2 text-left font-medium">Items & Total</th>
+            <th class="px-4 py-2 text-left font-medium">Date</th>
+            <th class="px-4 py-2 text-left font-medium">Status</th>
           </tr>
         </thead>
 
         <tbody>
 
           <tr
-            *ngFor="let message of filteredMessages"
-            (click)="onMessageClick(message)"
+            *ngFor="let order of filteredOrders"
+            (click)="onOrderClick(order)"
             class="border-b cursor-pointer"
             [ngClass]="isDarkMode ? 'border-gray-700 hover:bg-gray-700/50' : 'border-gray-100 hover:bg-gray-50'">
 
+            <!-- Order Number -->
+            <td class="px-4 py-2">
+              <div class="font-medium"
+                   [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
+                   [class.font-bold]="!order.isRead">
+                {{ order.orderNumber }}
+              </div>
+            </td>
+
             <!-- Customer -->
-            <td class="px-4 py-4">
+            <td class="px-4 py-2">
               <div class="flex items-center space-x-3">
                 <img
-                  [src]="message.avatarUrl.replace('80', '40')"
-                  [alt]="message.name"
-                  class="w-10 h-10 rounded-full">
+                  [src]="order.avatarUrl.replace('80', '40')"
+                  [alt]="order.customerName"
+                  class="w-8 h-8 rounded-full">
 
                 <div>
                   <div class="font-medium"
                        [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
-                    {{ message.name }}
+                    {{ order.customerName }}
                   </div>
-                  <div class="text-sm"
+                  <div class="text-xs"
                        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-                    {{ message.email }}
+                    {{ order.customerEmail }}
                   </div>
                 </div>
               </div>
             </td>
 
-            <!-- Subject -->
-            <td class="px-4 py-4">
+            <!-- Items & Total -->
+            <td class="px-4 py-2">
               <div>
                 <div
                   class="font-medium"
                   [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-                  [class.font-bold]="!message.isRead">
-                  {{ message.subject }}
+                  [class.font-bold]="!order.isRead">
+                  {{ order.items.join(', ') }}
                 </div>
 
-                <div class="text-sm"
+                <div class="text-xs"
                      [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-                  {{ message.preview }}
+                  {{ order.totalAmount.toFixed(2) }}MAD
                 </div>
               </div>
             </td>
 
             <!-- Date -->
-            <td class="px-4 py-4">
-              <div class="text-sm"
+            <td class="px-4 py-2">
+              <div class="text-xs"
                    [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-600'">
-                {{ message.relativeTime }}
+                {{ order.relativeTime }}
               </div>
               <div
                 class="text-xs"
                 [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'"
-                *ngIf="message.relativeTime !== message.date">
-                {{ message.time }}
+                *ngIf="order.relativeTime !== order.date">
+                {{ order.time }}
               </div>
             </td>
 
             <!-- Status -->
-            <td class="px-4 py-4">
+            <td class="px-4 py-2">
               <span class="inline-flex items-center space-x-2">
 
                 <span
                   class="w-2 h-2 rounded-full"
                   [ngClass]="{
-                    'bg-[#60CED6]': !message.isRead,
-                    'bg-green-400': message.isRead && !message.isArchived,
-                    'bg-gray-400': message.isArchived
+                    'bg-yellow-400': order.status === 'pending',
+                    'bg-blue-400': order.status === 'shipped',
+                    'bg-green-400': order.status === 'delivered'
                   }">
                 </span>
 
                 <span class="text-xs"
-                      [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
-                  {{
-                    message.isArchived
-                      ? 'Archived'
-                      : message.isRead
-                        ? 'Read'
-                        : 'Unread'
-                  }}
+                  [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+                  {{ order.status.charAt(0).toUpperCase() + order.status.slice(1) }}
                 </span>
 
               </span>
@@ -156,7 +170,7 @@
 
       <div class="text-sm"
            [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
-        Showing {{ filteredMessages.length }} messages
+        Showing {{ filteredOrders.length }} orders
       </div>
 
       <div class="flex items-center space-x-2">
@@ -167,8 +181,7 @@
         </button>
 
         <button
-          class="w-8 h-8 flex items-center justify-center rounded
-                 bg-[#60CED6] text-white">
+          class="w-8 h-8 flex items-center justify-center rounded bg-[#60CED6] text-white">
           1
         </button>
 
@@ -190,9 +203,9 @@
 </div>
 
 <!-- ===================== DETAILS VIEW ===================== -->
-<div *ngIf="showDetails && selectedMessage">
-  <app-details
-    [message]="selectedMessage!"
+<div *ngIf="showDetails && selectedOrder">
+  <app-info
+    [order]="selectedOrder"
     (backToList)="onBackToList()">
-  </app-details>
+  </app-info>
 </div>

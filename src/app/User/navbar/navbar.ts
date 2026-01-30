@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ThemeService } from '../../theme.service';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +16,7 @@ export class Navbar implements OnInit, OnDestroy {
   isDarkMode: boolean = false;
   private themeSubscription?: Subscription;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService, private router: Router) {}
 
   ngOnInit() {
     // Subscribe to theme changes
@@ -30,5 +31,9 @@ export class Navbar implements OnInit, OnDestroy {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+  }
+
+  goToUnreadMessages(): void {
+    this.router.navigate(['/user/messages'], { queryParams: { tab: 'unread' } });
   }
 }

@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../theme.service';
+import { Subscription } from 'rxjs';
 
 interface Message {
   id: number;
@@ -27,9 +29,24 @@ interface Message {
 
 
 
-export class Details {
+export class Details implements OnInit, OnDestroy {
   @Input() message!: Message;
   @Output() backToList = new EventEmitter<void>();
+
+  isDarkMode: boolean = false;
+  private themeSubscription?: Subscription;
+
+  constructor(private themeService: ThemeService) {}
+
+  ngOnInit() {
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark: boolean) => {
+      this.isDarkMode = isDark;
+    });
+  }
+
+  ngOnDestroy() {
+    this.themeSubscription?.unsubscribe();
+  }
 
   // Reply draft
   replyContent = '';
