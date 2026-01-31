@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CartService, CartItem } from '../../core/services/cart.service';
-import { AuthService } from '../../core/services/auth.service';
+import { CartService, CartItem } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'app-checkout',

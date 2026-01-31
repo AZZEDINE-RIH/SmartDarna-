@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { CartService } from '../services/cart.service';
+import { CartService } from '../../Pages/services/cart.service';
 
 @Component({
   selector: 'app-navbar',

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../shared/product-card/product-card.component';
-import { ProductService } from '../../core/services/product.service';
-import { CartService } from '../../core/services/cart.service';
+import { ProductService } from '../services/product.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
     selector: 'app-product-details',
@@ -28,30 +28,47 @@ export class ProductDetailsComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            const id = params['id'];
-            this.loadProduct(id);
+        this.route.paramMap.subscribe(params => {
+            const id = params.get('id');
+            console.log('📌 ProductDetails: Route param ID:', id);
+
+            if (id) {
+                this.loadProduct(id);
+            } else {
+                this.error = 'Invalid product ID';
+                this.isLoading = false;
+            }
         });
     }
 
     loadProduct(id: string) {
+        console.log('🔄 ProductDetails: Loading product...', id);
         this.isLoading = true;
         this.error = '';
+        this.product = undefined;
+
         this.productService.getProductById(id).subscribe({
             next: (product) => {
+                console.log('✅ ProductDetails: Received product:', product?.name);
                 this.product = product;
-                if (this.product) {
-                    this.selectedImage = this.product.images[0];
-                    this.selectedColor = this.product.colors[0];
+
+                if (product) {
+                    this.selectedImage = product.images[0];
+                    this.selectedColor = product.colors[0];
                 } else {
                     this.error = 'Product not found';
                 }
                 this.isLoading = false;
             },
             error: (err) => {
-                console.error('Error loading product:', err);
-                this.error = 'Failed to load product. Please try again.';
+                console.error('❌ ProductDetails: Error loading product:', err);
+                this.error = err.message || 'Failed to load product details';
                 this.isLoading = false;
+            },
+            complete: () => {
+                console.log('🏁 ProductDetails: Loading complete');
+                // Ensure loading is false even if something weird happens
+                if (this.isLoading) this.isLoading = false;
             }
         });
     }

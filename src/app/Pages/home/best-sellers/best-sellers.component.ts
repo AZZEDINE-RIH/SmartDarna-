@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductCardComponent, Product } from '../../../shared/product-card/product-card.component';
-import { ProductService } from '../../../core/services/product.service';
-import { CartService } from '../../../core/services/cart.service';
+import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
     selector: 'app-best-sellers',

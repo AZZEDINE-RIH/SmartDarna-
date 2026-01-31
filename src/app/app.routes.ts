@@ -5,7 +5,7 @@ import { CollectionComponent } from './Pages/collection/collection.component';
 import { ProductDetailsComponent } from './Pages/product-details/product-details.component';
 import { CartComponent } from './Pages/cart/cart.component';
 import { AboutComponent } from './Pages/about/about.component';
-import { ServicesComponent } from './Pages/services/services.component';
+import { ServicesComponent } from './Pages/services-page/services.component';
 import { CheckoutComponent } from './Pages/checkout/checkout.component';
 import { OrderConfirmationComponent } from './Pages/order-confirmation/order-confirmation.component';
 import { LoginComponent } from './Pages/login/login.component';

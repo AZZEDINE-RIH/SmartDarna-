@@ -1,0 +1,13 @@
+<section class="brand-band">
+    <div class="brand-band-wrapper">
+        <div class="slider-track">
+            <div class="brand-item" *ngFor="let brand of brands">
+                <img [src]="brand.logo" [alt]="brand.name" class="brand-logo">
+            </div>
+            <!-- Duplicate for seamless infinite scroll -->
+            <div class="brand-item" *ngFor="let brand of brands">
+                <img [src]="brand.logo" [alt]="brand.name" class="brand-logo">
+            </div>
+        </div>
+    </div>
+</section>
