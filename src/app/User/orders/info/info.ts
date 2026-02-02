@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angu
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ThemeService } from '../../../theme.service';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 interface Order {
@@ -11,7 +12,7 @@ interface Order {
   customerEmail: string;
   items: string[];
   totalAmount: number;
-  status: 'pending' | 'shipped' | 'delivered';
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
   date: string;
   time: string;
   avatarUrl: string;
@@ -33,7 +34,7 @@ export class Info implements OnInit, OnDestroy {
   isDarkMode: boolean = false;
   private themeSubscription?: Subscription;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService, private router: Router) {}
 
   ngOnInit() {
     this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark: boolean) => {
@@ -47,5 +48,6 @@ export class Info implements OnInit, OnDestroy {
 
   onBack(): void {
     this.backToList.emit();
+    this.router.navigate(['/user/orders']);
   }
 }

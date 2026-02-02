@@ -12,7 +12,7 @@ interface Order {
   customerEmail: string;
   items: string[];
   totalAmount: number;
-  status: 'pending' | 'shipped' | 'delivered';
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
   date: string;
   time: string;
   avatarUrl: string;
@@ -30,7 +30,7 @@ interface Order {
 })
 export class Orders implements OnInit, OnDestroy {
 
-  activeTab: 'all' | 'pending' | 'shipped' | 'delivered' = 'all';
+  activeTab: 'all' | 'pending' | 'processing' | 'completed' | 'cancelled' = 'all';
   showDetails = false;
   selectedOrder: Order | null = null;
   isDarkMode: boolean = false;
@@ -77,7 +77,7 @@ export class Orders implements OnInit, OnDestroy {
       'Apple HomePod Mini (Blue)'
     ],
     totalAmount: 1500,
-    status: 'shipped',
+    status: 'processing',
     date: '2026-01-26',
     time: '02:30 PM',
     avatarUrl: 'https://i.pravatar.cc/150?img=32',
@@ -95,7 +95,7 @@ export class Orders implements OnInit, OnDestroy {
       'Google Nest Hub Max'
     ],
     totalAmount: 3000,
-    status: 'delivered',
+    status: 'completed',
     date: '2026-01-22',
     time: '09:10 AM',
     avatarUrl: 'https://i.pravatar.cc/150?img=15',
@@ -133,7 +133,7 @@ export class Orders implements OnInit, OnDestroy {
       'Arlo Video Doorbell'
     ],
     totalAmount: 3000,
-    status: 'shipped',
+    status: 'processing',
     date: '2026-01-25',
     time: '11:55 AM',
     avatarUrl: 'https://i.pravatar.cc/150?img=8',
@@ -151,7 +151,7 @@ export class Orders implements OnInit, OnDestroy {
       'Amazon Echo Dot Kids (Dragon)'
     ],
     totalAmount: 1099,
-    status: 'delivered',
+    status: 'completed',
     date: '2026-01-20',
     time: '04:40 PM',
     avatarUrl: 'https://i.pravatar.cc/150?img=28',
@@ -188,18 +188,21 @@ export class Orders implements OnInit, OnDestroy {
       case 'pending':
         return this.orders.filter(o => o.status === 'pending' && !o.isArchived);
 
-      case 'shipped':
-        return this.orders.filter(o => o.status === 'shipped' && !o.isArchived);
+      case 'processing':
+        return this.orders.filter(o => o.status === 'processing' && !o.isArchived);
 
-      case 'delivered':
-        return this.orders.filter(o => o.status === 'delivered' && !o.isArchived);
+      case 'completed':
+        return this.orders.filter(o => o.status === 'completed' && !o.isArchived);
+
+      case 'cancelled':
+        return this.orders.filter(o => o.status === 'cancelled' && !o.isArchived);
 
       default:
         return this.orders.filter(o => !o.isArchived);
     }
   }
 
-  setActiveTab(tab: 'all' | 'pending' | 'shipped' | 'delivered'): void {
+  setActiveTab(tab: 'all' | 'pending' | 'processing' | 'completed' | 'cancelled'): void {
     this.activeTab = tab;
   }
 
@@ -222,12 +225,16 @@ export class Orders implements OnInit, OnDestroy {
     return this.orders.filter(o => o.status === 'pending' && !o.isArchived).length;
   }
 
-  getShippedCount(): number {
-    return this.orders.filter(o => o.status === 'shipped' && !o.isArchived).length;
+  getProcessingCount(): number {
+    return this.orders.filter(o => o.status === 'processing' && !o.isArchived).length;
   }
 
-  getDeliveredCount(): number {
-    return this.orders.filter(o => o.status === 'delivered' && !o.isArchived).length;
+  getCompletedCount(): number {
+    return this.orders.filter(o => o.status === 'completed' && !o.isArchived).length;
+  }
+
+  getCancelledCount(): number {
+    return this.orders.filter(o => o.status === 'cancelled' && !o.isArchived).length;
   }
 
   getTotalCount(): number {

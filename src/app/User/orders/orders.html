@@ -28,24 +28,34 @@
           Pending ({{ getPendingCount() }})
         </button>
 
-        <!-- SHIPPED -->
+        <!-- PROCESSING -->
         <button
-          (click)="setActiveTab('shipped')"
+          (click)="setActiveTab('processing')"
           class="pb-3 border-b-2 cursor-pointer"
-          [ngClass]="activeTab === 'shipped'
+          [ngClass]="activeTab === 'processing'
             ? 'text-[#60CED6] border-[#60CED6]'
             : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
-          Shipped ({{ getShippedCount() }})
+          Processing ({{ getProcessingCount() }})
         </button>
 
-        <!-- DELIVERED -->
+        <!-- COMPLETED -->
         <button
-          (click)="setActiveTab('delivered')"
+          (click)="setActiveTab('completed')"
           class="pb-3 border-b-2 cursor-pointer"
-          [ngClass]="activeTab === 'delivered'
+          [ngClass]="activeTab === 'completed'
             ? 'text-[#60CED6] border-[#60CED6]'
             : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
-          Delivered ({{ getDeliveredCount() }})
+          Completed ({{ getCompletedCount() }})
+        </button>
+
+        <!-- CANCELLED -->
+        <button
+          (click)="setActiveTab('cancelled')"
+          class="pb-3 border-b-2 cursor-pointer"
+          [ngClass]="activeTab === 'cancelled'
+            ? 'text-[#60CED6] border-[#60CED6]'
+            : (isDarkMode ? 'text-gray-300 border-transparent' : 'text-gray-600 border-transparent')">
+          Cancelled ({{ getCancelledCount() }})
         </button>
 
       </div>
@@ -59,7 +69,6 @@
           <tr
             class="border-b text-xs uppercase"
             [ngClass]="isDarkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'">
-            <th class="px-4 py-2 text-left font-medium">Order #</th>
             <th class="px-4 py-2 text-left font-medium">Customer</th>
             <th class="px-4 py-2 text-left font-medium">Items & Total</th>
             <th class="px-4 py-2 text-left font-medium">Date</th>
@@ -74,15 +83,6 @@
             (click)="onOrderClick(order)"
             class="border-b cursor-pointer"
             [ngClass]="isDarkMode ? 'border-gray-700 hover:bg-gray-700/50' : 'border-gray-100 hover:bg-gray-50'">
-
-            <!-- Order Number -->
-            <td class="px-4 py-2">
-              <div class="font-medium"
-                   [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-                   [class.font-bold]="!order.isRead">
-                {{ order.orderNumber }}
-              </div>
-            </td>
 
             <!-- Customer -->
             <td class="px-4 py-2">
@@ -144,8 +144,9 @@
                   class="w-2 h-2 rounded-full"
                   [ngClass]="{
                     'bg-yellow-400': order.status === 'pending',
-                    'bg-blue-400': order.status === 'shipped',
-                    'bg-green-400': order.status === 'delivered'
+                    'bg-blue-400': order.status === 'processing',
+                    'bg-green-400': order.status === 'completed',
+                    'bg-red-400': order.status === 'cancelled'
                   }">
                 </span>
 
