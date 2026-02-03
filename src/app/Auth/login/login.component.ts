@@ -17,6 +17,11 @@ export class LoginComponent {
   isLoading = false;
   errorMessage = '';
 
+  focusedField: 'email' | 'password' | null = null;
+  pupilX = 0;
+  pupilY = 0;
+  coverEyes = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -63,6 +68,38 @@ export class LoginComponent {
 
   goToRegister(): void {
     this.router.navigate(['/register']);
+  }
+
+  onFieldFocus(field: 'email' | 'password'): void {
+    this.focusedField = field;
+    this.coverEyes = field === 'password';
+  }
+
+  onFieldBlur(field: 'email' | 'password'): void {
+    if (this.focusedField === field) {
+      this.focusedField = null;
+    }
+    this.coverEyes = false;
+    this.pupilX = 0;
+    this.pupilY = 0;
+  }
+
+  onEmailInput(value: string): void {
+    if (this.focusedField !== 'email') return;
+    // Simple "follow" effect based on text length (no DOM measurements required)
+    const len = (value || '').length;
+    const x = Math.max(-10, Math.min(10, (len - 8) * 1.35));
+    this.pupilX = x;
+    this.pupilY = -3;
+  }
+
+  onPasswordInput(value: string): void {
+    if (this.focusedField !== 'password') return;
+    // Subtle movement even while covering eyes
+    const len = (value || '').length;
+    const x = Math.max(-6, Math.min(6, (len - 6) * 1));
+    this.pupilX = x;
+    this.pupilY = 0;
   }
 
   async signInWithGithub(): Promise<void> {

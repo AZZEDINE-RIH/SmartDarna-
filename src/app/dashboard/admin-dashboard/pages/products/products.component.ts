@@ -46,7 +46,6 @@ import { SupabaseService } from '../../../../services/supabase.service';
                   <th>Category</th>
                   <th>Price</th>
                   <th>Stock</th>
-                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -55,12 +54,7 @@ import { SupabaseService } from '../../../../services/supabase.service';
                   <td>{{ p.name }}</td>
                   <td>{{ p.category_name || 'Uncategorized' }}</td>
                   <td>{{ p.price | currency:'USD':'symbol':'1.2-2' }}</td>
-                  <td>{{ p.stock_quantity }}</td>
-                  <td>
-                    <span class="status-badge" [class.active]="p.is_active" [class.inactive]="!p.is_active">
-                      {{ p.is_active ? 'Active' : 'Inactive' }}
-                    </span>
-                  </td>
+                  <td>{{ p.stock }}</td>
                   <td>
                     <button class="btn-icon" (click)="openEdit(p)" title="Edit">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -80,7 +74,7 @@ import { SupabaseService } from '../../../../services/supabase.service';
                   </td>
                 </tr>
                 <tr *ngIf="!isLoading && filteredProducts.length === 0">
-                  <td colspan="6" class="empty">No products found.</td>
+                  <td colspan="5" class="empty">No products found.</td>
                 </tr>
               </tbody>
             </table>
@@ -119,15 +113,7 @@ import { SupabaseService } from '../../../../services/supabase.service';
               </label>
               <label class="field">
                 <span>Stock</span>
-                <input class="input" type="number" [(ngModel)]="form.stock_quantity" />
-              </label>
-              <label class="field">
-                <span>Image URL</span>
-                <input class="input" type="text" [(ngModel)]="form.image_url" />
-              </label>
-              <label class="field checkbox">
-                <span>Active</span>
-                <input type="checkbox" [(ngModel)]="form.is_active" />
+                <input class="input" type="number" [(ngModel)]="form.stock" />
               </label>
               <label class="field full">
                 <span>Description</span>
@@ -448,10 +434,8 @@ export class ProductsPageComponent implements OnInit {
     name: '',
     description: null,
     price: 0,
-    stock_quantity: 0,
-    category_id: null,
-    image_url: null,
-    is_active: true
+    stock: 0,
+    category_id: null
   };
 
   constructor(private supabaseService: SupabaseService) {}
@@ -475,11 +459,20 @@ export class ProductsPageComponent implements OnInit {
     this.isLoading = true;
     try {
       await Promise.all([this.loadCategories(), this.loadProducts()]);
+      this.applyCategoryNames();
     } catch (e: any) {
       this.errorMessage = e?.message || 'Failed to load products.';
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private applyCategoryNames() {
+    const map = new Map((this.categories || []).map(c => [c.id, c.name]));
+    this.products = (this.products || []).map(p => ({
+      ...p,
+      category_name: p.category_id ? (map.get(p.category_id) ?? null) : null
+    }));
   }
 
   private async loadCategories() {
@@ -500,11 +493,8 @@ export class ProductsPageComponent implements OnInit {
         name,
         description,
         price,
-        stock_quantity,
-        category_id,
-        image_url,
-        is_active,
-        categories(name)
+        stock,
+        category_id
       `)
       .order('created_at', { ascending: false });
 
@@ -515,11 +505,9 @@ export class ProductsPageComponent implements OnInit {
       name: p.name,
       description: p.description,
       price: Number(p.price ?? 0),
-      stock_quantity: Number(p.stock_quantity ?? 0),
+      stock: Number(p.stock ?? 0),
       category_id: p.category_id,
-      category_name: (p.categories as any)?.name || null,
-      image_url: p.image_url,
-      is_active: !!p.is_active
+      category_name: null
     }));
   }
 
@@ -529,10 +517,8 @@ export class ProductsPageComponent implements OnInit {
       name: '',
       description: null,
       price: 0,
-      stock_quantity: 0,
-      category_id: null,
-      image_url: null,
-      is_active: true
+      stock: 0,
+      category_id: null
     };
     this.isModalOpen = true;
     this.errorMessage = '';
@@ -544,10 +530,8 @@ export class ProductsPageComponent implements OnInit {
       name: p.name,
       description: p.description ?? null,
       price: p.price,
-      stock_quantity: p.stock_quantity,
-      category_id: p.category_id ?? null,
-      image_url: p.image_url ?? null,
-      is_active: p.is_active
+      stock: p.stock,
+      category_id: p.category_id ?? null
     };
     this.isModalOpen = true;
     this.errorMessage = '';
@@ -563,33 +547,82 @@ export class ProductsPageComponent implements OnInit {
     this.isSaving = true;
     this.errorMessage = '';
     try {
-      const payload = {
+      const payload: any = {
         name: this.form.name.trim(),
         description: this.form.description,
-        price: this.form.price ?? 0,
-        stock_quantity: this.form.stock_quantity ?? 0,
-        category_id: this.form.category_id,
-        image_url: this.form.image_url,
-        is_active: !!this.form.is_active
+        price: Number(this.form.price ?? 0),
+        stock: Number(this.form.stock ?? 0)
       };
 
-      if (this.editingId) {
-        const { error } = await this.supabaseService.getClient()
-          .from('products')
-          .update(payload)
-          .eq('id', this.editingId);
-        if (error) throw error;
-      } else {
-        const { error } = await this.supabaseService.getClient()
-          .from('products')
-          .insert([payload]);
-        if (error) throw error;
+      if (this.form.category_id) {
+        payload.category_id = this.form.category_id;
       }
 
-      await this.loadProducts();
+      if (this.editingId) {
+        const { data, error } = await this.supabaseService.getClient()
+          .from('products')
+          .update(payload)
+          .eq('id', this.editingId)
+          .select('id, name, description, price, stock, category_id');
+        if (error) {
+          console.error('Update product error:', error, { editingId: this.editingId, payload });
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          throw new Error('Update failed (no rows updated). Check RLS policies for UPDATE.');
+        }
+
+        const updated = data[0] as any;
+        const idx = this.products.findIndex(p => p.id === this.editingId);
+        const next: ProductRow = {
+          id: updated.id,
+          name: updated.name,
+          description: updated.description ?? null,
+          price: Number(updated.price ?? 0),
+          stock: Number(updated.stock ?? 0),
+          category_id: updated.category_id ?? null,
+          category_name: null
+        };
+        if (idx >= 0) {
+          this.products = [
+            ...this.products.slice(0, idx),
+            next,
+            ...this.products.slice(idx + 1)
+          ];
+        }
+      } else {
+        const { data, error } = await this.supabaseService.getClient()
+          .from('products')
+          .insert([payload])
+          .select('id, name, description, price, stock, category_id');
+        if (error) {
+          console.error('Insert product error:', error, { payload });
+          throw error;
+        }
+
+        if (data && data.length > 0) {
+          const inserted = data[0] as any;
+          const next: ProductRow = {
+            id: inserted.id,
+            name: inserted.name,
+            description: inserted.description ?? null,
+            price: Number(inserted.price ?? 0),
+            stock: Number(inserted.stock ?? 0),
+            category_id: inserted.category_id ?? null,
+            category_name: null
+          };
+          this.products = [next, ...this.products];
+        }
+      }
+
+      this.applyCategoryNames();
       this.closeModal();
     } catch (e: any) {
-      this.errorMessage = e?.message || 'Failed to save product.';
+      const msg = e?.message || 'Failed to save product.';
+      const details = e?.details ? ` (${e.details})` : '';
+      const hint = e?.hint ? ` Hint: ${e.hint}` : '';
+      this.errorMessage = `${msg}${details}${hint}`;
     } finally {
       this.isSaving = false;
     }
@@ -605,7 +638,7 @@ export class ProductsPageComponent implements OnInit {
         .delete()
         .eq('id', p.id);
       if (error) throw error;
-      await this.loadProducts();
+      this.products = this.products.filter(x => x.id !== p.id);
     } catch (e: any) {
       this.errorMessage = e?.message || 'Failed to delete product.';
     }
@@ -622,19 +655,15 @@ type ProductRow = {
   name: string;
   description: string | null;
   price: number;
-  stock_quantity: number;
+  stock: number;
   category_id: string | null;
   category_name: string | null;
-  image_url: string | null;
-  is_active: boolean;
 };
 
 type ProductForm = {
   name: string;
   description: string | null;
   price: number;
-  stock_quantity: number;
+  stock: number;
   category_id: string | null;
-  image_url: string | null;
-  is_active: boolean;
 };

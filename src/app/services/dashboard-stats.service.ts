@@ -27,6 +27,11 @@ export interface CategoryRevenue {
   revenue: number;
 }
 
+export interface CategoryCount {
+  category_name: string;
+  count: number;
+}
+
 export interface UserGrowth {
   current_month: number;
   previous_month: number;
@@ -94,6 +99,49 @@ export class DashboardStatsService {
       };
     }
 
+  }
+
+  /**
+   * Get product counts by category
+   */
+  async getProductCountsByCategory(): Promise<CategoryCount[]> {
+    try {
+      const { data: productsData, error: productsError } = await this.supabaseService.getClient()
+        .from('products')
+        .select('category_id');
+
+      if (productsError) {
+        console.error('Error fetching products for category counts:', productsError);
+        return [];
+      }
+
+      const { data: categoriesData, error: categoriesError } = await this.supabaseService.getClient()
+        .from('categories')
+        .select('id, name');
+
+      if (categoriesError) {
+        console.error('Error fetching categories for category counts:', categoriesError);
+      }
+
+      const categoryNameById = new Map<string, string>();
+      (categoriesData || []).forEach((c: any) => {
+        if (c?.id) categoryNameById.set(c.id, c.name || 'Other');
+      });
+
+      const counts: { [key: string]: number } = {};
+      (productsData || []).forEach((p: any) => {
+        const categoryId = p?.category_id as string | null;
+        const name = (categoryId && categoryNameById.get(categoryId)) || 'Other';
+        counts[name] = (counts[name] || 0) + 1;
+      });
+
+      return Object.entries(counts)
+        .map(([category_name, count]) => ({ category_name, count }))
+        .sort((a, b) => b.count - a.count);
+    } catch (error) {
+      console.error('Error calculating product counts by category:', error);
+      return [];
+    }
   }
 
   async getSellersGrowth(): Promise<{ growth: number; percentage: string }> {

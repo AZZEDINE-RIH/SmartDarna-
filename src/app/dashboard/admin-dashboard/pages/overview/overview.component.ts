@@ -1,13 +1,14 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardStatsService } from '../../../../services/dashboard-stats.service';
+import { SupabaseService } from '../../../../services/supabase.service';
 
 @Component({
   selector: 'app-admin-overview',
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="overview-dashboard" *ngIf="!isLoading; else loadingTemplate">
+    <div class="overview-dashboard">
       <!-- Stats Cards -->
       <div class="stats-grid">
         <div class="stat-card">
@@ -107,12 +108,12 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
           </div>
           <div class="chart-content">
             <div class="category-list">
-              <div class="category-item" *ngFor="let category of categoryRevenue">
+              <div class="category-item" *ngFor="let category of categoryCounts">
                 <div class="category-info">
                   <span class="category-dot" [ngClass]="getCategoryColor(category.category_name)"></span>
                   <span>{{ category.category_name }}</span>
                 </div>
-                <span class="category-value">{{ getCategoryPercentage(category.revenue) }}%</span>
+                <span class="category-value">{{ getCategoryPercentage(category.count) }}%</span>
               </div>
             </div>
           </div>
@@ -141,44 +142,12 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
         </div>
       </div>
     </div>
-
-    <!-- Loading Template -->
-    <ng-template #loadingTemplate>
-      <div class="loading-container">
-        <div class="loading-spinner"></div>
-        <p>Loading dashboard data...</p>
-      </div>
-    </ng-template>
   `,
   styles: [`
     .overview-dashboard {
       display: flex;
       flex-direction: column;
       gap: 2rem;
-    }
-
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 400px;
-      color: #64748b;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #e2e8f0;
-      border-top: 4px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 1rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
     }
 
     .stats-grid {
@@ -467,7 +436,8 @@ import { DashboardStatsService } from '../../../../services/dashboard-stats.serv
     }
   `]
 })
-export class AdminOverviewComponent implements OnInit, AfterViewInit {
+
+export class AdminOverviewComponent implements OnInit {
   stats = {
     totalUsers: 0,
     totalSellers: 0,
@@ -483,21 +453,29 @@ export class AdminOverviewComponent implements OnInit, AfterViewInit {
   ordersGrowth = { growth: 0, percentage: '0%' };
 
   weeklyRevenue: { day: string; revenue: number }[] = [];
-  categoryRevenue: { category_name: string; revenue: number }[] = [];
+  categoryCounts: { category_name: string; count: number }[] = [];
   recentTransactions: any[] = [];
 
   isLoading = true;
   totalRevenue = 0;
 
-  constructor(private dashboardStatsService: DashboardStatsService) {}
+  constructor(
+    private dashboardStatsService: DashboardStatsService,
+    private supabaseService: SupabaseService
+  ) {}
 
   async ngOnInit() {
+    await this.waitForSession();
     await this.loadDashboardData();
   }
 
-  async ngAfterViewInit() {
-    // Refresh data after view is initialized to ensure correct user context
-    await this.loadDashboardData();
+  private async waitForSession(maxWaitMs: number = 5000): Promise<void> {
+    const start = Date.now();
+    while (Date.now() - start < maxWaitMs) {
+      const session = this.supabaseService.getCurrentSession();
+      if (session?.user) return;
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
   }
 
   async loadDashboardData() {
@@ -514,7 +492,7 @@ export class AdminOverviewComponent implements OnInit, AfterViewInit {
         ordersGrowthData,
         revenueGrowthData,
         weeklyRevenueData,
-        categoryRevenueData,
+        categoryCountsData,
         recentTransactionsData
       ] = await Promise.all([
         this.dashboardStatsService.getDashboardStats(),
@@ -523,7 +501,7 @@ export class AdminOverviewComponent implements OnInit, AfterViewInit {
         this.dashboardStatsService.getOrdersGrowth(),
         this.dashboardStatsService.getRevenueGrowth(),
         this.dashboardStatsService.getWeeklyRevenue(),
-        this.dashboardStatsService.getRevenueByCategory(),
+        this.dashboardStatsService.getProductCountsByCategory(),
         this.dashboardStatsService.getRecentTransactions(5)
       ]);
 
@@ -533,7 +511,7 @@ export class AdminOverviewComponent implements OnInit, AfterViewInit {
       this.ordersGrowth = ordersGrowthData;
       this.revenueGrowth = revenueGrowthData;
       this.weeklyRevenue = weeklyRevenueData;
-      this.categoryRevenue = categoryRevenueData;
+      this.categoryCounts = categoryCountsData;
       this.recentTransactions = recentTransactionsData;
       this.totalRevenue = statsData.totalRevenue;
 
@@ -550,9 +528,10 @@ export class AdminOverviewComponent implements OnInit, AfterViewInit {
     return maxRevenue > 0 ? (revenue / maxRevenue) * 100 : 0;
   }
 
-  getCategoryPercentage(revenue: number): string {
-    if (this.totalRevenue === 0) return '0';
-    return ((revenue / this.totalRevenue) * 100).toFixed(1);
+  getCategoryPercentage(count: number): string {
+    const total = (this.categoryCounts || []).reduce((sum, c) => sum + (c.count || 0), 0);
+    if (total === 0) return '0';
+    return ((count / total) * 100).toFixed(1);
   }
 
   getCategoryColor(categoryName: string): string {

@@ -167,15 +167,12 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/admin-dashboard', exact: false }, // Use exact: false to match children? No, /admin-dashboard/overview
-    // Actually, if I redirect /admin-dashboard to /admin-dashboard/overview, I should link to /admin-dashboard
-    // Let's use /admin-dashboard/overview as the link for Dashboard
-    { label: 'Dashboard', icon: 'dashboard', route: '/admin-dashboard/overview', exact: true },
-    { label: 'Products', icon: 'inventory_2', route: '/admin-dashboard/products', exact: true },
-    { label: 'Users', icon: 'people', route: '/admin-dashboard/users', exact: true },
-    { label: 'Sellers', icon: 'store', route: '/admin-dashboard/sellers', exact: true },
-    { label: 'Orders', icon: 'shopping_cart', route: '/admin-dashboard/orders', exact: true },
-    { label: 'Settings', icon: 'settings', route: '/admin-dashboard/settings', exact: true },
+    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard/overview', exact: true },
+    { label: 'Products', icon: 'inventory_2', route: '/dashboard/products', exact: true },
+    { label: 'Users', icon: 'people', route: '/dashboard/users', exact: true },
+    { label: 'Sellers', icon: 'store', route: '/dashboard/sellers', exact: true },
+    { label: 'Orders', icon: 'shopping_cart', route: '/dashboard/orders', exact: true },
+    { label: 'Settings', icon: 'settings', route: '/dashboard/settings', exact: true },
   ];
 
   constructor(private authService: AuthService, private router: Router) {}
