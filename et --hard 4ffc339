@@ -1,0 +1,12 @@
+[33mfc8fa66[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mazzBranche[m[33m, [m[1;31morigin/azzBranche[m[33m)[m HEAD@{0}: checkout: moving from 4ffc33943ec58de44ab323f4a3e0985c13d0e5f8 to azzBranche
+[33m4ffc339[m HEAD@{1}: commit: Mes modifications avant switch
+[33m765d471[m HEAD@{2}: commit: make a real dashbaord
+[33m6a81634[m HEAD@{3}: commit: fix AUTH
+[33mfc8fa66[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mazzBranche[m[33m, [m[1;31morigin/azzBranche[m[33m)[m HEAD@{4}: checkout: moving from azzBranche to fc8fa6626c606828105ba1ee60a1de323920ca7a
+[33mfc8fa66[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mazzBranche[m[33m, [m[1;31morigin/azzBranche[m[33m)[m HEAD@{5}: commit: dashboard modifications version 2
+[33m20589a7[m HEAD@{6}: commit: dashboard modifications
+[33mfe8e1e2[m HEAD@{7}: commit: la premier version de page de connexion et deconnexion et tableau de bord
+[33m877824c[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmaster[m[33m, [m[1;32mmain[m[33m)[m HEAD@{8}: checkout: moving from main to azzBranche
+[33m877824c[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmaster[m[33m, [m[1;32mmain[m[33m)[m HEAD@{9}: checkout: moving from master to main
+[33m877824c[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmaster[m[33m, [m[1;32mmain[m[33m)[m HEAD@{10}: commit: initial commit
+[33mfa06fd1[m HEAD@{11}: commit (initial): initial commit
