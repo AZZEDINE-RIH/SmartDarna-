@@ -9,11 +9,16 @@ import { ServicesComponent } from './Pages/services-page/services.component';
 import { CheckoutComponent } from './Pages/checkout/checkout.component';
 import { OrderConfirmationComponent } from './Pages/order-confirmation/order-confirmation.component';
 import { LoginComponent } from './Pages/login/login.component';
+import { TeamComponent } from './Pages/team/team.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: HomePage,
+  },
+  {
+    path: 'team',
+    component: TeamComponent,
   },
   {
     path: 'about',

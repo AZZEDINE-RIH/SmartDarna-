@@ -7,12 +7,13 @@ import { BestSellersComponent } from '../best-sellers/best-sellers.component';
 import { CustomerReviewsComponent } from '../customer-reviews/customer-reviews.component';
 import { BrandSliderComponent } from '../brand-slider/brand-slider.component';
 
+
 @Component({
   selector: 'app-home-page',
   standalone: true,
   imports: [HeroSectionComponent, WhyChooseComponent, InstallationCtaComponent, BestSellersComponent, CustomerReviewsComponent, BrandSliderComponent],
   templateUrl: './home-page.html',
-  styleUrl: './home-page.css',
+  styleUrls: ['./home-page.css'],
 })
 export class HomePage {
 

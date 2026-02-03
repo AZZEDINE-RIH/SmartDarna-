@@ -1,0 +1,131 @@
+.cursor-follow {
+  position: fixed;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 35%, transparent) 0%,
+    color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 15%, transparent) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+  will-change: transform;
+  mix-blend-mode: screen;
+}
+
+/* Dark mode enhancement - using your actual dark class */
+html.dark .cursor-follow,
+:root.dark .cursor-follow,
+.dark .cursor-follow {
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    transparent 70%
+  );
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: blur(0.5px);
+}
+
+/* Light mode enhancement */
+@media (prefers-color-scheme: light) {
+  .cursor-follow {
+    background: radial-gradient(circle, 
+      color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 30%, transparent) 0%,
+      color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 12%, transparent) 40%,
+      transparent 70%
+    );
+    opacity: 0.8;
+    mix-blend-mode: multiply;
+  }
+}
+
+/* Theme-aware using your actual dark class */
+html.dark .cursor-follow,
+:root.dark .cursor-follow,
+.dark .cursor-follow {
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    transparent 70%
+  );
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: blur(0.5px);
+}
+
+/* Light mode - when dark class is not present */
+html:not(.dark) .cursor-follow,
+:root:not(.dark) .cursor-follow {
+  background: radial-gradient(circle, 
+    color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 30%, transparent) 0%,
+    color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 12%, transparent) 40%,
+    transparent 70%
+  );
+  opacity: 0.8;
+  mix-blend-mode: multiply;
+}
+
+/* Hide on touch devices */
+@media (hover: none) {
+  .cursor-follow {
+    display: none;
+  }
+}
+
+/* Subtle pulse animation */
+@keyframes cursorPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.cursor-follow:hover {
+  animation: cursorPulse 2s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  .cursor-follow {
+    width: 30px;
+    height: 30px;
+    top: -15px;
+    left: -15px;
+    opacity: 0.7;
+    background: radial-gradient(circle, 
+      color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 30%, transparent) 0%,
+      color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 12%, transparent) 40%,
+      transparent 70%
+    );
+  }
+}
+
+/* Mobile dark mode using your actual dark class */
+@media (max-width: 768px) {
+  html.dark .cursor-follow,
+  :root.dark .cursor-follow,
+  .dark .cursor-follow {
+    opacity: 0.95;
+    background: radial-gradient(circle, 
+      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.12) 40%,
+      transparent 70%
+    );
+    mix-blend-mode: normal;
+    filter: blur(0.3px);
+  }
+}
+
+@media (max-width: 768px) and (prefers-color-scheme: light) {
+  .cursor-follow {
+    opacity: 0.65;
+    mix-blend-mode: multiply;
+  }
+}

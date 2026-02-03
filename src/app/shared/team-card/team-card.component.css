@@ -1,0 +1,155 @@
+:host {
+  display: block;
+}
+
+.team-card {
+  --team-line: var(--primary-color, var(--color-primary, var(--accent-color)));
+
+  position: relative;
+  z-index: 2;
+  width: 220px;
+  height: 310px;
+  border-radius: 28px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--card-bg) 70%, #000 30%);
+  border: 1px solid color-mix(in oklab, var(--border-color) 60%, transparent);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.team-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    0 8px 16px color-mix(in oklab, var(--team-line) 20%, transparent);
+  border-color: var(--accent-color);
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 560px at 25% 0%, rgba(255,255,255,0.10), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.70));
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.9) contrast(1.06);
+  transition: all 0.3s ease;
+}
+
+.team-card:hover .photo {
+  filter: saturate(1.1) contrast(1.1);
+  transform: scale(1.05);
+}
+
+.team-card:active .photo {
+  filter: saturate(1.05) contrast(1.05);
+  transform: scale(1.02);
+  transition-duration: 0.1s;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.74) 50%, rgba(0,0,0,0.92) 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.team-card:hover .overlay {
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.76) 50%, rgba(0,0,0,0.93) 100%);
+}
+
+.name {
+  margin-top: 6px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
+  line-height: 1.05;
+  font-size: 19px;
+  color: #ffffff;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.team-card:hover .name {
+  transform: translateZ(0);
+  opacity: 1;
+}
+
+.role {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--team-line);
+  opacity: 0.9;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.team-card:hover .role {
+  transform: translateZ(0);
+  opacity: 1;
+}
+
+.team-card.director {
+  width: 280px;
+  height: 390px;
+}
+
+.team-card.director .name {
+  font-size: 22px;
+}
+
+.team-card.manager {
+  width: 180px;
+  height: 255px;
+}
+
+.team-card.manager .name {
+  font-size: 16px;
+}
+
+.team-card.member {
+  width: 150px;
+  height: 210px;
+  border-radius: 24px;
+}
+
+.team-card.member .name {
+  font-size: 14px;
+}
+
+.team-card.member .role {
+  font-size: 10px;
+}
+
+/* Responsive hover effects */
+@media (max-width: 1024px) {
+  .team-card:hover {
+    transform: translateY(-6px) scale(1.015);
+  }
+  
+  .team-card:hover .photo {
+    transform: scale(1.03);
+  }
+}
+
+@media (max-width: 640px) {
+  .team-card:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+  
+  .team-card:hover .photo {
+    transform: scale(1.02);
+  }
+}

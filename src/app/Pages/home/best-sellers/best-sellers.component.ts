@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { ProductCardComponent, Product } from '../../../shared/product-card/product-card.component';
+import { CarouselComponent } from '../../../shared/carousel/carousel.component';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 
 @Component({
     selector: 'app-best-sellers',
     standalone: true,
-    imports: [CommonModule, ProductCardComponent],
+    imports: [CommonModule, ProductCardComponent, CarouselComponent],
     templateUrl: './best-sellers.component.html',
     styleUrls: ['./best-sellers.component.css']
 })

@@ -1,6 +1,7 @@
 <div class="confirmation-page">
     <div class="container">
         <div class="confirmation-card card slide-up">
+            <!-- Success Icon -->
             <div class="success-icon-wrapper">
                 <div class="success-ring"></div>
                 <div class="success-icon">
@@ -14,22 +15,143 @@
             <h1 class="confirmation-title">Order <span class="text-primary">Confirmed!</span></h1>
             <p class="confirmation-subtitle">Thank you for choosing SmartDarna. Your smart life starts now.</p>
 
+            <!-- Order ID Badge -->
             <div class="order-id-badge">
                 Order ID: <strong>{{ orderId }}</strong>
             </div>
 
-            <div class="confirmation-details">
-                <p>We've received your order and are currently processing it. You will receive a confirmation email with
-                    your order details and tracking information shortly.</p>
+            <!-- Order Details Grid -->
+            <div class="order-details-grid">
+                <!-- Customer Information -->
+                <div class="detail-section">
+                    <h3 class="detail-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Customer Information
+                    </h3>
+                    <div class="detail-content">
+                        <p><strong>{{ customerInfo.name }}</strong></p>
+                        <p>{{ customerInfo.email }}</p>
+                        <p>{{ customerInfo.phone }}</p>
+                        <p>{{ customerInfo.address }}</p>
+                    </div>
+                </div>
+
+                <!-- Order Information -->
+                <div class="detail-section">
+                    <h3 class="detail-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11H3v10h6V11z"/>
+                            <path d="M21 11h-6v10h6V11z"/>
+                            <path d="M14 3v18"/>
+                            <path d="M10 3v18"/>
+                        </svg>
+                        Order Information
+                    </h3>
+                    <div class="detail-content">
+                        <p><strong>Order Date:</strong> {{ orderDate | date:'longDate' }}</p>
+                        <p><strong>Payment Method:</strong> {{ paymentMethod }}</p>
+                        <p><strong>Tracking Number:</strong> {{ trackingNumber }}</p>
+                        <p><strong>Estimated Delivery:</strong> {{ estimatedDelivery | date:'longDate' }}</p>
+                    </div>
+                </div>
             </div>
 
+            <!-- Order Items -->
+            <div class="order-items-section">
+                <h3 class="detail-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    Order Items
+                </h3>
+                <div class="order-items">
+                    <div class="order-item" *ngFor="let item of orderItems">
+                        <div class="item-info">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-details">Qty: {{ item.quantity }} | Color: {{ item.color }}</span>
+                        </div>
+                        <div class="item-price">{{ item.price * item.quantity }} MAD</div>
+                    </div>
+                </div>
+                <div class="order-total">
+                    <div class="total-line">
+                        <span>Subtotal</span>
+                        <span>{{ orderTotal }} MAD</span>
+                    </div>
+                    <div class="total-line">
+                        <span>Shipping</span>
+                        <span class="text-primary font-bold">FREE</span>
+                    </div>
+                    <div class="total-final">
+                        <span>Total</span>
+                        <span>{{ orderTotal }} MAD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
             <div class="confirmation-actions">
-                <button routerLink="/collection" class="btn main">Continue Shopping</button>
-                <button routerLink="/" class="btn ghost">Back to Home</button>
+                <button class="btn main" (click)="downloadInvoice()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Invoice
+                </button>
+                <button class="btn secondary" (click)="trackOrder()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    Track Order
+                </button>
+                <button class="btn ghost" (click)="printOrder()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 6 2 18 2 18 9"/>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                        <rect x="6" y="14" width="12" height="8"/>
+                    </svg>
+                    Print
+                </button>
             </div>
 
+            <!-- Navigation Links -->
+            <div class="navigation-links">
+                <a routerLink="/collection" class="btn main">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 2L3 9l6 7"/>
+                        <path d="M3 9h18"/>
+                    </svg>
+                    Continue Shopping
+                </a>
+                <a routerLink="/" class="btn ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+
+            <!-- Support Footer -->
             <div class="support-footer">
-                <p>Need help with your order? <a routerLink="/contact">Contact Support</a></p>
+                <div class="support-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>Need help with your order?</span>
+                    <a routerLink="/contact" class="support-link">Contact Support</a>
+                </div>
+                <div class="contact-info">
+                    <p><strong>Email:</strong> support@smartdarna.com</p>
+                    <p><strong>Phone:</strong> +212 600 000 000</p>
+                </div>
             </div>
         </div>
     </div>

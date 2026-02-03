@@ -1,0 +1,9 @@
+<div class="node-card">
+  <app-team-card [person]="node" [size]="size"></app-team-card>
+</div>
+
+<ul class="children" *ngIf="node.children?.length">
+  <li class="child" *ngFor="let child of node.children">
+    <app-team-node [node]="child" [level]="nextLevel"></app-team-node>
+  </li>
+</ul>

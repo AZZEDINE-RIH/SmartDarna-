@@ -3,6 +3,23 @@
         <div class="checkout-header">
             <h1 class="section-title">Secure <span class="text-primary">Checkout</span></h1>
             <p class="subtitle">Complete your order with your preferred payment method.</p>
+            
+            <!-- Security Badge -->
+            <div class="security-badges" *ngIf="showSecurityBadge && isSecureConnection()">
+                <div class="badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>SSL Secured</span>
+                </div>
+                <div class="badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span>256-bit Encryption</span>
+                </div>
+            </div>
         </div>
 
         <div class="checkout-grid">
@@ -11,30 +28,63 @@
 
                 <!-- 1. Customer Information -->
                 <div class="section-card card mb-6">
-                    <h2 class="card-title">1. Customer Information</h2>
+                    <h2 class="card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        1. Customer Information
+                    </h2>
                     <div class="card-form">
                         <div class="form-row">
                             <div class="form-group half">
-                                <label>Full Name</label>
+                                <label>Full Name *</label>
                                 <input type="text" formControlName="fullName" placeholder="John Doe"
-                                    [class.error]="checkoutForm.get('fullName')?.touched && checkoutForm.get('fullName')?.invalid">
+                                    [class.error]="formErrors['fullName']"
+                                    (input)="updateFieldError('fullName')">
+                                <div class="error-message" *ngIf="formErrors['fullName']">
+                                    {{ formErrors['fullName'] }}
+                                </div>
                             </div>
                             <div class="form-group half">
-                                <label>Phone Number</label>
-                                <input type="tel" formControlName="phone" placeholder="+212 600 000 000"
-                                    [class.error]="checkoutForm.get('phone')?.touched && checkoutForm.get('phone')?.invalid">
+                                <label>Email Address *</label>
+                                <input type="email" formControlName="email" placeholder="john@example.com"
+                                    [class.error]="formErrors['email']"
+                                    (input)="updateFieldError('email')">
+                                <div class="error-message" *ngIf="formErrors['email']">
+                                    {{ formErrors['email'] }}
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group half">
-                                <label>City</label>
-                                <input type="text" formControlName="city" placeholder="Casablanca"
-                                    [class.error]="checkoutForm.get('city')?.touched && checkoutForm.get('city')?.invalid">
+                                <label>Phone Number *</label>
+                                <input type="tel" formControlName="phone" placeholder="+212 600 000 000"
+                                    [class.error]="formErrors['phone']"
+                                    (input)="updateFieldError('phone')">
+                                <div class="error-message" *ngIf="formErrors['phone']">
+                                    {{ formErrors['phone'] }}
+                                </div>
                             </div>
                             <div class="form-group half">
-                                <label>Full Address</label>
+                                <label>City *</label>
+                                <input type="text" formControlName="city" placeholder="Casablanca"
+                                    [class.error]="formErrors['city']"
+                                    (input)="updateFieldError('city')">
+                                <div class="error-message" *ngIf="formErrors['city']">
+                                    {{ formErrors['city'] }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group full">
+                                <label>Full Address *</label>
                                 <input type="text" formControlName="address" placeholder="Appt 4, Building 12, Main St"
-                                    [class.error]="checkoutForm.get('address')?.touched && checkoutForm.get('address')?.invalid">
+                                    [class.error]="formErrors['address']"
+                                    (input)="updateFieldError('address')">
+                                <div class="error-message" *ngIf="formErrors['address']">
+                                    {{ formErrors['address'] }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -42,7 +92,13 @@
 
                 <!-- 2. Payment Method -->
                 <div class="section-card card">
-                    <h2 class="card-title">2. Payment Method</h2>
+                    <h2 class="card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="5" width="20" height="14" rx="2"/>
+                            <line x1="2" y1="10" x2="22" y2="10"/>
+                        </svg>
+                        2. Payment Method
+                    </h2>
 
                     <div class="method-options">
                         <!-- COD Option -->
@@ -91,44 +147,103 @@
                     <div class="online-payment-details slide-down" *ngIf="selectedMethod === 'online'">
                         <div class="online-selector">
                             <button class="online-btn" [class.active]="onlineMethod === 'card'"
-                                (click)="selectOnlineMethod('card')">Credit Card</button>
+                                (click)="selectOnlineMethod('card')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="5" width="20" height="14" rx="2"/>
+                                    <line x1="2" y1="10" x2="22" y2="10"/>
+                                </svg>
+                                Credit Card
+                            </button>
                             <button class="online-btn" [class.active]="onlineMethod === 'paypal'"
-                                (click)="selectOnlineMethod('paypal')">PayPal</button>
+                                (click)="selectOnlineMethod('paypal')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                    <path d="M2 17l10 5 10-5"/>
+                                    <path d="M2 12l10 5 10-5"/>
+                                </svg>
+                                PayPal
+                            </button>
                             <button class="online-btn" [class.active]="onlineMethod === 'stripe'"
-                                (click)="selectOnlineMethod('stripe')">Stripe</button>
+                                (click)="selectOnlineMethod('stripe')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                </svg>
+                                Stripe
+                            </button>
                         </div>
 
                         <!-- Credit Card Form -->
                         <div class="card-form" *ngIf="onlineMethod === 'card'">
+                            <!-- Card Type Display -->
+                            <div class="card-type-display" *ngIf="cardType">
+                                <img [src]="'assets/images/' + cardType + '.png'" [alt]="cardType" class="card-logo">
+                                <span class="card-type-name">{{ cardType | titlecase }}</span>
+                            </div>
+
                             <div class="form-group full">
-                                <label>Cardholder Name</label>
+                                <label>Cardholder Name *</label>
                                 <input type="text" formControlName="cardName" placeholder="Full name as on card"
-                                    [class.error]="checkoutForm.get('cardName')?.touched && checkoutForm.get('cardName')?.invalid">
+                                    [class.error]="formErrors['cardName']"
+                                    (input)="updateFieldError('cardName')">
+                                <div class="error-message" *ngIf="formErrors['cardName']">
+                                    {{ formErrors['cardName'] }}
+                                </div>
                             </div>
                             <div class="form-group full">
-                                <label>Card Number</label>
+                                <label>Card Number *</label>
                                 <input type="text" formControlName="cardNumber" placeholder="0000 0000 0000 0000"
-                                    maxlength="16"
-                                    [class.error]="checkoutForm.get('cardNumber')?.touched && checkoutForm.get('cardNumber')?.invalid">
+                                    maxlength="19"
+                                    [class.error]="formErrors['cardNumber']"
+                                    (input)="formatCardNumber($event); updateFieldError('cardNumber')">
+                                <div class="error-message" *ngIf="formErrors['cardNumber']">
+                                    {{ formErrors['cardNumber'] }}
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group half">
-                                    <label>Expiry Date</label>
+                                    <label>Expiry Date *</label>
                                     <input type="text" formControlName="expiryDate" placeholder="MM/YY" maxlength="5"
-                                        [class.error]="checkoutForm.get('expiryDate')?.touched && checkoutForm.get('expiryDate')?.invalid">
+                                        [class.error]="formErrors['expiryDate']"
+                                        (input)="formatExpiryDate($event); updateFieldError('expiryDate')">
+                                    <div class="error-message" *ngIf="formErrors['expiryDate']">
+                                        {{ formErrors['expiryDate'] }}
+                                    </div>
                                 </div>
                                 <div class="form-group half">
-                                    <label>CVV</label>
-                                    <input type="password" formControlName="cvv" placeholder="123" maxlength="4"
-                                        [class.error]="checkoutForm.get('cvv')?.touched && checkoutForm.get('cvv')?.invalid">
+                                    <label>CVV *</label>
+                                    <div class="cvv-input-wrapper">
+                                        <input type="password" formControlName="cvv" placeholder="123" maxlength="4"
+                                            [class.error]="formErrors['cvv']"
+                                            (input)="updateFieldError('cvv')">
+                                        <div class="cvv-help" *ngIf="cardType">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
+                                            <span class="cvv-tooltip">{{ getCvvHelper() }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="error-message" *ngIf="formErrors['cvv']">
+                                        {{ formErrors['cvv'] }}
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="form-group full">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" formControlName="saveCard">
+                                    <span class="checkmark"></span>
+                                    Save card information for future purchases
+                                </label>
                             </div>
                         </div>
 
                         <!-- PayPal/Stripe Placeholders -->
                         <div class="provider-message" *ngIf="onlineMethod === 'paypal' || onlineMethod === 'stripe'">
-                            <p>You will be redirected to {{ onlineMethod | titlecase }} to complete your secure payment.
-                            </p>
+                            <div class="provider-logo">
+                                <img [src]="'assets/images/' + onlineMethod + '-logo.png'" [alt]="onlineMethod">
+                            </div>
+                            <p>You will be redirected to {{ onlineMethod | titlecase }} to complete your secure payment.</p>
                         </div>
                     </div>
 
@@ -148,6 +263,11 @@
 
                     <!-- Payment Error -->
                     <div class="error-message fade-in" *ngIf="paymentError">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
                         {{ paymentError }}
                     </div>
                 </div>
@@ -188,11 +308,26 @@
                         </div>
                     </div>
 
-                    <button class="btn main w-full mt-6 place-order-btn" [disabled]="isLoading"
+                    <!-- Enhanced Order Button -->
+                    <button class="btn main w-full mt-6 place-order-btn" 
+                        [disabled]="isLoading || isProcessingPayment"
                         (click)="requestPlaceOrder()">
-                        <span *ngIf="!isLoading">Place Order</span>
-                        <div class="spinner-small" *ngIf="isLoading"></div>
+                        <span *ngIf="!isLoading && !isProcessingPayment">Place Order</span>
+                        <div class="spinner-small" *ngIf="isLoading && !isProcessingPayment"></div>
+                        <div class="payment-processing" *ngIf="isProcessingPayment">
+                            <div class="processing-spinner"></div>
+                            <span>Processing Payment...</span>
+                        </div>
                     </button>
+
+                    <!-- Success State -->
+                    <div class="payment-success" *ngIf="paymentSuccess">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span>Payment Successful! Redirecting...</span>
+                    </div>
 
                     <p class="security-text">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"

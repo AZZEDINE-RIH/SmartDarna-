@@ -53,8 +53,8 @@ export class ProductDetailsComponent implements OnInit {
                 this.product = product;
 
                 if (product) {
-                    this.selectedImage = product.images[0];
-                    this.selectedColor = product.colors[0];
+                    this.selectedImage = (product.images && product.images.length > 0) ? product.images[0] : '';
+                    this.selectedColor = (product.colors && product.colors.length > 0) ? product.colors[0] : '';
                 } else {
                     this.error = 'Product not found';
                 }

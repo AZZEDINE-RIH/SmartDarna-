@@ -7,6 +7,74 @@
     min-height: 100vh;
 }
 
+/* ===== STATISTICS SECTION ===== */
+.statistics-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    padding: var(--spacing-2xl) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.statistics-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(96, 206, 214, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(96, 206, 214, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.statistics-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+    max-width: 200px;
+}
+
+.stat-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--primary-color, var(--color-primary, var(--accent-color)));
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    text-shadow: 0 4px 20px rgba(96, 206, 214, 0.3);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-item:hover .stat-number {
+    transform: translateY(-2px);
+    text-shadow: 0 6px 30px rgba(96, 206, 214, 0.4);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #b0b0b0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(180deg, transparent, rgba(96, 206, 214, 0.3), transparent);
+    opacity: 0.6;
+}
+
 /* ===== HEADER ===== */
 .about-header {
     padding-top: var(--spacing-3xl);
@@ -198,5 +266,39 @@
 
     .feature-card {
         padding: var(--spacing-lg);
+    }
+
+    /* Statistics responsive */
+    .statistics-section {
+        padding: var(--spacing-xl) 0;
+    }
+
+    .statistics-grid {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .stat-item {
+        max-width: none;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .stat-divider {
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(96, 206, 214, 0.3), transparent);
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
     }
 }

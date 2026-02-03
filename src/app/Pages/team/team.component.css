@@ -1,0 +1,209 @@
+.team-page {
+  position: relative;
+  padding: clamp(70px, 8vw, 110px) 0;
+  --team-line: var(--primary-color, var(--color-primary, var(--accent-color)));
+  overflow-x: clip;
+  background:
+    radial-gradient(900px 620px at 20% 10%, color-mix(in oklab, var(--team-line) 10%, transparent), transparent 62%),
+    radial-gradient(700px 520px at 80% 30%, rgba(255, 255, 255, 0.03), transparent 58%),
+    linear-gradient(180deg, color-mix(in oklab, var(--bg-color) 96%, #000 4%), var(--bg-color));
+}
+
+.team-header {
+  text-align: center;
+  margin-bottom: clamp(34px, 4vw, 54px);
+  padding: 0 clamp(16px, 4vw, 48px);
+}
+
+.pill {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--border-color) 70%, transparent);
+  background: color-mix(in oklab, var(--card-bg) 60%, transparent);
+  color: var(--text-secondary);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 14px 0 8px;
+  font-size: clamp(38px, 4.8vw, 64px);
+  font-weight: 900;
+  line-height: 1.05;
+  color: var(--text-color);
+  letter-spacing: -0.8px;
+}
+
+.accent {
+  color: var(--team-line);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+.org-chart {
+  position: relative;
+  width: 100%;
+  padding: clamp(8px, 1.2vw, 14px) clamp(10px, 3vw, 42px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(44px, 5vw, 74px);
+  --director-card-h: 390px;
+  --director-to-hub: 36px;
+}
+
+.director-row {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.managers-area {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(40px, 5vw, 90px);
+  justify-items: center;
+  align-items: start;
+  z-index: 2;
+}
+
+.manager-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 46px;
+  padding-top: 22px;
+  min-width: 0;
+}
+
+.members {
+  position: relative;
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-items: start;
+  column-gap: clamp(14px, 1.4vw, 20px);
+  row-gap: clamp(16px, 1.6vw, 22px);
+  padding-top: 18px;
+}
+
+.member {
+  position: relative;
+  z-index: 2;
+}
+
+.members.layout-row-3 {
+  grid-template-columns: repeat(3, max-content);
+}
+
+.members.layout-grid-2x2 {
+  grid-template-columns: repeat(2, max-content);
+}
+
+.members.layout-row-2 {
+  grid-template-columns: repeat(2, max-content);
+}
+
+/* Director -> Managers connectors */
+.org-chart::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--director-card-h) + 16px);
+  left: 50%;
+  width: 1px;
+  height: var(--director-to-hub);
+  transform: translateX(-50%);
+  background: color-mix(in oklab, var(--team-line) 55%, var(--border-color));
+  z-index: 1;
+}
+
+.org-chart::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--director-card-h) + 16px + var(--director-to-hub));
+  left: 50%;
+  width: min(980px, 84vw);
+  height: 1px;
+  transform: translateX(-50%);
+  background: color-mix(in oklab, var(--team-line) 55%, var(--border-color));
+  z-index: 1;
+}
+
+.manager-group::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 32px;
+  transform: translateX(-50%);
+  background: color-mix(in oklab, var(--team-line) 55%, var(--border-color));
+  z-index: 1;
+}
+
+/* Manager -> Members connectors (per group only) */
+.members::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  width: 1px;
+  height: 30px;
+  transform: translateX(-50%);
+  background: color-mix(in oklab, var(--team-line) 55%, var(--border-color));
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .org-chart {
+    padding: 8px 0;
+    --director-card-h: 390px;
+    --director-to-hub: 22px;
+  }
+
+  .managers-area {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 960px;
+    gap: 42px;
+  }
+
+  .org-chart::after {
+    display: none;
+  }
+
+  .org-chart::before {
+    height: var(--director-to-hub);
+  }
+
+  .manager-group::before {
+    height: 18px;
+  }
+
+  .members.layout-row-3 {
+    grid-template-columns: repeat(2, max-content);
+  }
+}
+
+@media (max-width: 640px) {
+  .managers-area {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    gap: 36px;
+  }
+
+  .members.layout-row-3,
+  .members.layout-grid-2x2 {
+    grid-template-columns: 1fr;
+  }
+}

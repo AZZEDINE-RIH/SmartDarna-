@@ -27,7 +27,7 @@ export class ProductService {
         return this.getProducts().pipe(
             map(products => {
                 console.log('🔎 ProductService: Searching in', products.length, 'products for ID:', id);
-                const found = products.find(p => p.id === id);
+                const found = products.find(p => String(p.id) === String(id));
                 if (found) {
                     console.log('✅ ProductService: Product found:', found.name);
                 } else {

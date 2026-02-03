@@ -1,0 +1,129 @@
+:host {
+  display: block;
+}
+
+.carousel {
+  position: relative;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-track {
+  --gap: 24px;
+  --per-view: 1;
+  --translate-x: 0px;
+
+  display: flex;
+  gap: var(--gap);
+  will-change: transform;
+  transform: translate3d(calc(-1 * var(--translate-x)), 0, 0);
+}
+
+.carousel-track.is-transitioning {
+  transition: transform 300ms ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+}
+
+.carousel-item > * {
+  height: 100%;
+}
+
+.carousel-item {
+  transition: transform 300ms ease-in-out;
+}
+
+.carousel-item:hover {
+  transform: scale(1.03);
+}
+
+.carousel-header {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.carousel-arrow {
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: color-mix(in oklab, var(--bg-color) 85%, transparent);
+  color: var(--text-color);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 300ms ease-in-out, box-shadow 300ms ease-in-out, border-color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+.carousel-arrow span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.carousel-arrow.left {
+  left: 10px;
+}
+
+.carousel-arrow.right {
+  right: 10px;
+}
+
+.carousel-arrow:hover {
+  transform: translateY(-50%) scale(1.03);
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-hover);
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--border-color) 75%, transparent);
+  background: transparent;
+  cursor: pointer;
+  transition: transform 300ms ease-in-out, background-color 300ms ease-in-out, border-color 300ms ease-in-out;
+}
+
+.dot:hover {
+  transform: scale(1.03);
+  border-color: var(--accent-color);
+}
+
+.dot.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+@media (max-width: 640px) {
+  .carousel-arrow {
+    width: 38px;
+    height: 38px;
+  }
+
+  .carousel-arrow.left {
+    left: 6px;
+  }
+
+  .carousel-arrow.right {
+    right: 6px;
+  }
+}

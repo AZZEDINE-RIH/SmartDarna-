@@ -5,12 +5,23 @@
             <p class="subtitle">Our most loved smart home products</p>
         </div>
 
-        <div class="product-grid">
-            <div *ngFor="let product of bestSellers; let i = index" class="product-card-wrapper fade-up"
-                [style.animation-delay]="(i * 0.15) + 's'">
-                <app-product-card [product]="product" [showBadge]="true" (addToCart)="onAddToCart($event)">
-                </app-product-card>
-            </div>
-        </div>
+        <app-carousel class="best-sellers-carousel"
+            [items]="bestSellers"
+            [autoplay]="true"
+            [autoplayDelayMs]="3200"
+            [pauseOnHover]="true"
+            [showArrows]="true"
+            [showDots]="true"
+            [perViewDesktop]="4"
+            [perViewTablet]="2"
+            [perViewMobile]="1"
+            [gapPx]="24">
+            <ng-template let-product>
+                <div class="product-slide">
+                    <app-product-card [product]="product" [showBadge]="true" (addToCart)="onAddToCart($event)">
+                    </app-product-card>
+                </div>
+            </ng-template>
+        </app-carousel>
     </div>
 </section>

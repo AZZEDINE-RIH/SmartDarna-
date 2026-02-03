@@ -1,0 +1,11 @@
+<div class="team-card" [class.director]="size === 'director'" [class.manager]="size === 'manager'" [class.member]="size === 'member'">
+  <div class="card-top">
+    <div class="photo" [style.background-image]="'url(' + person.photoUrl + ')'"></div>
+  </div>
+  <div class="card-bottom">
+    <div class="overlay">
+      <div class="role">{{ person.role }}</div>
+      <div class="name">{{ person.name }}</div>
+    </div>
+  </div>
+</div>
