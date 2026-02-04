@@ -13,6 +13,7 @@ import { AnalyticsPageComponent } from './dashboard/admin-dashboard/pages/analyt
 import { SettingsPageComponent } from './dashboard/admin-dashboard/pages/settings/settings.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
+import { PermissionGuard } from './guards/permission.guard';
 
 export const routes: Routes = [
   {
@@ -52,27 +53,39 @@ export const routes: Routes = [
       },
       {
         path: 'products',
-        component: ProductsPageComponent
+        component: ProductsPageComponent,
+        canActivate: [PermissionGuard],
+        data: { permissions: ['manage_products'] }
       },
       {
         path: 'users',
-        component: UsersPageComponent
+        component: UsersPageComponent,
+        canActivate: [PermissionGuard],
+        data: { superAdminOnly: true }
       },
       {
         path: 'sellers',
-        component: SellersPageComponent
+        component: SellersPageComponent,
+        canActivate: [PermissionGuard],
+        data: { permissions: ['manage_sellers'] }
       },
       {
         path: 'orders',
-        component: OrdersPageComponent
+        component: OrdersPageComponent,
+        canActivate: [PermissionGuard],
+        data: { permissions: ['manage_orders'] }
       },
       {
         path: 'analytics',
-        component: AnalyticsPageComponent
+        component: AnalyticsPageComponent,
+        canActivate: [PermissionGuard],
+        data: { permissions: ['view_analytics'] }
       },
       {
         path: 'settings',
-        component: SettingsPageComponent
+        component: SettingsPageComponent,
+        canActivate: [PermissionGuard],
+        data: { superAdminOnly: true }
       },
       {
         path: '',

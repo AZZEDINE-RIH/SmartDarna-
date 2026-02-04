@@ -205,6 +205,7 @@ export class AuthService {
         .upsert(
           {
             id: user.id,
+            email: user.email || null,
             name: data?.name ?? user.user_metadata?.['name'] ?? user.email ?? 'User',
             role: data?.role ?? user.user_metadata?.['role'] ?? 'user'
           },

@@ -36,6 +36,7 @@ export class SellerService {
           status,
           profiles(
             full_name,
+            name,
             email,
             phone,
             address
@@ -60,7 +61,7 @@ export class SellerService {
             shop_name: seller.shop_name,
             description: seller.description,
             status: seller.status,
-            full_name: profile?.full_name || 'N/A',
+            full_name: profile?.full_name || profile?.name || 'N/A',
             email: profile?.email || 'N/A',
             phone: profile?.phone,
             address: profile?.address,
@@ -90,6 +91,7 @@ export class SellerService {
           status,
           profiles(
             full_name,
+            name,
             email,
             phone,
             address
@@ -115,7 +117,7 @@ export class SellerService {
             shop_name: seller.shop_name,
             description: seller.description,
             status: seller.status,
-            full_name: profile?.full_name || 'N/A',
+            full_name: profile?.full_name || profile?.name || 'N/A',
             email: profile?.email || 'N/A',
             phone: profile?.phone,
             address: profile?.address,
@@ -145,6 +147,7 @@ export class SellerService {
           status,
           profiles(
             full_name,
+            name,
             email,
             phone,
             address
@@ -170,7 +173,7 @@ export class SellerService {
             shop_name: seller.shop_name,
             description: seller.description,
             status: seller.status,
-            full_name: profile?.full_name || 'N/A',
+            full_name: profile?.full_name || profile?.name || 'N/A',
             email: profile?.email || 'N/A',
             phone: profile?.phone,
             address: profile?.address,
@@ -200,6 +203,7 @@ export class SellerService {
           status,
           profiles(
             full_name,
+            name,
             email,
             phone,
             address
@@ -223,7 +227,7 @@ export class SellerService {
           shop_name: data.shop_name,
           description: data.description,
           status: data.status,
-          full_name: profile?.full_name || 'N/A',
+          full_name: profile?.full_name || profile?.name || 'N/A',
           email: profile?.email || 'N/A',
           phone: profile?.phone,
           address: profile?.address,
@@ -233,6 +237,27 @@ export class SellerService {
       catchError((err) => {
         console.error('Error in getSellerById:', err);
         return of(null);
+      })
+    );
+  }
+
+  updateSellerStatus(sellerId: string, status: Seller['status']): Observable<boolean> {
+    return from(
+      this.supabaseService.getClient()
+        .from('sellers')
+        .update({ status })
+        .eq('id', sellerId)
+    ).pipe(
+      map(({ error }) => {
+        if (error) {
+          console.error('Error updating seller status:', error);
+          return false;
+        }
+        return true;
+      }),
+      catchError((err) => {
+        console.error('Error in updateSellerStatus:', err);
+        return of(false);
       })
     );
   }

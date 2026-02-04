@@ -2,6 +2,7 @@ import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-admin-permissions.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -41,7 +42,7 @@ import { AuthService } from '../../services/auth.service';
 
         <nav class="sidebar-nav">
           <ul>
-            <li *ngFor="let item of menuItems">
+            <li *ngFor="let item of visibleMenuItems">
               <a 
                 [routerLink]="item.route" 
                 routerLinkActive="active" 
@@ -451,7 +452,7 @@ import { AuthService } from '../../services/auth.service';
       background: rgba(239, 68, 68, 0.2);
       border-color: rgba(239, 68, 68, 0.3);
       transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
     }
 
     .logout-btn span {
@@ -794,14 +795,28 @@ export class AdminDashboardComponent {
     { key: 'settings', label: 'Settings', route: '/dashboard/settings', exact: true }
   ];
 
+  visibleMenuItems = [...this.menuItems];
+
+  private readonly permissionByKey: Record<string, AdminPermission | null> = {
+    dashboard: null,
+    products: 'manage_products',
+    users: null,
+    sellers: 'manage_sellers',
+    orders: 'manage_orders',
+    analytics: 'view_analytics',
+    settings: null
+  };
+
   constructor(
     private authService: AuthService,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private permissionsService: SubAdminPermissionsService
   ) {
     this.authService.currentUser.subscribe(user => {
       if (!user) {
         this.ngZone.run(() => {
           this.user = null;
+          this.visibleMenuItems = [];
         });
         return;
       }
@@ -817,11 +832,49 @@ export class AdminDashboardComponent {
         };
       });
 
+      void this.refreshVisibleMenuItems(this.user);
+
       void this.authService.getUser().then(profile => {
         this.ngZone.run(() => {
           this.user = profile;
         });
+
+        void this.refreshVisibleMenuItems(profile);
       });
+    });
+  }
+
+  private async refreshVisibleMenuItems(profile: any | null): Promise<void> {
+    if (!profile) {
+      this.ngZone.run(() => {
+        this.visibleMenuItems = [];
+      });
+      return;
+    }
+
+    const isSuperAdmin = await this.permissionsService.isSuperAdmin(profile);
+    if (isSuperAdmin) {
+      this.ngZone.run(() => {
+        this.visibleMenuItems = [...this.menuItems];
+      });
+      return;
+    }
+
+    const myPermissions = await this.permissionsService.getMyPermissions();
+    const allowed = new Set<AdminPermission>(myPermissions);
+
+    const filtered = this.menuItems.filter((item: any) => {
+      if (item.key === 'dashboard') return true;
+      if (item.key === 'users') return false;
+      if (item.key === 'settings') return false;
+
+      const required = this.permissionByKey[item.key];
+      if (!required) return true;
+      return allowed.has(required);
+    });
+
+    this.ngZone.run(() => {
+      this.visibleMenuItems = filtered;
     });
   }
 

@@ -243,20 +243,38 @@ export class SellerRequestsComponent implements OnInit {
     this.isProcessing = true;
     console.log('Approve seller:', sellerId);
     // TODO: Implement approve seller action
-    setTimeout(() => {
-      this.isProcessing = false;
-      this.loadPendingSellers();
-    }, 500);
+    this.sellerService.updateSellerStatus(sellerId, 'approved').subscribe({
+      next: (ok) => {
+        if (!ok) {
+          console.error('Approve seller failed');
+        }
+        this.isProcessing = false;
+        this.loadPendingSellers();
+      },
+      error: (err) => {
+        console.error('Approve seller failed:', err);
+        this.isProcessing = false;
+      }
+    });
   }
 
   rejectSeller(sellerId: string) {
     this.isProcessing = true;
     console.log('Reject seller:', sellerId);
     // TODO: Implement reject seller action
-    setTimeout(() => {
-      this.isProcessing = false;
-      this.loadPendingSellers();
-    }, 500);
+    this.sellerService.updateSellerStatus(sellerId, 'rejected').subscribe({
+      next: (ok) => {
+        if (!ok) {
+          console.error('Reject seller failed');
+        }
+        this.isProcessing = false;
+        this.loadPendingSellers();
+      },
+      error: (err) => {
+        console.error('Reject seller failed:', err);
+        this.isProcessing = false;
+      }
+    });
   }
 
   getInitials(name: string): string {

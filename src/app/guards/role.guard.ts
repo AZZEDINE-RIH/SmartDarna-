@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
@@ -21,23 +21,21 @@ export class RoleGuard implements CanActivate {
     
     return this.authService.currentUser.pipe(
       take(1),
-      map(user => {
+      switchMap((user) => {
         if (!user) {
           this.router.navigate(['/login']);
-          return false;
+          return of(null);
         }
-
-        // Since we can't use async in map, we'll use getUserSync for immediate role checking
-        const userProfile = this.authService.getUserSync();
+        return from(this.authService.getUser());
+      }),
+      map((userProfile) => {
         const userRole = userProfile?.role || 'user';
-        
         if (expectedRoles.includes(userRole)) {
           return true;
-        } else {
-          // Redirect based on role
-          this.redirectByRole(userRole);
-          return false;
         }
+
+        this.redirectByRole(userRole);
+        return false;
       })
     );
   }
