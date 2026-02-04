@@ -131,6 +131,23 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
           </div>
           
           <div class="topbar-right">
+            <button class="theme-btn" type="button" (click)="toggleTheme()" [title]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+              <svg *ngIf="!isDarkMode" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
+              </svg>
+              <svg *ngIf="isDarkMode" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="M4.93 4.93l1.41 1.41" />
+                <path d="M17.66 17.66l1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="M6.34 17.66l-1.41 1.41" />
+                <path d="M19.07 4.93l-1.41 1.41" />
+              </svg>
+            </button>
+
             <button class="notification-btn" type="button">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6z"/>
@@ -164,7 +181,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     .admin-dashboard {
       display: flex;
       height: 100vh;
-      background: #f4f7f7;
+      background: var(--bg);
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
@@ -206,7 +223,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .logo-text {
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s;
     }
 
     .logo-text.hidden {
@@ -225,7 +242,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .logo-text span {
-      color: #94a3b8;
+      color: var(--muted);
       font-size: 0.75rem;
       font-weight: 500;
       text-transform: uppercase;
@@ -234,7 +251,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
 
     .toggle-btn {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.10);
       color: #94a3b8;
       cursor: pointer;
       padding: 0.5rem;
@@ -250,7 +267,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     .toggle-btn:hover {
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.20);
       transform: scale(1.05);
     }
 
@@ -303,7 +320,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
 
     .nav-item.active {
       background: rgba(255, 255, 255, 0.10);
-      color: #ffffff;
+      color: white;
       box-shadow: none;
     }
 
@@ -315,7 +332,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       transform: translateY(-50%);
       width: 4px;
       height: 22px;
-      background: #14b8a6;
+      background: var(--accent);
       border-radius: 0 4px 4px 0;
     }
 
@@ -349,7 +366,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .nav-badge {
-      background: #ef4444;
+      background: var(--danger);
       color: white;
       font-size: 0.7rem;
       padding: 0.125rem 0.5rem;
@@ -427,7 +444,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .user-role {
-      color: #94a3b8;
+      color: var(--muted);
       font-size: 0.75rem;
     }
 
@@ -439,8 +456,8 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       width: 100%;
       padding: 0.75rem;
       background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.22);
+      color: var(--danger);
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
@@ -450,7 +467,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
 
     .logout-btn:hover {
       background: rgba(239, 68, 68, 0.2);
-      border-color: rgba(239, 68, 68, 0.3);
+      border-color: rgba(239, 68, 68, 0.34);
       transform: translateY(-1px);
       box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
     }
@@ -479,8 +496,8 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
        TOPBAR
        =========================== */
     .topbar {
-      background: #ffffff;
-      border-bottom: 1px solid #e7ecec;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
@@ -506,7 +523,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     .page-title {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #1e293b;
+      color: var(--text);
       margin: 0 0 0.25rem 0;
       letter-spacing: -0.5px;
     }
@@ -518,23 +535,23 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .breadcrumb-item {
-      color: #64748b;
+      color: var(--muted);
       text-decoration: none;
       font-size: 0.875rem;
       transition: color 0.2s;
     }
 
     .breadcrumb-item:hover:not(.current) {
-      color: #334155;
+      color: var(--text);
     }
 
     .breadcrumb-item.current {
-      color: #14b8a6;
+      color: var(--accent);
       font-weight: 600;
     }
 
     .breadcrumb-separator {
-      color: #cbd5e1;
+      color: var(--border-2);
     }
 
     .topbar-right {
@@ -545,9 +562,9 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
 
     .notification-btn {
       position: relative;
-      background: #ffffff;
-      border: 1px solid #e7ecec;
-      color: #476060;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
       padding: 0.625rem;
       border-radius: 12px;
       cursor: pointer;
@@ -560,9 +577,32 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .notification-btn:hover {
-      background: #f2f8f7;
-      border-color: #cde7e4;
-      color: #0f172a;
+      background: var(--surface-2);
+      border-color: var(--border-2);
+      color: var(--text);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .theme-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.625rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-btn:hover {
+      background: var(--surface-2);
+      border-color: var(--border-2);
+      color: var(--text);
       transform: translateY(-1px);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
     }
@@ -571,7 +611,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       position: absolute;
       top: -4px;
       right: -4px;
-      background: #ef4444;
+      background: var(--danger);
       color: white;
       font-size: 0.625rem;
       padding: 0.125rem 0.375rem;
@@ -586,8 +626,8 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      background: #f2f8f7;
-      border: 1px solid #e7ecec;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 0.7rem 1rem;
       min-width: 360px;
@@ -597,13 +637,13 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .search-box:focus-within {
-      background: #ffffff;
-      border-color: #14b8a6;
+      background: var(--surface);
+      border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
     }
 
     .search-box svg {
-      color: #7aa6a1;
+      color: var(--muted);
       flex-shrink: 0;
     }
 
@@ -613,12 +653,12 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       outline: none;
       flex: 1;
       font-size: 0.9rem;
-      color: #0f172a;
+      color: var(--text);
       font-weight: 500;
     }
 
     .search-box input::placeholder {
-      color: #7aa6a1;
+      color: var(--muted);
       font-weight: 400;
     }
 
@@ -627,8 +667,8 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       align-items: center;
       gap: 10px;
       padding: 6px 10px 6px 6px;
-      border: 1px solid #e7ecec;
-      background: #ffffff;
+      border: 1px solid var(--border);
+      background: var(--surface);
       border-radius: 14px;
       min-width: 200px;
     }
@@ -639,14 +679,13 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       border-radius: 12px;
       overflow: hidden;
       flex-shrink: 0;
-      background: #e7ecec;
+      background: var(--border);
     }
 
     .user-chip-avatar img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
     }
 
     .user-chip-info {
@@ -657,7 +696,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .user-chip-name {
-      color: #0f172a;
+      color: var(--text);
       font-size: 0.9rem;
       font-weight: 700;
       white-space: nowrap;
@@ -666,7 +705,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
     }
 
     .user-chip-role {
-      color: #6b7280;
+      color: var(--muted);
       font-size: 0.75rem;
       font-weight: 600;
       white-space: nowrap;
@@ -682,7 +721,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       flex: 1;
       overflow-y: auto;
       padding: 2rem;
-      background: #f8fafc;
+      background: var(--bg);
     }
 
     .content-area::-webkit-scrollbar {
@@ -784,6 +823,9 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
 export class AdminDashboardComponent {
   sidebarCollapsed = false;
   user: any | null = null;
+  isDarkMode = false;
+
+  private readonly themeStorageKey = 'smartdarna_theme';
 
   menuItems = [
     { key: 'dashboard', label: 'Dashboard', route: '/dashboard/overview', exact: true },
@@ -812,6 +854,7 @@ export class AdminDashboardComponent {
     private ngZone: NgZone,
     private permissionsService: SubAdminPermissionsService
   ) {
+    this.initTheme();
     this.authService.currentUser.subscribe(user => {
       if (!user) {
         this.ngZone.run(() => {
@@ -880,6 +923,36 @@ export class AdminDashboardComponent {
 
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  toggleTheme() {
+    this.applyTheme(!this.isDarkMode, true);
+  }
+
+  private initTheme() {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    const saved = window.localStorage.getItem(this.themeStorageKey);
+    if (saved === 'dark') {
+      this.applyTheme(true, false);
+      return;
+    }
+    if (saved === 'light') {
+      this.applyTheme(false, false);
+      return;
+    }
+
+    this.applyTheme(false, false);
+  }
+
+  private applyTheme(isDark: boolean, persist: boolean) {
+    this.isDarkMode = isDark;
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.toggle('dark', isDark);
+    }
+    if (persist && typeof window !== 'undefined') {
+      window.localStorage.setItem(this.themeStorageKey, isDark ? 'dark' : 'light');
+    }
   }
 
   getCurrentPageTitle(): string {

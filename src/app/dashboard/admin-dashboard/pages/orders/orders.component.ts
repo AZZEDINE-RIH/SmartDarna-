@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Order, OrderService } from '../../../../services/order.service';
@@ -107,7 +107,7 @@ import { Subscription } from 'rxjs';
 
             <h3>Revenue</h3>
 
-            <p class="stat-number">{{ getRevenue() | currency:'USD':'symbol':'1.0-0' }}</p>
+            <p class="stat-number">{{ getRevenue() | currency:'MAD':'symbol':'1.0-0' }}</p>
 
           </div>
 
@@ -210,7 +210,7 @@ import { Subscription } from 'rxjs';
 
                   <td>{{ getSellerDisplay(o) }}</td>
 
-                  <td>{{ o.total_amount | currency:'USD':'symbol':'1.2-2' }}</td>
+                  <td>{{ o.total_amount | currency:'MAD':'symbol':'1.2-2' }}</td>
 
                   <td>{{ o.payment_method || '—' }}</td>
 
@@ -765,7 +765,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderService: OrderService,
-    private sellerService: SellerService
+    private sellerService: SellerService,
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -779,6 +780,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     this.newOrdersSub = this.orderService.listenForNewOrders().subscribe({
       next: () => {
         this.newOrdersCount += 1;
+        this.cdr.detectChanges();
       },
       error: () => {
       }
@@ -801,6 +803,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
     this.errorMessage = '';
 
+    this.cdr.detectChanges();
+
     this.orderService.getAllOrders().subscribe({
 
       next: (data) => {
@@ -812,6 +816,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         this.applyFilters();
 
         this.isLoading = false;
+
+        this.cdr.detectChanges();
 
       },
 
@@ -825,6 +831,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
         this.isLoading = false;
 
+        this.cdr.detectChanges();
+
       }
 
     });
@@ -836,10 +844,12 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.sellers = data || [];
         this.sellersByUserId = new Map<string, Seller>((this.sellers || []).map((s) => [s.user_id, s] as const));
+        this.cdr.detectChanges();
       },
       error: () => {
         this.sellers = [];
         this.sellersByUserId = new Map<string, Seller>();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -978,6 +988,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
     this.processingOrderId = order.id;
 
+    this.cdr.detectChanges();
+
     this.orderService.updateOrderStatus(order.id, next).subscribe({
 
       next: (ok) => {
@@ -988,11 +1000,15 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
 
           this.processingOrderId = null;
 
+          this.cdr.detectChanges();
+
           return;
 
         }
 
         this.processingOrderId = null;
+
+        this.cdr.detectChanges();
 
         this.loadOrders();
 
@@ -1003,6 +1019,8 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
         this.errorMessage = err?.message || 'Update failed';
 
         this.processingOrderId = null;
+
+        this.cdr.detectChanges();
 
       }
 

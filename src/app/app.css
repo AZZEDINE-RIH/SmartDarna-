@@ -7,7 +7,7 @@
 }
 
 .navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-gradient);
   color: white;
   padding: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -65,6 +65,26 @@
   transition: all 0.3s ease;
 }
 
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.26);
+  border-color: rgba(255, 255, 255, 0.40);
+  transform: translateY(-2px);
+}
+
 .logout-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
@@ -75,6 +95,35 @@ main {
   flex: 1;
   overflow-y: auto;
   width: 100%;
+}
+
+.floating-theme-toggle {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  z-index: 200;
+}
+
+.floating-theme-toggle:hover {
+  transform: translateY(-2px);
+  background: var(--surface-2);
+  border-color: var(--border-2);
+}
+
+html.dark .floating-theme-toggle {
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
 }
 
 main.with-navbar {

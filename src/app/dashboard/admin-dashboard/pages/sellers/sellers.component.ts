@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -767,7 +767,10 @@ export class SellersPageComponent implements OnInit {
     rejected: 0,
   };
 
-  constructor(private sellerService: SellerService) {}
+  constructor(
+    private sellerService: SellerService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadSellers();
@@ -776,12 +779,14 @@ export class SellersPageComponent implements OnInit {
   loadSellers(): void {
     this.isLoading = true;
     this.errorMessage = '';
+    this.cdr.detectChanges();
     this.sellerService.getAllSellers().subscribe({
       next: (data) => {
         this.sellers = data || [];
         this.updateCounts();
         this.applyFilters();
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = err?.message || 'Failed to load sellers';
@@ -789,6 +794,7 @@ export class SellersPageComponent implements OnInit {
         this.filteredSellers = [];
         this.updateCounts();
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -814,19 +820,23 @@ export class SellersPageComponent implements OnInit {
   updateStatus(seller: Seller, status: Seller['status']): void {
     if (this.processingSellerId) return;
     this.processingSellerId = seller.id;
+    this.cdr.detectChanges();
     this.sellerService.updateSellerStatus(seller.id, status).subscribe({
       next: (ok) => {
         if (!ok) {
           this.errorMessage = 'Action failed. Please check RLS policies and try again.';
           this.processingSellerId = null;
+          this.cdr.detectChanges();
           return;
         }
         this.processingSellerId = null;
+        this.cdr.detectChanges();
         this.loadSellers();
       },
       error: (err) => {
         this.errorMessage = err?.message || 'Action failed';
         this.processingSellerId = null;
+        this.cdr.detectChanges();
       },
     });
   }

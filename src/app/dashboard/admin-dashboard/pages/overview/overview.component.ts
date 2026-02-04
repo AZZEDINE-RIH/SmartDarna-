@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardStatsService } from '../../../../services/dashboard-stats.service';
 import { SupabaseService } from '../../../../services/supabase.service';
@@ -461,12 +461,14 @@ export class AdminOverviewComponent implements OnInit {
 
   constructor(
     private dashboardStatsService: DashboardStatsService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
     await this.waitForSession();
     await this.loadDashboardData();
+    this.cdr.detectChanges();
   }
 
   private async waitForSession(maxWaitMs: number = 5000): Promise<void> {
@@ -481,6 +483,7 @@ export class AdminOverviewComponent implements OnInit {
   async loadDashboardData() {
     try {
       this.isLoading = true;
+      this.cdr.detectChanges();
 
       // Add a small delay to ensure auth context is properly set
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -515,10 +518,13 @@ export class AdminOverviewComponent implements OnInit {
       this.recentTransactions = recentTransactionsData;
       this.totalRevenue = statsData.totalRevenue;
 
+      this.cdr.detectChanges();
+
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 

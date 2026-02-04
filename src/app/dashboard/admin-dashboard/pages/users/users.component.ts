@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -859,13 +859,13 @@ interface SuperAdminRow {
 
     .subadmin-list {
 
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
 
       border-radius: 10px;
 
       overflow: hidden;
 
-      background: #ffffff;
+      background: var(--surface);
 
       min-height: 180px;
 
@@ -875,7 +875,7 @@ interface SuperAdminRow {
 
       padding: 0.85rem 1rem;
 
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--border);
 
       cursor: pointer;
 
@@ -885,7 +885,7 @@ interface SuperAdminRow {
 
     .subadmin-item:hover {
 
-      background: #f8fafc;
+      background: var(--surface-2);
 
     }
 
@@ -901,7 +901,7 @@ interface SuperAdminRow {
 
       font-weight: 700;
 
-      color: #0f172a;
+      color: var(--text);
 
       font-size: 0.95rem;
 
@@ -909,7 +909,7 @@ interface SuperAdminRow {
 
     .subadmin-email {
 
-      color: #64748b;
+      color: var(--muted);
 
       font-size: 0.8rem;
 
@@ -925,13 +925,13 @@ interface SuperAdminRow {
 
     .subadmin-perms {
 
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
 
       border-radius: 10px;
 
       padding: 1rem;
 
-      background: #ffffff;
+      background: var(--surface);
 
       min-height: 180px;
 
@@ -941,7 +941,7 @@ interface SuperAdminRow {
 
       padding-bottom: 0.75rem;
 
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid var(--border);
 
       margin-bottom: 0.75rem;
 
@@ -951,7 +951,7 @@ interface SuperAdminRow {
 
       font-weight: 800;
 
-      color: #0f172a;
+      color: var(--text);
 
       font-size: 1rem;
 
@@ -959,7 +959,7 @@ interface SuperAdminRow {
 
     .subadmin-perms-subtitle {
 
-      color: #64748b;
+      color: var(--muted);
 
       font-size: 0.85rem;
 
@@ -987,15 +987,15 @@ interface SuperAdminRow {
 
       padding: 0.6rem 0.7rem;
 
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--border);
 
       border-radius: 10px;
 
-      color: #0f172a;
+      color: var(--text);
 
       font-weight: 600;
 
-      background: #f8fafc;
+      background: var(--surface-2);
 
     }
 
@@ -1063,7 +1063,8 @@ export class UsersPageComponent implements OnInit {
 
   constructor(
     private supabaseService: SupabaseService,
-    private subAdminPermissionsService: SubAdminPermissionsService
+    private subAdminPermissionsService: SubAdminPermissionsService,
+    private cdr: ChangeDetectorRef
   ) {}
 
 
@@ -1079,6 +1080,8 @@ export class UsersPageComponent implements OnInit {
       this.loadSubAdmins()
 
     ]);
+
+    this.cdr.detectChanges();
 
   }
 
@@ -1153,6 +1156,8 @@ export class UsersPageComponent implements OnInit {
     } finally {
 
       this.isLoadingSubAdmins = false;
+
+      this.cdr.detectChanges();
 
     }
 
@@ -1405,6 +1410,8 @@ export class UsersPageComponent implements OnInit {
     } finally {
 
       this.isLoading = false;
+
+      this.cdr.detectChanges();
 
     }
 

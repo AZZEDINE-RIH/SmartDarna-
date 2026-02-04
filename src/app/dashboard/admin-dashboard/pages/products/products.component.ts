@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../../../services/supabase.service';
@@ -12,6 +12,40 @@ import { SupabaseService } from '../../../../services/supabase.service';
       <div class="page-header">
         <h1>Products Management</h1>
         <p>Manage your product inventory, pricing, and availability</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">📦</div>
+          <div class="stat-content">
+            <h3>Total Products</h3>
+            <p class="stat-number">{{ products.length }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">✅</div>
+          <div class="stat-content">
+            <h3>Active</h3>
+            <p class="stat-number">{{ getActiveCount() }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon orange">⚠️</div>
+          <div class="stat-content">
+            <h3>Low Stock</h3>
+            <p class="stat-number">{{ getLowStockCount() }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon red">⛔</div>
+          <div class="stat-content">
+            <h3>Out of Stock</h3>
+            <p class="stat-number">{{ getOutOfStockCount() }}</p>
+          </div>
+        </div>
       </div>
       
       <div class="content-card">
@@ -34,7 +68,27 @@ import { SupabaseService } from '../../../../services/supabase.service';
                 [(ngModel)]="searchQuery"
               />
             </div>
+
+            <select class="input" [(ngModel)]="categoryFilter">
+              <option value="all">All categories</option>
+              <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+            </select>
+
+            <select class="input" [(ngModel)]="activeFilter">
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+
+            <select class="input" [(ngModel)]="stockFilter">
+              <option value="all">All stock</option>
+              <option value="in_stock">In stock</option>
+              <option value="low_stock">Low stock</option>
+              <option value="out_of_stock">Out of stock</option>
+            </select>
+
             <div class="meta" *ngIf="isLoading">Loading...</div>
+            <div class="meta" *ngIf="!isLoading && !errorMessage">Showing {{ filteredProducts.length }} of {{ products.length }}</div>
             <div class="meta error" *ngIf="errorMessage">{{ errorMessage }}</div>
           </div>
 
@@ -46,15 +100,28 @@ import { SupabaseService } from '../../../../services/supabase.service';
                   <th>Category</th>
                   <th>Price</th>
                   <th>Stock</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let p of filteredProducts">
-                  <td>{{ p.name }}</td>
+                  <td>
+                    <div class="name">{{ p.name }}</div>
+                    <div class="muted" *ngIf="p.description">{{ p.description }}</div>
+                  </td>
                   <td>{{ p.category_name || 'Uncategorized' }}</td>
-                  <td>{{ p.price | currency:'USD':'symbol':'1.2-2' }}</td>
-                  <td>{{ p.stock }}</td>
+                  <td>{{ p.price | currency:'MAD':'symbol':'1.2-2' }}</td>
+                  <td>
+                    <span class="stock-badge" [class.out]="p.stock <= 0" [class.low]="p.stock > 0 && p.stock <= lowStockThreshold" [class.ok]="p.stock > lowStockThreshold">
+                      {{ p.stock }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="status-badge" [class.active]="p.is_active !== false" [class.inactive]="p.is_active === false">
+                      {{ p.is_active === false ? 'Inactive' : 'Active' }}
+                    </span>
+                  </td>
                   <td>
                     <button class="btn-icon" (click)="openEdit(p)" title="Edit">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -74,7 +141,11 @@ import { SupabaseService } from '../../../../services/supabase.service';
                   </td>
                 </tr>
                 <tr *ngIf="!isLoading && filteredProducts.length === 0">
-                  <td colspan="5" class="empty">No products found.</td>
+                  <td colspan="6" class="empty">
+                    <div class="empty-title">No products found</div>
+                    <div class="empty-subtitle">Try changing filters, or add your first product.</div>
+                    <button class="btn-primary" style="margin-top: 12px;" (click)="openCreate()">Add Product</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -119,6 +190,11 @@ import { SupabaseService } from '../../../../services/supabase.service';
                 <span>Description</span>
                 <textarea class="input" rows="3" [(ngModel)]="form.description"></textarea>
               </label>
+
+              <label class="field checkbox full">
+                <input type="checkbox" [(ngModel)]="form.is_active" />
+                <span>Active</span>
+              </label>
             </div>
           </div>
           <div class="modal-footer">
@@ -136,6 +212,53 @@ import { SupabaseService } from '../../../../services/supabase.service';
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 1.1rem 1.2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-size: 20px;
+    }
+
+    .stat-icon.blue { background: #dbeafe; }
+    .stat-icon.green { background: #dcfce7; }
+    .stat-icon.orange { background: #ffedd5; }
+    .stat-icon.red { background: #fee2e2; }
+
+    .stat-content h3 {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .stat-number {
+      margin: 0.15rem 0 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #0f172a;
     }
 
     .page-header h1 {
@@ -204,6 +327,7 @@ import { SupabaseService } from '../../../../services/supabase.service';
       gap: 1rem;
       justify-content: space-between;
       margin-bottom: 1rem;
+      flex-wrap: wrap;
     }
 
     .search {
@@ -302,6 +426,17 @@ import { SupabaseService } from '../../../../services/supabase.service';
       padding: 1.25rem;
     }
 
+    .empty-title {
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .empty-subtitle {
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -380,6 +515,73 @@ import { SupabaseService } from '../../../../services/supabase.service';
       outline: none;
     }
 
+    .name {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 0.82rem;
+      margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .stock-badge.ok {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .stock-badge.low {
+      background: #ffedd5;
+      color: #9a3412;
+      border-color: #fdba74;
+    }
+
+    .stock-badge.out {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .status-badge.active {
+      background: #d1fae5;
+      color: #065f46;
+      border-color: #6ee7b7;
+    }
+
+    .status-badge.inactive {
+      background: #f1f5f9;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+
     .input:focus {
       border-color: #93c5fd;
       box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
@@ -428,6 +630,11 @@ export class ProductsPageComponent implements OnInit {
   errorMessage = '';
   searchQuery = '';
 
+  categoryFilter: string = 'all';
+  activeFilter: 'all' | 'active' | 'inactive' = 'all';
+  stockFilter: 'all' | 'in_stock' | 'low_stock' | 'out_of_stock' = 'all';
+  lowStockThreshold = 5;
+
   isModalOpen = false;
   editingId: string | null = null;
   form: ProductForm = {
@@ -435,19 +642,45 @@ export class ProductsPageComponent implements OnInit {
     description: null,
     price: 0,
     stock: 0,
-    category_id: null
+    category_id: null,
+    is_active: true
   };
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   get filteredProducts(): ProductRow[] {
     const q = this.searchQuery.trim().toLowerCase();
-    if (!q) return this.products;
-    return this.products.filter(p => {
+    return (this.products || []).filter(p => {
+      if (this.categoryFilter !== 'all' && (p.category_id || '') !== this.categoryFilter) return false;
+
+      if (this.activeFilter === 'active' && p.is_active === false) return false;
+      if (this.activeFilter === 'inactive' && p.is_active !== false) return false;
+
+      if (this.stockFilter === 'in_stock' && !(p.stock > this.lowStockThreshold)) return false;
+      if (this.stockFilter === 'low_stock' && !(p.stock > 0 && p.stock <= this.lowStockThreshold)) return false;
+      if (this.stockFilter === 'out_of_stock' && !(p.stock <= 0)) return false;
+
+      if (!q) return true;
       const name = (p.name || '').toLowerCase();
       const cat = (p.category_name || '').toLowerCase();
-      return name.includes(q) || cat.includes(q);
+      const desc = (p.description || '').toLowerCase();
+      return name.includes(q) || cat.includes(q) || desc.includes(q);
     });
+  }
+
+  getActiveCount(): number {
+    return (this.products || []).filter(p => p.is_active !== false).length;
+  }
+
+  getLowStockCount(): number {
+    return (this.products || []).filter(p => p.stock > 0 && p.stock <= this.lowStockThreshold).length;
+  }
+
+  getOutOfStockCount(): number {
+    return (this.products || []).filter(p => p.stock <= 0).length;
   }
 
   async ngOnInit() {
@@ -457,6 +690,7 @@ export class ProductsPageComponent implements OnInit {
   async refresh() {
     this.errorMessage = '';
     this.isLoading = true;
+    this.cdr.detectChanges();
     try {
       await Promise.all([this.loadCategories(), this.loadProducts()]);
       this.applyCategoryNames();
@@ -464,6 +698,7 @@ export class ProductsPageComponent implements OnInit {
       this.errorMessage = e?.message || 'Failed to load products.';
     } finally {
       this.isLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
@@ -486,28 +721,48 @@ export class ProductsPageComponent implements OnInit {
   }
 
   private async loadProducts() {
-    const { data, error } = await this.supabaseService.getClient()
+    const client = this.supabaseService.getClient();
+
+    const withActive = await client
       .from('products')
-      .select(`
-        id,
-        name,
-        description,
-        price,
-        stock,
-        category_id
-      `)
+      .select('id, name, description, price, stock, category_id, is_active')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (withActive.error) {
+      const msg = String((withActive.error as any)?.message || '');
+      if (msg.toLowerCase().includes('is_active') && msg.toLowerCase().includes('does not exist')) {
+        const fallback = await client
+          .from('products')
+          .select('id, name, description, price, stock, category_id')
+          .order('created_at', { ascending: false });
 
-    this.products = (data || []).map((p: any) => ({
+        if (fallback.error) throw fallback.error;
+
+        this.products = (fallback.data || []).map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          price: Number(p.price ?? 0),
+          stock: Number(p.stock ?? 0),
+          category_id: p.category_id,
+          category_name: null,
+          is_active: true
+        }));
+        return;
+      }
+
+      throw withActive.error;
+    }
+
+    this.products = (withActive.data || []).map((p: any) => ({
       id: p.id,
       name: p.name,
       description: p.description,
       price: Number(p.price ?? 0),
       stock: Number(p.stock ?? 0),
       category_id: p.category_id,
-      category_name: null
+      category_name: null,
+      is_active: p.is_active
     }));
   }
 
@@ -518,7 +773,8 @@ export class ProductsPageComponent implements OnInit {
       description: null,
       price: 0,
       stock: 0,
-      category_id: null
+      category_id: null,
+      is_active: true
     };
     this.isModalOpen = true;
     this.errorMessage = '';
@@ -531,7 +787,8 @@ export class ProductsPageComponent implements OnInit {
       description: p.description ?? null,
       price: p.price,
       stock: p.stock,
-      category_id: p.category_id ?? null
+      category_id: p.category_id ?? null,
+      is_active: p.is_active !== false
     };
     this.isModalOpen = true;
     this.errorMessage = '';
@@ -551,7 +808,8 @@ export class ProductsPageComponent implements OnInit {
         name: this.form.name.trim(),
         description: this.form.description,
         price: Number(this.form.price ?? 0),
-        stock: Number(this.form.stock ?? 0)
+        stock: Number(this.form.stock ?? 0),
+        is_active: this.form.is_active !== false
       };
 
       if (this.form.category_id) {
@@ -559,16 +817,32 @@ export class ProductsPageComponent implements OnInit {
       }
 
       if (this.editingId) {
-        const { data, error } = await this.supabaseService.getClient()
+        const client = this.supabaseService.getClient();
+
+        let update = await client
           .from('products')
           .update(payload)
           .eq('id', this.editingId)
-          .select('id, name, description, price, stock, category_id');
-        if (error) {
-          console.error('Update product error:', error, { editingId: this.editingId, payload });
-          throw error;
+          .select('id, name, description, price, stock, category_id, is_active');
+
+        if (update.error) {
+          const msg = String((update.error as any)?.message || '');
+          if (msg.toLowerCase().includes('is_active') && msg.toLowerCase().includes('does not exist')) {
+            const { is_active, ...payloadWithoutActive } = payload;
+            update = await client
+              .from('products')
+              .update(payloadWithoutActive)
+              .eq('id', this.editingId)
+              .select('id, name, description, price, stock, category_id');
+          }
         }
 
+        if (update.error) {
+          console.error('Update product error:', update.error, { editingId: this.editingId, payload });
+          throw update.error;
+        }
+
+        const data = update.data as any;
         if (!data || data.length === 0) {
           throw new Error('Update failed (no rows updated). Check RLS policies for UPDATE.');
         }
@@ -582,7 +856,8 @@ export class ProductsPageComponent implements OnInit {
           price: Number(updated.price ?? 0),
           stock: Number(updated.stock ?? 0),
           category_id: updated.category_id ?? null,
-          category_name: null
+          category_name: null,
+          is_active: updated.is_active ?? true
         };
         if (idx >= 0) {
           this.products = [
@@ -592,15 +867,30 @@ export class ProductsPageComponent implements OnInit {
           ];
         }
       } else {
-        const { data, error } = await this.supabaseService.getClient()
+        const client = this.supabaseService.getClient();
+
+        let insert = await client
           .from('products')
           .insert([payload])
-          .select('id, name, description, price, stock, category_id');
-        if (error) {
-          console.error('Insert product error:', error, { payload });
-          throw error;
+          .select('id, name, description, price, stock, category_id, is_active');
+
+        if (insert.error) {
+          const msg = String((insert.error as any)?.message || '');
+          if (msg.toLowerCase().includes('is_active') && msg.toLowerCase().includes('does not exist')) {
+            const { is_active, ...payloadWithoutActive } = payload;
+            insert = await client
+              .from('products')
+              .insert([payloadWithoutActive])
+              .select('id, name, description, price, stock, category_id');
+          }
         }
 
+        if (insert.error) {
+          console.error('Insert product error:', insert.error, { payload });
+          throw insert.error;
+        }
+
+        const data = insert.data as any;
         if (data && data.length > 0) {
           const inserted = data[0] as any;
           const next: ProductRow = {
@@ -610,7 +900,8 @@ export class ProductsPageComponent implements OnInit {
             price: Number(inserted.price ?? 0),
             stock: Number(inserted.stock ?? 0),
             category_id: inserted.category_id ?? null,
-            category_name: null
+            category_name: null,
+            is_active: inserted.is_active ?? true
           };
           this.products = [next, ...this.products];
         }
@@ -658,6 +949,7 @@ type ProductRow = {
   stock: number;
   category_id: string | null;
   category_name: string | null;
+  is_active: boolean | null | undefined;
 };
 
 type ProductForm = {
@@ -666,4 +958,5 @@ type ProductForm = {
   price: number;
   stock: number;
   category_id: string | null;
+  is_active: boolean;
 };
