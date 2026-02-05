@@ -7,6 +7,13 @@ CREATE TABLE IF NOT EXISTS public.super_admins (
   created_at timestamptz NOT NULL DEFAULT now()
 );
 
+INSERT INTO public.super_admins (user_id)
+SELECT p.id
+FROM public.profiles p
+JOIN auth.users u ON u.id = p.id
+WHERE lower(u.email) = 'sarajamal02@gmail.com'
+ON CONFLICT (user_id) DO NOTHING;
+
 CREATE OR REPLACE FUNCTION public.is_super_admin()
 RETURNS boolean
 LANGUAGE sql
@@ -127,24 +134,22 @@ CREATE TABLE IF NOT EXISTS public.sub_admin_permissions (
 );
 
 -- Keep the permission values controlled
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1
-    FROM pg_constraint
-    WHERE conname = 'sub_admin_permissions_permission_check'
-  ) THEN
-    ALTER TABLE public.sub_admin_permissions
-      ADD CONSTRAINT sub_admin_permissions_permission_check
-      CHECK (permission IN (
-        'manage_products',
-        'manage_users',
-        'manage_sellers',
-        'manage_orders',
-        'view_analytics'
-      ));
-  END IF;
-END $$;
+ALTER TABLE public.sub_admin_permissions
+  DROP CONSTRAINT IF EXISTS sub_admin_permissions_permission_check;
+
+ALTER TABLE public.sub_admin_permissions
+  ADD CONSTRAINT sub_admin_permissions_permission_check
+  CHECK (permission IN (
+    'manage_products',
+    'manage_users',
+    'manage_sellers',
+    'manage_orders',
+    'view_analytics',
+    'manage_settings',
+    'manage_settings_general',
+    'manage_feature_flags',
+    'view_audit_log'
+  ));
 
 ALTER TABLE public.sub_admin_permissions ENABLE ROW LEVEL SECURITY;
 
@@ -178,13 +183,41 @@ CREATE POLICY "profiles_admin_read" ON public.profiles
     OR public.has_admin_permission('manage_users')
     OR public.has_admin_permission('manage_orders')
     OR public.has_admin_permission('manage_sellers')
+    OR public.has_admin_permission('view_analytics')
+    OR public.has_admin_permission('view_audit_log')
   );
 
 
 -- 2b) Allow admin operations on core tables based on permissions
 
 -- sellers
+CREATE TABLE IF NOT EXISTS public.sellers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
+  shop_name text NOT NULL,
+  description text,
+  status text NOT NULL DEFAULT 'pending',
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.sellers
+  ADD COLUMN IF NOT EXISTS user_id uuid;
+
+ALTER TABLE public.sellers
+  ADD COLUMN IF NOT EXISTS shop_name text;
+
+ALTER TABLE public.sellers
+  ADD COLUMN IF NOT EXISTS description text;
+
+ALTER TABLE public.sellers
+  ADD COLUMN IF NOT EXISTS status text;
+
+ALTER TABLE public.sellers
+  ADD COLUMN IF NOT EXISTS created_at timestamptz;
+
 ALTER TABLE IF EXISTS public.sellers ENABLE ROW LEVEL SECURITY;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.sellers TO authenticated;
 
 DROP POLICY IF EXISTS "sellers_admin_manage" ON public.sellers;
 CREATE POLICY "sellers_admin_manage" ON public.sellers
@@ -192,6 +225,52 @@ CREATE POLICY "sellers_admin_manage" ON public.sellers
   TO authenticated
   USING (public.has_admin_permission('manage_sellers'))
   WITH CHECK (public.has_admin_permission('manage_sellers'));
+
+DROP POLICY IF EXISTS "sellers_read_scoped" ON public.sellers;
+CREATE POLICY "sellers_read_scoped" ON public.sellers
+  FOR SELECT
+  TO authenticated
+  USING (
+    public.has_admin_permission('manage_sellers')
+    OR user_id = auth.uid()
+  );
+
+INSERT INTO public.sellers (user_id, shop_name, status)
+SELECT
+  p.id,
+  coalesce(p.name, 'Seller'),
+  'pending'
+FROM public.profiles p
+WHERE p.role = 'seller'
+  AND NOT EXISTS (
+    SELECT 1
+    FROM public.sellers s
+    WHERE s.user_id = p.id
+  );
+
+CREATE OR REPLACE FUNCTION public.ensure_seller_row_from_profile()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NEW.role = 'seller' THEN
+    IF NOT EXISTS (SELECT 1 FROM public.sellers s WHERE s.user_id = NEW.id) THEN
+      INSERT INTO public.sellers (user_id, shop_name, status)
+      VALUES (NEW.id, coalesce(NEW.name, 'Seller'), 'pending');
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_profiles_ensure_seller_row ON public.profiles;
+CREATE TRIGGER trg_profiles_ensure_seller_row
+  AFTER INSERT OR UPDATE OF role ON public.profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION public.ensure_seller_row_from_profile();
 
 -- orders
 ALTER TABLE IF EXISTS public.orders ENABLE ROW LEVEL SECURITY;
@@ -205,6 +284,18 @@ CREATE POLICY "orders_admin_manage" ON public.orders
 
 -- products
 ALTER TABLE IF EXISTS public.products ENABLE ROW LEVEL SECURITY;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.products TO authenticated;
+
+DROP POLICY IF EXISTS "products_read_scoped" ON public.products;
+CREATE POLICY "products_read_scoped" ON public.products
+  FOR SELECT
+  TO authenticated
+  USING (
+    public.has_admin_permission('manage_products')
+    OR public.has_admin_permission('view_analytics')
+    OR seller_id = auth.uid()
+  );
 
 DROP POLICY IF EXISTS "products_admin_manage" ON public.products;
 CREATE POLICY "products_admin_manage" ON public.products
@@ -264,15 +355,273 @@ GRANT INSERT, UPDATE, DELETE ON TABLE public.app_settings TO authenticated;
 DROP POLICY IF EXISTS "app_settings_read_all" ON public.app_settings;
 DROP POLICY IF EXISTS "app_settings_manage_super_only" ON public.app_settings;
 
+DROP POLICY IF EXISTS "app_settings_update_scoped" ON public.app_settings;
+DROP POLICY IF EXISTS "app_settings_insert_super_only" ON public.app_settings;
+DROP POLICY IF EXISTS "app_settings_delete_super_only" ON public.app_settings;
+
 CREATE POLICY "app_settings_read_all" ON public.app_settings
   FOR SELECT
   USING (true);
 
-CREATE POLICY "app_settings_manage_super_only" ON public.app_settings
+CREATE POLICY "app_settings_update_scoped" ON public.app_settings
+  FOR UPDATE
+  TO authenticated
+  USING (
+    public.is_super_admin()
+    OR public.has_admin_permission('manage_settings')
+    OR public.has_admin_permission('manage_settings_general')
+  )
+  WITH CHECK (
+    public.is_super_admin()
+    OR public.has_admin_permission('manage_settings')
+    OR public.has_admin_permission('manage_settings_general')
+  );
+
+CREATE POLICY "app_settings_insert_super_only" ON public.app_settings
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (public.is_super_admin());
+
+CREATE POLICY "app_settings_delete_super_only" ON public.app_settings
+  FOR DELETE
+  TO authenticated
+  USING (public.is_super_admin());
+
+
+CREATE TABLE IF NOT EXISTS public.feature_flags (
+  key text PRIMARY KEY,
+  enabled boolean NOT NULL DEFAULT false,
+  description text,
+  audience text NOT NULL DEFAULT 'all',
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION public.touch_feature_flags_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_touch_feature_flags_updated_at ON public.feature_flags;
+CREATE TRIGGER trg_touch_feature_flags_updated_at
+  BEFORE UPDATE ON public.feature_flags
+  FOR EACH ROW
+  EXECUTE FUNCTION public.touch_feature_flags_updated_at();
+
+ALTER TABLE public.feature_flags ENABLE ROW LEVEL SECURITY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.feature_flags TO authenticated;
+
+DROP POLICY IF EXISTS "feature_flags_read" ON public.feature_flags;
+DROP POLICY IF EXISTS "feature_flags_manage" ON public.feature_flags;
+
+CREATE POLICY "feature_flags_read" ON public.feature_flags
+  FOR SELECT
+  TO authenticated
+  USING (
+    public.has_admin_permission('manage_feature_flags')
+    OR public.has_admin_permission('manage_settings')
+  );
+
+CREATE POLICY "feature_flags_manage" ON public.feature_flags
   FOR ALL
   TO authenticated
-  USING (public.is_super_admin())
-  WITH CHECK (public.is_super_admin());
+  USING (
+    public.has_admin_permission('manage_feature_flags')
+    OR public.has_admin_permission('manage_settings')
+  )
+  WITH CHECK (
+    public.has_admin_permission('manage_feature_flags')
+    OR public.has_admin_permission('manage_settings')
+  );
+
+
+CREATE TABLE IF NOT EXISTS public.integrations (
+  provider text PRIMARY KEY,
+  enabled boolean NOT NULL DEFAULT false,
+  public_config jsonb NOT NULL DEFAULT '{}'::jsonb,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION public.touch_integrations_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_touch_integrations_updated_at ON public.integrations;
+CREATE TRIGGER trg_touch_integrations_updated_at
+  BEFORE UPDATE ON public.integrations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.touch_integrations_updated_at();
+
+ALTER TABLE public.integrations ENABLE ROW LEVEL SECURITY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.integrations TO authenticated;
+
+DROP POLICY IF EXISTS "integrations_read" ON public.integrations;
+DROP POLICY IF EXISTS "integrations_manage" ON public.integrations;
+
+CREATE POLICY "integrations_read" ON public.integrations
+  FOR SELECT
+  TO authenticated
+  USING (
+    public.has_admin_permission('manage_settings')
+    OR public.has_admin_permission('manage_settings_general')
+  );
+
+CREATE POLICY "integrations_manage" ON public.integrations
+  FOR ALL
+  TO authenticated
+  USING (public.has_admin_permission('manage_settings'))
+  WITH CHECK (public.has_admin_permission('manage_settings'));
+
+
+CREATE TABLE IF NOT EXISTS public.user_settings (
+  user_id uuid PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  locale text,
+  timezone text,
+  email_notifications boolean NOT NULL DEFAULT true,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.user_settings ENABLE ROW LEVEL SECURITY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.user_settings TO authenticated;
+
+DROP POLICY IF EXISTS "user_settings_read" ON public.user_settings;
+DROP POLICY IF EXISTS "user_settings_write" ON public.user_settings;
+
+CREATE POLICY "user_settings_read" ON public.user_settings
+  FOR SELECT
+  TO authenticated
+  USING (
+    user_id = auth.uid()
+    OR public.has_admin_permission('manage_users')
+  );
+
+CREATE POLICY "user_settings_write" ON public.user_settings
+  FOR ALL
+  TO authenticated
+  USING (user_id = auth.uid())
+  WITH CHECK (user_id = auth.uid());
+
+
+CREATE TABLE IF NOT EXISTS public.seller_settings (
+  seller_id uuid PRIMARY KEY REFERENCES public.profiles(id) ON DELETE CASCADE,
+  store_locale text,
+  notification_email text,
+  shipping_origin jsonb NOT NULL DEFAULT '{}'::jsonb,
+  returns_policy text,
+  payout_account_ref text,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.seller_settings ENABLE ROW LEVEL SECURITY;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.seller_settings TO authenticated;
+
+DROP POLICY IF EXISTS "seller_settings_read" ON public.seller_settings;
+DROP POLICY IF EXISTS "seller_settings_write" ON public.seller_settings;
+
+CREATE POLICY "seller_settings_read" ON public.seller_settings
+  FOR SELECT
+  TO authenticated
+  USING (
+    seller_id = auth.uid()
+    OR public.has_admin_permission('manage_sellers')
+  );
+
+CREATE POLICY "seller_settings_write" ON public.seller_settings
+  FOR ALL
+  TO authenticated
+  USING (seller_id = auth.uid())
+  WITH CHECK (seller_id = auth.uid());
+
+
+CREATE TABLE IF NOT EXISTS public.settings_audit_log (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  scope text NOT NULL,
+  entity_id text,
+  actor_id uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
+  action text NOT NULL,
+  old_value jsonb,
+  new_value jsonb,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE public.settings_audit_log ENABLE ROW LEVEL SECURITY;
+GRANT SELECT ON TABLE public.settings_audit_log TO authenticated;
+
+DROP POLICY IF EXISTS "settings_audit_read" ON public.settings_audit_log;
+
+CREATE POLICY "settings_audit_read" ON public.settings_audit_log
+  FOR SELECT
+  TO authenticated
+  USING (
+    public.is_super_admin()
+    OR public.has_admin_permission('view_audit_log')
+    OR public.has_admin_permission('manage_settings')
+  );
+
+
+CREATE OR REPLACE FUNCTION public.audit_log_trigger(scope text)
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+SET row_security = off
+AS $$
+DECLARE
+  entity text;
+BEGIN
+  entity := coalesce(
+    (to_jsonb(NEW) ->> 'id'),
+    (to_jsonb(OLD) ->> 'id'),
+    (to_jsonb(NEW) ->> 'key'),
+    (to_jsonb(OLD) ->> 'key'),
+    (to_jsonb(NEW) ->> 'provider'),
+    (to_jsonb(OLD) ->> 'provider')
+  );
+
+  INSERT INTO public.settings_audit_log (scope, entity_id, actor_id, action, old_value, new_value)
+  VALUES (
+    scope,
+    entity,
+    auth.uid(),
+    TG_OP,
+    CASE WHEN TG_OP IN ('UPDATE', 'DELETE') THEN to_jsonb(OLD) ELSE NULL END,
+    CASE WHEN TG_OP IN ('UPDATE', 'INSERT') THEN to_jsonb(NEW) ELSE NULL END
+  );
+
+  IF TG_OP = 'DELETE' THEN
+    RETURN OLD;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_app_settings_audit ON public.app_settings;
+CREATE TRIGGER trg_app_settings_audit
+  AFTER INSERT OR UPDATE OR DELETE ON public.app_settings
+  FOR EACH ROW
+  EXECUTE FUNCTION public.audit_log_trigger('app_settings');
+
+DROP TRIGGER IF EXISTS trg_feature_flags_audit ON public.feature_flags;
+CREATE TRIGGER trg_feature_flags_audit
+  AFTER INSERT OR UPDATE OR DELETE ON public.feature_flags
+  FOR EACH ROW
+  EXECUTE FUNCTION public.audit_log_trigger('feature_flags');
+
+DROP TRIGGER IF EXISTS trg_integrations_audit ON public.integrations;
+CREATE TRIGGER trg_integrations_audit
+  AFTER INSERT OR UPDATE OR DELETE ON public.integrations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.audit_log_trigger('integrations');
 
 
 ALTER TABLE IF EXISTS public.orders
@@ -422,6 +771,7 @@ CREATE POLICY "orders_read_scoped" ON public.orders
   TO authenticated
   USING (
     public.has_admin_permission('manage_orders')
+    OR public.has_admin_permission('view_analytics')
     OR auth.uid() = customer_id
     OR auth.uid() = user_id
     OR public.order_has_seller(orders.id, auth.uid())
@@ -443,6 +793,7 @@ CREATE POLICY "order_items_read_scoped" ON public.order_items
   TO authenticated
   USING (
     public.has_admin_permission('manage_orders')
+    OR public.has_admin_permission('view_analytics')
     OR public.order_is_customer(order_items.order_id, auth.uid())
     OR public.product_is_seller(order_items.product_id, auth.uid())
   );
@@ -462,6 +813,7 @@ CREATE POLICY "payments_read_scoped" ON public.payments
   TO authenticated
   USING (
     public.has_admin_permission('manage_orders')
+    OR public.has_admin_permission('view_analytics')
     OR public.order_is_customer(payments.order_id, auth.uid())
     OR public.order_has_seller(payments.order_id, auth.uid())
   );

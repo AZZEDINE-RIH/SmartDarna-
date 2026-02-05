@@ -1337,6 +1337,22 @@ export class UsersPageComponent implements OnInit {
 
         return 'View Analytics';
 
+      case 'manage_settings':
+
+        return 'Manage Settings';
+
+      case 'manage_settings_general':
+
+        return 'Manage Settings (General)';
+
+      case 'manage_feature_flags':
+
+        return 'Manage Feature Flags';
+
+      case 'view_audit_log':
+
+        return 'View Audit Log';
+
       default:
 
         return perm;

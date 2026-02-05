@@ -11,6 +11,7 @@ import { SellersPageComponent } from './dashboard/admin-dashboard/pages/sellers/
 import { OrdersPageComponent } from './dashboard/admin-dashboard/pages/orders/orders.component';
 import { AnalyticsPageComponent } from './dashboard/admin-dashboard/pages/analytics/analytics.component';
 import { SettingsPageComponent } from './dashboard/admin-dashboard/pages/settings/settings.component';
+import { ProfilePageComponent } from './dashboard/admin-dashboard/pages/profile/profile.component';
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { PermissionGuard } from './guards/permission.guard';
@@ -52,6 +53,10 @@ export const routes: Routes = [
         component: AdminOverviewComponent
       },
       {
+        path: 'profile',
+        component: ProfilePageComponent
+      },
+      {
         path: 'products',
         component: ProductsPageComponent,
         canActivate: [PermissionGuard],
@@ -85,7 +90,7 @@ export const routes: Routes = [
         path: 'settings',
         component: SettingsPageComponent,
         canActivate: [PermissionGuard],
-        data: { superAdminOnly: true }
+        data: {}
       },
       {
         path: '',

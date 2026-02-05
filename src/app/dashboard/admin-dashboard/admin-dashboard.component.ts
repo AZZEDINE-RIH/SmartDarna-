@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-admin-permissions.service';
 
@@ -78,7 +78,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
                   </svg>
                   <svg *ngSwitchCase="'settings'" viewBox="0 0 24 24" fill="none">
                     <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="1.8"/>
-                    <path d="M19.4 15a7.97 7.97 0 0 0 .1-1 7.97 7.97 0 0 0-.1-1l2-1.5-2-3.5-2.3 1a7.8 7.8 0 0 0-1.7-1L14 3h-4l-.8 2.9a7.8 7.8 0 0 0-1.7 1l-2.3-1-2 3.5L5.2 13a7.97 7.97 0 0 0-.1 1c0 .34.03.67.1 1l-2 1.5 2 3.5 2.3-1a7.8 7.8 0 0 0 1.7 1L10 21h4l.8-2.9a7.8 7.8 0 0 0 1.7-1l2.3 1 2-3.5-2-1.6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+                    <path d="M19.4 15a7.97 7.97 0 0 0 .1-1 7.97 7.97 0 0 0-.1-1l2-1.5-2-3.5-2.3 1a7.8 7.8 0 0 0-1.7-1L14 3h-4l-.8 2.9a7.8 7.8 0 0 0-1.7 1l-2.3-1-2 3.5L5.2 13a7.97 7.97 0 0 0-.1 1c0 .34.03.67.1 1l-2 1.5 2 3.5 2.3-1a7.8 7.8 0 0 0 1.7-1L10 21h4l.8-2.9a7.8 7.8 0 0 0 1.7-1l2.3 1 2-3.5-2-1.6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
                   </svg>
                 </span>
                 <span class="nav-text" [class.hidden]="sidebarCollapsed">{{ item.label }}</span>
@@ -156,7 +156,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
               <span class="notification-badge">3</span>
             </button>
 
-            <div class="user-chip" [title]="user?.email || ''">
+            <div class="user-chip" [title]="user?.email || ''" (click)="goToProfile()">
               <div class="user-chip-avatar">
                 <img [src]="user?.avatar || 'https://ui-avatars.com/api/?name=' + (user?.name || 'User') + '&background=14b8a6&color=fff'" [alt]="user?.name">
               </div>
@@ -671,6 +671,7 @@ import { AdminPermission, SubAdminPermissionsService } from '../../services/sub-
       background: var(--surface);
       border-radius: 14px;
       min-width: 200px;
+      cursor: pointer;
     }
 
     .user-chip-avatar {
@@ -852,11 +853,13 @@ export class AdminDashboardComponent {
   constructor(
     private authService: AuthService,
     private ngZone: NgZone,
-    private permissionsService: SubAdminPermissionsService
+    private permissionsService: SubAdminPermissionsService,
+    private router: Router
   ) {
     this.initTheme();
     this.authService.currentUser.subscribe(user => {
       if (!user) {
+
         this.ngZone.run(() => {
           this.user = null;
           this.visibleMenuItems = [];
@@ -909,7 +912,6 @@ export class AdminDashboardComponent {
     const filtered = this.menuItems.filter((item: any) => {
       if (item.key === 'dashboard') return true;
       if (item.key === 'users') return false;
-      if (item.key === 'settings') return false;
 
       const required = this.permissionByKey[item.key];
       if (!required) return true;
@@ -959,6 +961,7 @@ export class AdminDashboardComponent {
     // Check if running in browser environment
     if (typeof window !== 'undefined' && typeof window.location !== 'undefined') {
       const currentRoute = window.location.pathname;
+      if (currentRoute.includes('/dashboard/profile')) return 'Profile';
       const menuItem = this.menuItems.find(item => 
         currentRoute.includes(item.route) || 
         (item.route === '/dashboard/overview' && currentRoute === '/dashboard')
@@ -966,6 +969,10 @@ export class AdminDashboardComponent {
       return menuItem ? menuItem.label : 'Dashboard';
     }
     return 'Dashboard';
+  }
+
+  goToProfile(): void {
+    void this.router.navigate(['/dashboard/profile']);
   }
 
   async logout() {

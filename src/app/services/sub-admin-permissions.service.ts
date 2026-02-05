@@ -7,7 +7,11 @@ export const ADMIN_PERMISSION_KEYS = [
   'manage_users',
   'manage_sellers',
   'manage_orders',
-  'view_analytics'
+  'view_analytics',
+  'manage_settings',
+  'manage_settings_general',
+  'manage_feature_flags',
+  'view_audit_log'
 ] as const;
 
 export type AdminPermission = (typeof ADMIN_PERMISSION_KEYS)[number];

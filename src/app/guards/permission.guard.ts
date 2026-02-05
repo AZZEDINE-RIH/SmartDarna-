@@ -21,6 +21,7 @@ export class PermissionGuard implements CanActivate {
 
     const superAdminOnly = !!route.data['superAdminOnly'];
     const requiredPermissions = (route.data['permissions'] || []) as AdminPermission[];
+    const permissionsMode = (route.data['permissionsMode'] || 'all') as 'all' | 'any';
 
     const isSuperAdmin = await this.permissionsService.isSuperAdmin(user);
     if (isSuperAdmin) {
@@ -36,7 +37,9 @@ export class PermissionGuard implements CanActivate {
     }
 
     const myPermissions = await this.permissionsService.getMyPermissions();
-    const ok = requiredPermissions.every((p) => myPermissions.includes(p));
+    const ok = permissionsMode === 'any'
+      ? requiredPermissions.some((p) => myPermissions.includes(p))
+      : requiredPermissions.every((p) => myPermissions.includes(p));
     return ok ? true : this.router.parseUrl('/dashboard/overview');
   }
 }

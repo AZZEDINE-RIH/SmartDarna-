@@ -167,7 +167,7 @@ export class SupabaseService {
     if (error) console.error('Error creating profile:', error);
     return { data, error };
   }
-
+  
   async updateProfile(id: string, updates: any) {
     const { data, error } = await this.supabase
       .from('profiles')
