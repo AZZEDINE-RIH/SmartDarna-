@@ -1,0 +1,117 @@
+<div class="auth-layout">
+  <!-- Left Side - Login Form -->
+  <div class="auth-left">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="logo">
+          <h2>SmartDarna</h2>
+        </div>
+        <h1>Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your account to continue</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            class="form-input"
+            [class.error]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+          />
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['required']) {
+            <small class="error-text">Email is required</small>
+          }
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors?.['email']) {
+            <small class="error-text">Please enter a valid email</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            class="form-input"
+            [class.error]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+          />
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']) {
+            <small class="error-text">Password is required</small>
+          }
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['minlength']) {
+            <small class="error-text">Password must be at least 6 characters</small>
+          }
+        </div>
+
+        @if (errorMessage()) {
+          <div class="error-alert">
+            <span class="error-icon">⚠️</span>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="auth-btn">
+          @if (isLoading()) {
+            <span class="btn-spinner"></span>
+            <span>Signing in...</span>
+          } @else {
+            <span>Sign In</span>
+          }
+        </button>
+
+        <div class="auth-footer">
+          <p>Don't have an account? <a (click)="toggleFlip()" class="auth-link">Sign Up</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right Side - Branding -->
+  <div class="auth-right">
+    <div class="brand-content">
+      <div class="brand-header">
+        <h2>SmartDarna</h2>
+        <p>Your Smart Business Solution</p>
+      </div>
+      
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-text">
+            <h3>Fast & Efficient</h3>
+            <p>Streamlined workflow for maximum productivity</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-text">
+            <h3>Secure & Reliable</h3>
+            <p>Enterprise-grade security for your data</p>
+          </div>
+        </div>
+        
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <h3>Smart Analytics</h3>
+            <p>Real-time insights and reporting</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="brand-footer">
+        <p>Join thousands of satisfied users</p>
+        <div class="stats">
+          <span>10K+ Users</span>
+          <span>99.9% Uptime</span>
+          <span>24/7 Support</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

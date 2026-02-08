@@ -1,0 +1,164 @@
+<div class="auth-container">
+  <div class="alexa-stage">
+    <div class="alexa" aria-hidden="true">
+      <div class="speech" #speech>
+        <div class="speech-title">Hello, I’m Alexa</div>
+        <div class="speech-text">Welcome to our SmartDarna. Please register and welcome again.</div>
+      </div>
+
+      <svg class="alexa-svg" viewBox="0 0 240 220" role="img" aria-label="Alexa mascot">
+        <g #alexaFloat>
+          <path class="alexa-shadow" d="M58 190c18 10 106 10 124 0 6-3 6-10 0-13-18-10-106-10-124 0-6 3-6 10 0 13Z" fill="rgba(2,6,23,0.10)"/>
+
+          <path class="alexa-hair" d="M76 62c8-28 32-44 60-44 31 0 54 17 60 46 2 11 1 26-6 38-10 17-28 28-54 28-30 0-52-13-60-34-4-11-4-23 0-34Z" fill="#0f172a"/>
+          <path d="M87 68c6-18 23-30 49-30 28 0 46 12 52 33 1 4 1 10-1 15-3 8-10 15-20 20-9 4-19 6-31 6-12 0-24-3-33-8-12-7-18-17-18-29 0-2 1-5 2-7Z" fill="#111827" opacity="0.9"/>
+
+          <circle cx="120" cy="78" r="44" fill="#fad4c0"/>
+          <path d="M92 88c8 12 21 18 28 18s20-6 28-18" stroke="rgba(15,23,42,0.12)" stroke-width="6" stroke-linecap="round"/>
+
+          <g #alexaEyes>
+            <circle cx="105" cy="76" r="4.5" fill="#0f172a"/>
+            <circle cx="135" cy="76" r="4.5" fill="#0f172a"/>
+          </g>
+          <path d="M112 92c5 3 11 3 16 0" stroke="#0f172a" stroke-width="2" stroke-linecap="round" opacity="0.65"/>
+          <path d="M114 101c3 2 9 2 12 0" stroke="#0f172a" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+
+          <path d="M78 152c18-18 37-28 62-28s44 10 62 28c6 6 6 16 0 22-14 14-36 24-62 24s-48-10-62-24c-6-6-6-16 0-22Z" fill="#14b8a6"/>
+          <path d="M90 152c12-10 26-16 50-16s38 6 50 16" stroke="rgba(255,255,255,0.55)" stroke-width="5" stroke-linecap="round"/>
+
+          <g #alexaArm>
+            <path d="M166 132c10 4 18 10 26 18 3 3 3 8 0 11-3 3-8 3-11 0-5-5-11-9-18-12" fill="#fad4c0"/>
+            <path d="M164 136c-7 22-18 40-30 54-3 4-8 4-12 1-3-3-4-8-1-12 11-12 20-28 26-47" fill="#fad4c0"/>
+            <path d="M140 182c8-1 16-3 22-5" stroke="rgba(15,23,42,0.20)" stroke-width="4" stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+
+    <div class="auth-card" #card>
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Join our platform today</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+      <!-- Success Message -->
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="formData.name"
+          name="name"
+          required
+          placeholder="Enter your full name"
+          class="form-control"
+          (focus)="onFieldFocus('name')"
+          (blur)="onFieldBlur('name')"
+        />
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="formData.email"
+          name="email"
+          required
+          placeholder="Enter your email"
+          class="form-control"
+          (focus)="onFieldFocus('email')"
+          (blur)="onFieldBlur('email')"
+        />
+      </div>
+
+      <!-- Role Field -->
+      <div class="form-group">
+        <label for="role">Account Type</label>
+        <select
+          id="role"
+          [(ngModel)]="formData.role"
+          name="role"
+          class="form-control"
+          (focus)="onFieldFocus('role')"
+          (blur)="onFieldBlur('role')"
+        >
+          <option value="user">Customer</option>
+          <option value="seller">Seller</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="formData.password"
+          name="password"
+          required
+          placeholder="Enter your password (min 6 characters)"
+          class="form-control"
+          (focus)="onFieldFocus('password')"
+          (blur)="onFieldBlur('password')"
+        />
+        <div class="password-strength">
+          <span *ngIf="formData.password.length < 6 && formData.password" class="weak">
+            Password must be at least 6 characters
+          </span>
+          <span *ngIf="formData.password.length >= 6" class="strong">
+            Password strength: Good
+          </span>
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+          placeholder="Confirm your password"
+          class="form-control"
+          (focus)="onFieldFocus('confirmPassword')"
+          (blur)="onFieldBlur('confirmPassword')"
+        />
+        <div *ngIf="confirmPassword && formData.password !== confirmPassword" class="password-mismatch">
+          Passwords do not match
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading || !isFormValid"
+        class="btn btn-primary btn-block"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading">Creating Account...</span>
+      </button>
+    </form>
+
+    <!-- Register Link -->
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div>
+    </div>
+  </div>
+</div>

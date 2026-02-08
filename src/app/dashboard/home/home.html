@@ -1,0 +1,14 @@
+<div class="home-shell">
+  <div class="home-header">
+    <div>
+      <h1 class="home-title">Home</h1>
+      <p class="home-subtitle">Welcome{{ user?.name ? ', ' + user?.name : '' }}.</p>
+    </div>
+
+    <button class="logout-btn" type="button" (click)="logout()">Logout</button>
+  </div>
+
+  <div class="home-content">
+    <app-chatbot></app-chatbot>
+  </div>
+</div>

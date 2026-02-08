@@ -1,1 +1,413 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --bg: #f8fafc;
+  --bg-soft: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-2: #cbd5e1;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.18);
+  --primary: #667eea;
+  --primary-2: #764ba2;
+  --accent: #14b8a6;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --primary-gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+}
+
+html.dark {
+  --bg: #0e1626;
+  --bg-soft: #111c2f;
+  --surface: #111c2f;
+  --surface-2: #0f172a;
+  --text: #e2e8f0;
+  --muted: #a3b1c6;
+  --border: rgba(226, 232, 240, 0.10);
+  --border-2: rgba(226, 232, 240, 0.18);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.48);
+  --primary: #8aa0ff;
+  --primary-2: #b196ff;
+  --accent: #39dbc7;
+  --danger: #fb7185;
+  --success: #34d399;
+  --warning: #fbbf24;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html.dark body {
+  background-image: radial-gradient(1200px 700px at 18% 0%, rgba(138, 160, 255, 0.10), transparent 60%),
+    radial-gradient(900px 600px at 96% 10%, rgba(57, 219, 199, 0.08), transparent 55%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+}
+
+.page-container {
+  color: var(--text) !important;
+}
+
+html.dark .page-header h1 {
+  color: var(--text) !important;
+}
+
+html.dark .page-header p {
+  color: var(--muted) !important;
+}
+
+html.dark .content-area {
+  background-image: radial-gradient(1200px 700px at 18% 0%, rgba(138, 160, 255, 0.08), transparent 60%),
+    radial-gradient(900px 600px at 96% 10%, rgba(57, 219, 199, 0.06), transparent 55%) !important;
+}
+
+html.dark .subadmin-list,
+html.dark .subadmin-perms {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html.dark .subadmin-item {
+  border-bottom-color: var(--border) !important;
+}
+
+html.dark .subadmin-item:hover {
+  background: rgba(226, 232, 240, 0.06) !important;
+}
+
+html.dark .subadmin-name {
+  color: var(--text) !important;
+}
+
+html.dark .subadmin-email,
+html.dark .subadmin-perms-subtitle {
+  color: var(--muted) !important;
+}
+
+html.dark .perm-item {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.content-card,
+.stat-card,
+.modal-card,
+.user-chip,
+.chart-container,
+.activity-card,
+.recent-transactions-container,
+.seller-requests-container,
+.auth-card,
+.sign {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.auth-container {
+  background: var(--bg) !important;
+}
+
+.seller-item,
+.activity-item {
+  background: var(--surface-2) !important;
+}
+
+html.dark .seller-item:hover,
+html.dark .activity-item:hover {
+  background: rgba(148, 163, 184, 0.10) !important;
+}
+
+.seller-name,
+.header h2,
+.chart-container h2,
+.chart-header h3,
+.activity-header h3,
+.auth-header h2 {
+  color: var(--text) !important;
+}
+
+.seller-shop,
+.no-data,
+.loading-state,
+.auth-header p,
+.auth-footer p,
+.activity-desc,
+.date,
+.order-id {
+  color: var(--muted) !important;
+}
+
+.transactions-table table,
+.transactions-table th,
+.transactions-table td {
+  color: var(--text) !important;
+}
+
+.transactions-table thead,
+.transactions-table th {
+  background: var(--surface-2) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+.transactions-table tbody tr {
+  border-bottom-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+html.dark .transactions-table tbody tr {
+  border-bottom-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+.transactions-table tbody tr:hover {
+  background: rgba(148, 163, 184, 0.10) !important;
+}
+
+.card-header,
+.topbar {
+  border-color: var(--border) !important;
+}
+
+.data-table th {
+  background: var(--surface-2) !important;
+  color: var(--muted) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+.data-table td {
+  color: var(--text) !important;
+  border-bottom-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+html.dark .data-table td {
+  border-bottom-color: rgba(148, 163, 184, 0.12) !important;
+}
+
+.input,
+.search-input,
+.search-box,
+select,
+input,
+textarea {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.search-box {
+  background: var(--surface-2) !important;
+}
+
+.input:focus,
+.search-input:focus,
+.search-box:focus-within,
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.16) !important;
+}
+
+html.dark .input:focus,
+html.dark .search-input:focus,
+html.dark .search-box:focus-within,
+html.dark select:focus,
+html.dark input:focus,
+html.dark textarea:focus {
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.16) !important;
+}
+
+.meta {
+  color: var(--muted) !important;
+}
+
+.meta.error {
+  color: var(--danger) !important;
+}
+
+.btn-primary {
+  background: var(--primary-gradient) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.btn-secondary {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.btn-secondary:hover {
+  background: var(--surface-2) !important;
+}
+
+.btn-icon {
+  color: var(--text) !important;
+}
+
+.btn-icon:hover {
+  background: rgba(148, 163, 184, 0.15) !important;
+}
+
+.modal-backdrop {
+  background: rgba(15, 23, 42, 0.55) !important;
+}
+
+html.dark .modal-backdrop {
+  background: rgba(0, 0, 0, 0.62) !important;
+}
+
+.empty {
+  color: var(--muted) !important;
+}
+
+.stat-label,
+.stat-period,
+.stat-change,
+.role-badge,
+.dashboard-content h1,
+.quick-links h3 {
+  color: var(--muted) !important;
+}
+
+.stat-value,
+.stat-number,
+.category-value,
+.activity-title,
+.dashboard-content h1,
+.info-card h2 {
+  color: var(--text) !important;
+}
+
+.amount {
+  color: var(--success) !important;
+}
+
+html.dark .amount {
+  color: var(--success) !important;
+}
+
+.dashboard-container {
+  background: var(--bg) !important;
+}
+
+.info-card,
+.quick-links {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.info-card p,
+.info-card li,
+.dashboard-content p {
+  color: var(--muted) !important;
+}
+
+.link-btn {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--primary) !important;
+}
+
+.link-btn:hover {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+.link-btn.primary {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+.link-btn.primary:hover {
+  background: var(--primary-2) !important;
+  border-color: var(--primary-2) !important;
+}
+
+html.dark .dashboard-container {
+  background: var(--bg) !important;
+}
+
+html.dark .dashboard-container {
+  background-image: radial-gradient(1200px 700px at 20% 10%, rgba(124, 140, 251, 0.12), transparent 55%),
+    radial-gradient(900px 600px at 90% 20%, rgba(45, 212, 191, 0.10), transparent 50%) !important;
+}
+
+html.dark .auth-divider::before {
+  background: var(--border) !important;
+}
+
+html.dark .auth-divider span {
+  background: var(--surface) !important;
+  color: var(--muted) !important;
+}
+
+html.dark .form-control {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+html.dark .error-message {
+  background: rgba(248, 113, 113, 0.10) !important;
+  border-color: rgba(248, 113, 113, 0.25) !important;
+  color: #fecaca !important;
+}
+
+html.dark .success-message {
+  background: rgba(45, 212, 191, 0.10) !important;
+  border-color: rgba(45, 212, 191, 0.22) !important;
+  color: #99f6e4 !important;
+}
+
+html.dark .face {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.40);
+  border-radius: 999px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.56);
+}
