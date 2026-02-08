@@ -15,6 +15,69 @@
   padding-bottom: 70px;
 }
 
+.alexa {
+  position: absolute;
+  top: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.alexa-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.speech {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -88%);
+  width: 320px;
+  max-width: calc(100vw - 60px);
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e7ecec;
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+}
+
+.speech::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  border: 12px solid transparent;
+  border-top-color: #ffffff;
+}
+
+.speech::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -13px;
+  transform: translateX(-50%);
+  border: 13px solid transparent;
+  border-top-color: #e7ecec;
+}
+
+.speech-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.speech-text {
+  font-size: 0.9rem;
+  color: #476060;
+  line-height: 1.25;
+}
+
 .bear {
   position: absolute;
   top: -110px;
@@ -343,6 +406,11 @@
     top: -96px;
     width: 220px;
     height: 180px;
+  }
+
+  .alexa {
+    top: -128px;
+    width: 250px;
   }
 
   .sign-feet {

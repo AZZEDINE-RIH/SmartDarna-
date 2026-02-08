@@ -24,9 +24,9 @@ import { SellerService, Seller } from '../../../../services/seller.service';
 
       <div *ngIf="!isLoading && sellers.length > 0" class="sellers-list">
         <div *ngFor="let seller of sellers" class="seller-item">
-          <div class="seller-avatar">{{ getInitials(seller.full_name) }}</div>
+          <div class="seller-avatar">{{ getInitials(seller.name) }}</div>
           <div class="seller-info">
-            <div class="seller-name">{{ seller.full_name }}</div>
+            <div class="seller-name">{{ seller.name }}</div>
             <div class="seller-shop">{{ seller.shop_name }}</div>
           </div>
           <div class="seller-actions">

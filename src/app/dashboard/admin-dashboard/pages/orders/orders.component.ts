@@ -135,7 +135,7 @@ import { Subscription } from 'rxjs';
 
             <select class="input" [(ngModel)]="sellerFilter" (change)="applyFilters()">
               <option value="all">All sellers</option>
-              <option *ngFor="let s of sellers" [value]="s.user_id">{{ s.shop_name }}</option>
+              <option *ngFor="let s of sellers" [value]="s.id">{{ s.shop_name }}</option>
             </select>
 
             <input class="input" type="date" [(ngModel)]="startDate" (change)="applyFilters()" />
@@ -767,7 +767,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     private orderService: OrderService,
     private sellerService: SellerService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
 
 
@@ -843,7 +843,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     this.sellerService.getAllSellers().subscribe({
       next: (data) => {
         this.sellers = data || [];
-        this.sellersByUserId = new Map<string, Seller>((this.sellers || []).map((s) => [s.user_id, s] as const));
+        this.sellersByUserId = new Map<string, Seller>((this.sellers || []).map((s) => [s.id, s] as const));
         this.cdr.detectChanges();
       },
       error: () => {
@@ -876,19 +876,19 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     const byDate = (!start && !end)
       ? bySeller
       : bySeller.filter((o) => {
-          const d = o.created_at ? new Date(o.created_at) : null;
-          if (!d || isNaN(d.getTime())) return false;
-          if (start && d < start) return false;
-          if (end && d > end) return false;
-          return true;
-        });
+        const d = o.created_at ? new Date(o.created_at) : null;
+        if (!d || isNaN(d.getTime())) return false;
+        if (start && d < start) return false;
+        if (end && d > end) return false;
+        return true;
+      });
 
     this.filteredOrders = !q
       ? [...byDate]
       : byDate.filter((o) => {
-          const hay = `${o.id || ''} ${o.customer_name || ''} ${o.customer_email || ''} ${o.status || ''} ${o.payment_method || ''}`.toLowerCase();
-          return hay.includes(q);
-        });
+        const hay = `${o.id || ''} ${o.customer_name || ''} ${o.customer_email || ''} ${o.status || ''} ${o.payment_method || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
 
   }
 
@@ -931,7 +931,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     const names = ids
       .map((id) => {
         const seller = this.sellersByUserId.get(id);
-        return seller?.shop_name || seller?.full_name || id;
+        return seller?.shop_name || seller?.name || id;
       })
       .filter((v) => !!v);
 

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './Auth/login/login.component';
-import { RegisterComponent } from './Auth/register/register.component';
+import { AuthSwapComponent } from './Auth/auth-swap/auth-swap.component';
 import { HomeComponent } from './dashboard/home/home';
 import { VendeurDashboardComponent } from './dashboard/vendeur-dashboard/vendeur-dashboard';
 import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard.component';
@@ -24,11 +23,17 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
   },
   {
     path: 'register',
-    component: RegisterComponent
+    redirectTo: 'auth/register',
+    pathMatch: 'full'
+  },
+  {
+    path: 'auth/:mode',
+    component: AuthSwapComponent
   },
   {
     path: 'home',

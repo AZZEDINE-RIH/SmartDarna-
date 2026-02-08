@@ -524,13 +524,13 @@ export class ChatbotComponent implements OnInit {
     const p = (prompt || '').trim().toLowerCase();
     if (!p) {
       return {
-        text: "How can I help you with SmartDarna today?",
+        text: "Hi! I'm Alexa, your SmartDarna assistant. How can I help you today?",
         topic: 'general',
         suggestions: this.getStarterSuggestions()
       };
     }
 
-    const mentionsOrder = p.includes('order') || p.includes('commande') || p.includes('tracking') || p.includes('track');
+    const mentionsOrder = p.includes('order') || p.includes('commande') || p.includes('tracking') || p.includes('track') || p.includes('livraison');
     const asksForSpecificOrder = mentionsOrder && (p.includes('#') || p.match(/\b\d{4,}\b/) !== null || p.includes('my order') || p.includes('ma commande'));
 
     const isShortFollowUp = p.length <= 18 || p === 'yes' || p === 'no' || p.startsWith('and ') || p.startsWith('what about');
@@ -538,7 +538,7 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('hello') || p.includes('hi') || p.includes('salut') || p.includes('bonjour')) {
       return {
-        text: "Hello! I’m SmartDarna’s assistant. What can I help you with—products, ordering, tracking, or seller registration?",
+        text: "Hello! I'm Alexa, your SmartDarna assistant. I can help you with products, orders, tracking, or becoming a seller. What's on your mind?",
         topic: 'general',
         suggestions: this.getStarterSuggestions()
       };
@@ -546,9 +546,9 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('what is smartdarna') || (p.includes('smartdarna') && (p.includes('what is') || p.includes("c'est quoi") || p.includes('about')))) {
       return {
-        text: 'SmartDarna is an online marketplace dedicated to smart home products, helping customers find secure and modern smart solutions for their homes.',
+        text: 'SmartDarna is Morocco\'s leading marketplace for smart home solutions. We connect homeowners with the best IoT devices (cameras, locks, lighting) and verified sellers to make your home smarter and safer.',
         topic: 'general',
-        suggestions: ['Browse smart home categories', 'Create an account', 'Become a seller']
+        suggestions: ['Browse categories', 'Create an account', 'Become a seller']
       };
     }
 
@@ -586,7 +586,7 @@ export class ChatbotComponent implements OnInit {
 
     if ((p.includes('difference') || p.includes('diff') || p.includes('customer') || p.includes('seller')) && (p.includes('customer') || p.includes('seller'))) {
       return {
-        text: 'A customer account is for buying and tracking orders. A seller account is for listing products and managing sales after your shop is reviewed and approved.',
+        text: 'A Customer account lets you browse and buy products. A Seller account is for businesses to list products and manage sales. Sellers go through a verification process to ensure quality on SmartDarna.',
         topic: 'account',
         suggestions: ['Create an account', 'Become a seller', 'Login help']
       };
@@ -594,7 +594,7 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('become a seller') || (p.includes('seller') && (p.includes('register') || p.includes('signup') || p.includes('sign up') || p.includes('apply') || p.includes('approval') || p.includes('approve')))) {
       return {
-        text: 'You can register as a seller on SmartDarna, submit your shop details, and wait for admin review/approval before you can list products.',
+        text: 'To become a seller, click "Become a Seller" in the menu. You\'ll need to provide your shop name, business details, and contact info. Our team reviews all applications within 24-48 hours.',
         topic: 'seller',
         suggestions: ['What happens after approval?', 'Seller requirements', 'Contact support']
       };
@@ -626,7 +626,7 @@ export class ChatbotComponent implements OnInit {
 
     if (mentionsOrder && (p.includes('status') || p.includes('tracking') || p.includes('track') || p.includes('where is') || p.includes('delivered') || p.includes('shipped') || asksForSpecificOrder)) {
       return {
-        text: "I can’t access personal orders. Please check your dashboard’s orders page to view your order status and tracking updates. If something looks wrong, contact SmartDarna support.",
+        text: "I don't have direct access to your private order details for security reasons. Please visit your Dashboard > Orders to see real-time tracking. If your order is late, I can help you contact support.",
         topic: 'orders',
         suggestions: ['Order status meaning', 'Returns & refunds', 'Contact support']
       };
@@ -650,7 +650,7 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('payment') || p.includes('pay') || p.includes('method') || p.includes('card') || p.includes('cash')) {
       return {
-        text: 'Available payment methods are shown at checkout and can vary by location and seller. If you don’t see a method you need, contact SmartDarna support.',
+        text: 'SmartDarna supports Credit Cards (CMI, Visa, Mastercard) and Cash on Delivery (COD) for most regions in Morocco. You can see the specific options for your cart at checkout.',
         topic: 'payments',
         suggestions: ['Place an order', 'Delivery info', 'Contact support']
       };
@@ -658,7 +658,7 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('delivery') || p.includes('shipping') || p.includes('ship') || p.includes('livraison')) {
       return {
-        text: 'Delivery options and estimated timelines depend on your address and the seller. You’ll see the available delivery details during checkout and in your order tracking.',
+        text: 'We deliver across Morocco! Delivery usually takes 2-5 business days depending on your city. Shipping costs are calculated at checkout based on the seller\'s location and your address.',
         topic: 'delivery',
         suggestions: ['Track my order', 'Order status meaning', 'Returns & refunds']
       };
@@ -674,9 +674,17 @@ export class ChatbotComponent implements OnInit {
 
     if (p.includes('price') || p.includes('promo') || p.includes('promotion') || p.includes('discount') || p.includes('coupon')) {
       return {
-        text: "I can’t confirm prices, promotions, or discounts here. Please check the product page in the app for the most accurate pricing and availability.",
+        text: "You can find all active promotions on our homepage! For specific products, the price shown on the product page is final. Keep an eye out for 'Flash Sales' for the best deals.",
         topic: 'products',
-        suggestions: ['Browse smart home categories', 'How to place an order']
+        suggestions: ['Browse categories', 'How to place an order']
+      };
+    }
+
+    if (p.includes('contact') || p.includes('support') || p.includes('help') || p.includes('aide') || p.includes('email') || p.includes('phone')) {
+      return {
+        text: "You can reach our support team at support@smartdarna.ma or via the Contact page. We're available Monday to Friday, 9 AM - 6 PM.",
+        topic: 'support',
+        suggestions: ['Contact support', 'Track my order', 'Returns & refunds']
       };
     }
 
