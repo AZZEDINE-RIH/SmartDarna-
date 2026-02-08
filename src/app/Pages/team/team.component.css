@@ -103,8 +103,8 @@
   z-index: 2;
 }
 
-.members.layout-row-3 {
-  grid-template-columns: repeat(3, max-content);
+.members.layout-row-2 {
+  grid-template-columns: repeat(2, max-content);
 }
 
 .members.layout-grid-2x2 {

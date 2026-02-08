@@ -5,6 +5,7 @@
 .about-page {
     background-color: var(--bg-primary);
     min-height: 100vh;
+    perspective: 1000px; /* Enable 3D perspective for the entire page */
 }
 
 /* ===== STATISTICS SECTION ===== */
@@ -41,6 +42,37 @@
     text-align: center;
     flex: 1;
     max-width: 200px;
+    transform-style: preserve-3d;
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.stat-item.opacity-0 {
+    opacity: 0;
+}
+
+.stat-item.translate-y-8 {
+    transform: translateY(32px);
+}
+
+.stat-item.opacity-100 {
+    opacity: 1;
+}
+
+.stat-item.translate-y-0 {
+    transform: translateY(0);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stat-item.translate-y-0:hover {
+    transform: perspective(800px) translateZ(8px) scale(1.02);
+    box-shadow: 
+        0 10px 25px rgba(96, 206, 214, 0.2),
+        0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item.translate-y-0:hover .stat-number {
+    transform: translateY(-2px);
+    text-shadow: 0 6px 30px rgba(96, 206, 214, 0.4);
 }
 
 .stat-number {
@@ -52,11 +84,6 @@
     letter-spacing: -0.02em;
     text-shadow: 0 4px 20px rgba(96, 206, 214, 0.3);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.stat-item:hover .stat-number {
-    transform: translateY(-2px);
-    text-shadow: 0 6px 30px rgba(96, 206, 214, 0.4);
 }
 
 .stat-label {
@@ -116,6 +143,16 @@
     height: 500px;
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--border-color);
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.image-card:hover {
+    transform: perspective(1000px) rotateY(5deg) rotateX(-5deg) translateZ(20px);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 10px 20px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .image-overlay {
@@ -147,18 +184,22 @@
     border: 1px solid var(--border-color);
     padding: var(--spacing-2xl);
     border-radius: var(--radius-lg);
-    transition: all var(--transition-normal);
+    transition: all 0.5s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: var(--spacing-lg);
+    transform-style: preserve-3d;
 }
 
 .glass-card:hover {
-    transform: translateY(-10px);
+    transform: perspective(1000px) rotateY(3deg) rotateX(-3deg) translateZ(15px);
     border-color: var(--accent-color);
-    box-shadow: 0 10px 30px rgba(96, 206, 214, 0.1);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .card-icon {
@@ -203,12 +244,17 @@
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    transition: all var(--transition-normal);
+    transition: all 0.5s ease;
+    transform-style: preserve-3d;
 }
 
 .feature-card:hover {
     border-color: var(--accent-color);
-    transform: translateX(10px);
+    transform: perspective(1000px) rotateY(2deg) rotateX(-2deg) translateZ(10px);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.08),
+        0 5px 10px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .feature-icon-wrapper {
@@ -290,6 +336,43 @@
         width: 40px;
         height: 1px;
         background: linear-gradient(90deg, transparent, rgba(96, 206, 214, 0.3), transparent);
+    }
+
+    /* ===== MOBILE 3D OPTIMIZATION ===== */
+    .about-page {
+        perspective: none; /* Disable 3D on mobile for performance */
+    }
+    
+    .image-card:hover,
+    .glass-card:hover,
+    .feature-card:hover,
+    .stat-item:hover {
+        transform: none; /* Remove 3D effects on mobile */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Simple shadow only */
+    }
+
+    /* ===== MOBILE ANIMATION OPTIMIZATION ===== */
+    .stat-item {
+        opacity: 1; /* Show immediately on mobile */
+        transform: translateY(0);
+        transition: none; /* Disable animation on mobile */
+    }
+}
+
+/* ===== PERFORMANCE OPTIMIZATION ===== */
+@media (prefers-reduced-motion: reduce) {
+    .image-card,
+    .glass-card,
+    .feature-card,
+    .stat-item {
+        transition: none;
+    }
+    
+    .image-card:hover,
+    .glass-card:hover,
+    .feature-card:hover,
+    .stat-item:hover {
+        transform: none;
     }
 }
 

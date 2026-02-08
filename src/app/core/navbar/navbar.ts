@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../Pages/services/cart.service';
@@ -11,26 +11,19 @@ import { CartService } from '../../Pages/services/cart.service';
   styleUrls: ['./navbar.css']
 })
 export class Navbar implements OnInit {
+  private cartService = inject(CartService);
   cartCount = 0;
   isDarkMode = false;
-
-  constructor(private cartService: CartService) { }
 
   ngOnInit() {
     this.cartService.getCartCount().subscribe(count => {
       this.cartCount = count;
     });
+    this.isDarkMode = document.documentElement.classList.contains('dark');
   }
 
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-    if (this.isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', this.isDarkMode);
   }
 }
-
-
-

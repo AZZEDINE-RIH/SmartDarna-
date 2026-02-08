@@ -50,7 +50,7 @@
             <div class="product-grid-container">
                 <div class="product-grid" *ngIf="pagedProducts.length > 0">
                     <app-product-card *ngFor="let product of pagedProducts" [product]="product" [showBadge]="false"
-                        (addToCart)="onAddToCart($event)" class="slide-up"></app-product-card>
+                        (addToCart)="onAddToCart($event)" (buyNow)="onBuyNow($event)" class="slide-up"></app-product-card>
                 </div>
 
                 <!-- No Results -->

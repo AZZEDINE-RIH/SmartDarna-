@@ -1,0 +1,22 @@
+<section class="trusted-by-section section">
+    <div class="container">
+        <div class="section-header text-center fade-in">
+            <h2 class="section-title">Trusted By</h2>
+            <p class="subtitle">Building Trust through Excellence</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card fade-up" *ngFor="let stat of stats; let i = index" #statCard
+                [style.animation-delay]="i * 100 + 'ms'">
+                <div class="stat-content">
+                    <div class="stat-number">
+                        <span class="prefix" *ngIf="stat.prefix">{{ stat.prefix }}</span>
+                        <span class="value">{{ stat.currentValue }}</span>
+                        <span class="suffix" *ngIf="stat.suffix">{{ stat.suffix }}</span>
+                    </div>
+                    <div class="stat-label">{{ stat.label }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

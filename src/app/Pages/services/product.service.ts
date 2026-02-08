@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, map, catchError, throwError, tap } from 'rxjs';
+import { Observable, map, catchError, throwError, tap, shareReplay } from 'rxjs';
 import { Product } from '../../shared/product-card/product-card.component';
 
 @Injectable({
@@ -8,18 +8,26 @@ import { Product } from '../../shared/product-card/product-card.component';
 })
 export class ProductService {
     private dataUrl = '/assets/data/products.json';
+    private productsCache$: Observable<Product[]> | null = null;
 
     constructor(private http: HttpClient) { }
 
     getProducts(): Observable<Product[]> {
-        console.log('🔍 ProductService: Fetching products from:', this.dataUrl);
-        return this.http.get<Product[]>(this.dataUrl).pipe(
-            tap(products => {
-                console.log('✅ ProductService: Successfully loaded', products.length, 'products');
-                console.log('📦 ProductService: Product IDs:', products.map(p => p.id));
-            }),
-            catchError(this.handleError)
-        );
+        if (!this.productsCache$) {
+            console.log('🔍 ProductService: Fetching products from:', this.dataUrl);
+            this.productsCache$ = this.http.get<Product[]>(this.dataUrl).pipe(
+                tap(products => {
+                    console.log('✅ ProductService: Successfully loaded', products.length, 'products');
+                    console.log('📦 ProductService: Product IDs:', products.map(p => p.id));
+                }),
+                shareReplay(1),
+                catchError(error => {
+                    this.productsCache$ = null; // Reset cache on error so we can retry
+                    return this.handleError(error);
+                })
+            );
+        }
+        return this.productsCache$;
     }
 
     getProductById(id: string): Observable<Product | undefined> {
@@ -42,7 +50,12 @@ export class ProductService {
 
     getBestSellers(): Observable<Product[]> {
         return this.getProducts().pipe(
-            map(products => products.filter(p => p.bestSeller)),
+            map(products => {
+                // Filter for best sellers
+                const best = products.filter(p => p.bestSeller);
+                // Return exactly 4 items (or less if not enough)
+                return best.slice(0, 4);
+            }),
             catchError(this.handleError)
         );
     }

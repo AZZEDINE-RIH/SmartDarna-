@@ -6,10 +6,10 @@ import { ProductDetailsComponent } from './Pages/product-details/product-details
 import { CartComponent } from './Pages/cart/cart.component';
 import { AboutComponent } from './Pages/about/about.component';
 import { ServicesComponent } from './Pages/services-page/services.component';
-import { CheckoutComponent } from './Pages/checkout/checkout.component';
+
 import { OrderConfirmationComponent } from './Pages/order-confirmation/order-confirmation.component';
-import { LoginComponent } from './Pages/login/login.component';
 import { TeamComponent } from './Pages/team/team.component';
+import { CheckoutComponent } from './Pages/checkout-page/checkout.component';
 
 export const routes: Routes = [
   {
@@ -51,10 +51,6 @@ export const routes: Routes = [
   {
     path: 'order-confirmation',
     component: OrderConfirmationComponent,
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
   },
   {
     path: '**',

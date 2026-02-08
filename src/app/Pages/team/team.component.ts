@@ -16,34 +16,42 @@ interface ManagerGroup {
 })
 export class TeamComponent {
   director: TeamPerson = {
-    name: 'Name',
+    name: 'Azzdinne Rih',
     role: 'Director',
-    photoUrl: '',
+    photoUrl: '/assets/AzzdineRih.jpeg',
+  };
+
+  assistant: TeamPerson = {
+    name: 'Sarah',
+    role: 'Executive Assistant',
+    photoUrl: ''
   };
 
   managerGroups: ManagerGroup[] = [
     {
-      manager: { name: 'Sara Jamal', role: 'Manager', photoUrl: 'assets/images/sara-jamal.jpg' },
+      manager: { name: 'Sara Jamal', role: 'Manager', photoUrl: '/assets/SaraCom.jpg' },
       members: [
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
+        { name: 'Hamza', role: 'Team Member', photoUrl: '/assets/Hamza.png' },
+        { name: 'Samira', role: 'Team Member', photoUrl: '/assets/Samira.jpeg' },
+        { name: 'Kamilia', role: 'Team Member', photoUrl: '/assets/Kamilia.jpg' },
       ],
     },
     {
-      manager: { name: 'Name', role: 'Manager', photoUrl: '' },
+      manager: { name: 'Soukaina Taleb', role: 'Manager', photoUrl: '/assets/SoukainaTaleb.jpg' },
       members: [
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
+        { name: 'Aboubaker', role: 'Team Member', photoUrl: '/assets/JadAbou.jpg' },
+        { name: 'Adam', role: 'Team Member', photoUrl: '/assets/Adam.png' },
+        { name: 'Adile', role: 'Team Member', photoUrl: '/assets/Adile.png' },
+
+        { name: 'Nassmine', role: 'Team Member', photoUrl: '/assets/Nassmine.png' },
       ],
     },
     {
-      manager: { name: 'Name', role: 'Manager', photoUrl: '' },
+      manager: { name: 'Ihssane EL Bouazzaoui', role: 'Manager', photoUrl: '/assets/IhssaneElBouazzaoui.jpg' },
       members: [
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
-        { name: 'Name', role: 'Team Member', photoUrl: '' },
+        { name: 'Jamal', role: 'Team Member', photoUrl: '/assets/Jamal.png' },
+
+        { name: 'Said', role: 'Team Member', photoUrl: '/assets/said.png' },
       ],
     },
   ];

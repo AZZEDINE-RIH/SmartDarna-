@@ -1,0 +1,52 @@
+<section class="customer-reviews section" id="reviews">
+    <div class="container">
+        <!-- Section 1: Reviews Display -->
+        <div class="section-header text-center slide-up">
+            <h2 class="section-title">What Our Clients Say</h2>
+        </div>
+
+        <div class="reviews-grid">
+            <div class="review-card slide-up" *ngFor="let review of visibleReviews">
+                <div class="card-content">
+                    <div class="rating">
+                        <span class="star" *ngFor="let star of getRatingStars(review.rating)">★</span>
+                    </div>
+                    <p class="review-text">"{{ review.text }}"</p>
+                    <div class="review-divider"></div>
+                    <div class="user-info">
+                        <h4 class="user-name">{{ review.name }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Share Your Experience -->
+        <div class="share-experience-section slide-up">
+            <h4 class="section-subtitle text-center">Share Your Experience</h4>
+
+            <div class="form-container">
+                <form (ngSubmit)="submitReview()" class="review-form">
+                    <div class="form-group">
+                        <input type="text" name="name" [(ngModel)]="newReview.name" placeholder="Your Name" required
+                            class="form-input">
+                    </div>
+
+                    <div class="form-group rating-group">
+                        <label>Rating</label>
+                        <div class="rating-selector">
+                            <span *ngFor="let s of [1,2,3,4,5]" class="star-btn" [class.active]="s <= newReview.rating"
+                                (click)="newReview.rating = s">★</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea name="text" [(ngModel)]="newReview.text" placeholder="Your review..." rows="4"
+                            required class="form-input"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

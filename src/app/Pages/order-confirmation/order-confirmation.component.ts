@@ -1,116 +1,90 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
+import { OrderService, Order } from '../services/order.service';
+import { EmailService } from '../services/email.service';
 
 @Component({
-    selector: 'app-order-confirmation',
-    standalone: true,
-    imports: [CommonModule, RouterLink],
-    templateUrl: './order-confirmation.component.html',
-    styleUrls: ['./order-confirmation.component.css']
+  selector: 'app-order-confirmation',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './order-confirmation.component.html',
+  styleUrls: ['./order-confirmation.component.css']
 })
 export class OrderConfirmationComponent implements OnInit {
-    orderId: string = '';
-    orderDate: Date = new Date();
-    estimatedDelivery: Date = new Date();
-    customerInfo: any = {};
-    orderItems: any[] = [];
-    orderTotal: number = 0;
-    paymentMethod: string = '';
-    trackingNumber: string = '';
+  private cartService = inject(CartService);
+  private orderService = inject(OrderService);
+  private emailService = inject(EmailService);
+  private router = inject(Router);
 
-    constructor(private cartService: CartService) { }
+  emailSent = signal(false);
+  emailError = signal(false);
 
-    ngOnInit() {
-        // Generate a random order ID for visual effect
-        this.orderId = 'SD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        this.trackingNumber = 'TRK-' + Math.random().toString(36).substr(2, 12).toUpperCase();
-        
-        // Set estimated delivery (5-7 business days)
-        this.estimatedDelivery = new Date();
-        this.estimatedDelivery.setDate(this.estimatedDelivery.getDate() + 7);
-
-        // Simulate order data (in real app, this would come from the order service)
-        this.simulateOrderData();
-
-        // Clear the cart upon successful order
-        this.cartService.clearCart();
+  orderData = computed(() => {
+    const order = this.orderService.getCurrentOrder();
+    if (!order) {
+      return {
+        orderId: '',
+        emailSent: this.emailSent(),
+        customer: { name: '', email: '', phone: '', address: '' },
+        items: [] as { name: string; quantity: number; price: number }[],
+        summary: { subtotal: 0, total: 0 },
+        delivery: { trackingNumber: '', expectedDelivery: '', paymentMethod: '' }
+      };
     }
+    return {
+      orderId: order.id,
+      emailSent: this.emailSent(),
+      customer: {
+        name: order.customerInfo.name,
+        email: order.customerInfo.email,
+        phone: order.customerInfo.phone,
+        address: `${order.customerInfo.address}, ${order.customerInfo.city}`
+      },
+      items: order.items.map(i => ({
+        name: i.name,
+        quantity: i.quantity,
+        price: i.price * i.quantity
+      })),
+      summary: {
+        subtotal: order.subtotal,
+        total: order.total
+      },
+      delivery: {
+        trackingNumber: order.trackingNumber,
+        expectedDelivery: new Date(order.estimatedDelivery).toLocaleDateString(),
+        paymentMethod: order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'
+      }
+    };
+  });
 
-    private simulateOrderData() {
-        // Simulate customer info
-        this.customerInfo = {
-            name: 'John Doe',
-            email: 'john@example.com',
-            phone: '+212 600 000 000',
-            address: 'Appt 4, Building 12, Main St, Casablanca'
-        };
-
-        // Simulate order items
-        this.orderItems = [
-            {
-                name: 'Smart Home Starter Kit',
-                quantity: 2,
-                price: 2499,
-                color: 'White'
-            },
-            {
-                name: 'Smart Lighting System',
-                quantity: 1,
-                price: 899,
-                color: 'Black'
-            }
-        ];
-
-        this.orderTotal = this.orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-        this.paymentMethod = 'Credit Card';
+  ngOnInit() {
+    const order = this.orderService.getCurrentOrder();
+    if (!order) {
+      this.router.navigate(['/']);
+      return;
     }
+    this.sendConfirmationEmail(order);
+  }
 
-    downloadInvoice() {
-        // Simulate invoice download
-        const invoiceData = {
-            orderId: this.orderId,
-            date: this.orderDate,
-            customer: this.customerInfo,
-            items: this.orderItems,
-            total: this.orderTotal
-        };
-
-        // Create a simple text invoice
-        const invoiceText = `
-ORDER INVOICE
-===============
-Order ID: ${this.orderId}
-Date: ${this.orderDate.toLocaleDateString()}
-Customer: ${this.customerInfo.name}
-Email: ${this.customerInfo.email}
-Phone: ${this.customerInfo.phone}
-Address: ${this.customerInfo.address}
-
-Items:
-${this.orderItems.map(item => `${item.name} x${item.quantity} - ${item.price * item.quantity} MAD`).join('\n')}
-
-Total: ${this.orderTotal} MAD
-Payment Method: ${this.paymentMethod}
-        `;
-
-        // Download as text file
-        const blob = new Blob([invoiceText], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `invoice-${this.orderId}.txt`;
-        a.click();
-        window.URL.revokeObjectURL(url);
+  async sendConfirmationEmail(order: Order) {
+    try {
+      await this.emailService.sendOrderConfirmation(order);
+      this.emailSent.set(true);
+    } catch {
+      this.emailError.set(true);
     }
+  }
 
-    trackOrder() {
-        // Simulate tracking URL
-        window.open(`https://smartdarna.com/tracking/${this.trackingNumber}`, '_blank');
-    }
+  continueShopping() {
+    this.router.navigate(['/collection']);
+  }
 
-    printOrder() {
-        window.print();
+  trackOrder() {
+    const order = this.orderService.getCurrentOrder();
+    if (order) {
+      window.open(`https://smartdarna.com/tracking/${order.trackingNumber}`, '_blank');
     }
+  }
 }

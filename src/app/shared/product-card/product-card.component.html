@@ -12,10 +12,16 @@
             <!-- Hover Overlay -->
             <div class="product-overlay">
                 <p class="product-quick-info">{{ product.description }}</p>
-                <button (click)="$event.preventDefault(); $event.stopPropagation(); onAddToCart()"
-                    class="btn-quick-add">
-                    Quick Add
-                </button>
+                <div class="overlay-buttons">
+                    <button (click)="$event.preventDefault(); $event.stopPropagation(); onAddToCart()"
+                        class="btn-quick-add">
+                        Quick Add
+                    </button>
+                    <button (click)="onBuyNow($event)"
+                        class="btn-buy-now">
+                        Buy Now
+                    </button>
+                </div>
             </div>
         </div>
 

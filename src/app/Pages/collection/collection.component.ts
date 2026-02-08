@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductCardComponent, Product } from '../../shared/product-card/product-card.component';
 import { ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
+import { CheckoutFlowService } from '../services/checkout-flow.service';
 
 @Component({
     selector: 'app-collection',
@@ -34,7 +35,8 @@ export class CollectionComponent implements OnInit {
 
     constructor(
         private productService: ProductService,
-        private cartService: CartService
+        private cartService: CartService,
+        private checkoutFlowService: CheckoutFlowService
     ) {
         this.brands.forEach(brand => this.selectedBrands[brand] = false);
     }
@@ -81,5 +83,9 @@ export class CollectionComponent implements OnInit {
 
     onAddToCart(product: Product) {
         this.cartService.addToCart(product, product.colors[0], 1);
+    }
+
+    onBuyNow(product: Product) {
+        this.checkoutFlowService.buyNow(product, product.colors[0], 1);
     }
 }

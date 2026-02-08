@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostListener, Input, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostListener, Input, OnDestroy, OnChanges, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./carousel.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarouselComponent<T = any> implements AfterViewInit, OnDestroy {
+export class CarouselComponent<T = any> implements AfterViewInit, OnDestroy, OnChanges {
   @Input() items: T[] = [];
 
   @Input() autoplay: boolean = true;
@@ -43,6 +43,12 @@ export class CarouselComponent<T = any> implements AfterViewInit, OnDestroy {
   translateXPx: number = 0;
 
   private autoplayId: any;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['items'] && !changes['items'].firstChange) {
+      this.recalculate();
+    }
+  }
 
   ngAfterViewInit(): void {
     this.recalculate();

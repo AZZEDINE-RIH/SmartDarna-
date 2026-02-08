@@ -5,7 +5,6 @@
             <p class="subtitle" *ngIf="cartItems.length > 0">You have {{ cartItems.length }} items in your cart.</p>
         </div>
 
-        <!-- Empty Cart State -->
         <div class="empty-cart-state slide-up" *ngIf="cartItems.length === 0">
             <div class="empty-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none"
@@ -20,9 +19,7 @@
             <button routerLink="/collection" class="btn main mt-6">Start Shopping</button>
         </div>
 
-        <!-- Cart Content Grid -->
         <div class="cart-grid" *ngIf="cartItems.length > 0">
-            <!-- Items List (Left/Main Side) -->
             <div class="cart-items-list">
                 <div *ngFor="let item of cartItems; let i = index" class="cart-item-card card slide-up">
                     <div class="item-image">
@@ -62,7 +59,6 @@
                 </a>
             </div>
 
-            <!-- Order Summary (Right Side) -->
             <aside class="order-summary-container">
                 <div class="cart-summary card">
                     <h3>Order Summary</h3>
