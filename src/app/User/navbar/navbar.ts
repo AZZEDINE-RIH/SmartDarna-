@@ -36,4 +36,8 @@ export class Navbar implements OnInit, OnDestroy {
   goToUnreadMessages(): void {
     this.router.navigate(['/user/messages'], { queryParams: { tab: 'unread' } });
   }
+
+  goToSettings(): void {
+    this.router.navigate(['/user/settings']);
+  }
 }

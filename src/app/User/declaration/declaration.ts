@@ -2,13 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
-import { HistoryComponent } from './history/history';
-import { ThemeService } from '../../theme.service'; 
+import { ThemeService } from '../../theme.service';
+import { NewDeclarationFormComponent } from "./new-declaration-form/new-declaration-form"; 
 
 @Component({
   selector: 'app-declaration',
   standalone: true,
-  imports: [CommonModule, HistoryComponent],
+  imports: [CommonModule, NewDeclarationFormComponent],
   templateUrl: './declaration.html',
   styleUrl: './declaration.css',
 })

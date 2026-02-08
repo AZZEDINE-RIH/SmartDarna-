@@ -3,7 +3,8 @@ import { Dashboard } from './User/dashboard/dashboard';
 import { Declaration } from './User/declaration/declaration';
 import { Messages } from './User/messages/messages';
 import { Orders } from './User/orders/orders';
-import { Settings } from './User/settings/settings';
+import { SettingsComponent } from './User/settings/settings';
+import { ProfileComponent } from './User/profile/profile';
 
 export const routes: Routes = [
   {
@@ -13,7 +14,8 @@ export const routes: Routes = [
       { path: 'declarations', component: Declaration },
       { path: 'messages', component: Messages },
       { path: 'orders', component: Orders},
-      { path: 'settings', component: Settings },
+      { path: 'settings', component: SettingsComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

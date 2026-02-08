@@ -89,4 +89,8 @@ export class Sidebar implements OnInit, OnDestroy {
       return;
     }
   }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/user/profile']);
+  }
 }

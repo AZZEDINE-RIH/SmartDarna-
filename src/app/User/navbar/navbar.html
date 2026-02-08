@@ -39,7 +39,7 @@
                 [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"></ion-icon>
               <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
             </button>
-            <button class="w-10 h-10 rounded-full border flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer"
+            <button (click)="goToSettings()" class="w-10 h-10 rounded-full border flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#60CED6] focus:border-transparent cursor-pointer"
               [ngClass]="isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-white'">
               <ion-icon name="settings-outline" class="text-[20px]"
                 [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"></ion-icon>

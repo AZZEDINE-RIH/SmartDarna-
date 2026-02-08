@@ -1,0 +1,213 @@
+/* Form Styles */
+.form-container {
+  max-width: 4rem;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Declaration Type Cards */
+.declaration-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.declaration-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(96, 206, 214, 0.15);
+}
+
+.declaration-card.selected {
+  border-color: #60CED6;
+  background: linear-gradient(135deg, rgba(96, 206, 214, 0.1) 0%, rgba(96, 206, 214, 0.05) 100%);
+}
+
+/* Form Controls */
+.form-input,
+.form-select,
+.form-textarea {
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #60CED6;
+  box-shadow: 0 0 0 3px rgba(96, 206, 214, 0.1);
+}
+
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+  border-color: #ef4444;
+}
+
+/* File Upload Area */
+.file-upload-area {
+  transition: all 0.3s ease;
+  border: 2px dashed #d1d5db;
+  background: #f9fafb;
+}
+
+.file-upload-area:hover {
+  border-color: #60CED6;
+  background: rgba(96, 206, 214, 0.05);
+}
+
+.file-upload-area.dragover {
+  border-color: #60CED6;
+  background: rgba(96, 206, 214, 0.1);
+}
+
+/* Dark Mode Styles */
+.dark .form-input,
+.dark .form-select,
+.dark .form-textarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .form-input:focus,
+.dark .form-select:focus,
+.dark .form-textarea:focus {
+  border-color: #60CED6;
+  background-color: #374151;
+}
+
+.dark .file-upload-area {
+  border-color: #4b5563;
+  background-color: #374151;
+}
+
+.dark .file-upload-area:hover {
+  border-color: #60CED6;
+  background-color: rgba(96, 206, 214, 0.1);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, #60CED6 0%, #4FA8B0 100%);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(96, 206, 214, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+}
+
+/* Success Message */
+.success-message {
+  animation: slideInUp 0.5s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* File Attachment Styles */
+.attachment-item {
+  transition: all 0.2s ease;
+}
+
+.attachment-item:hover {
+  background-color: rgba(96, 206, 214, 0.05);
+}
+
+/* Loading Spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+  
+  .declaration-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Character Counter */
+.char-counter {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* Error States */
+.error-text {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.dark .error-text {
+  color: #f87171;
+}
+
+/* Checkbox Styles */
+.custom-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  border: 2px solid #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #60CED6;
+  border-color: #60CED6;
+}
+
+.custom-checkbox:focus {
+  box-shadow: 0 0 0 3px rgba(96, 206, 214, 0.1);
+}
+
+.dark .custom-checkbox {
+  border-color: #4b5563;
+}
+
+.dark .custom-checkbox:checked {
+  background-color: #60CED6;
+  border-color: #60CED6;
+}

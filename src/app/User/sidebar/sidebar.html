@@ -22,11 +22,10 @@
       <button
         class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
         [ngClass]="{
-          'bg-[#60CED6]/15 text-[#60CED6]': isDarkMode && activeItem === item.id,
+          'bg-[#60CED6]/25 text-[#60CED6]': isDarkMode && activeItem === item.id,
           'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === item.id,
-          'text-gray-400 hover:bg-gray-800 hover:text-[#60CED6]': isDarkMode && activeItem !== item.id,
+          'text-gray-400 hover:bg-gray-700 hover:text-[#60CED6]': isDarkMode && activeItem !== item.id,
           'text-gray-500 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== item.id
-          
         }"
         (click)="handleItemClick(item)"
       >
@@ -56,9 +55,10 @@
       <button
         class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
         [ngClass]="{
-          'bg-[#60CED6]/15 text-[#60CED6]': isDarkMode && activeItem === settingsItem.id,
+          'bg-[#60CED6]/25 text-[#60CED6]': isDarkMode && activeItem === settingsItem.id,
           'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === settingsItem.id,
-          
+          'text-gray-400 hover:bg-gray-700 hover:text-[#60CED6]': isDarkMode && activeItem !== settingsItem.id,
+          'text-gray-500 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== settingsItem.id
         }"
         (click)="handleItemClick(settingsItem)"
       >
@@ -81,7 +81,7 @@
 
     <!-- Profile -->
     <li class="pb-4 mt-1">
-      <button>
+      <button (click)="navigateToProfile()">
         <div class="text-left">
           <div class="text-sm font-semibold"
             [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">Sara Jamal</div>
