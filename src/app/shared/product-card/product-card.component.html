@@ -7,7 +7,11 @@
     <!-- Product Image (Clickable) -->
     <a [routerLink]="['/product', product.id]" class="product-link">
         <div class="product-image-wrapper">
-            <img [src]="product.images[0]" [alt]="product.name" class="product-image" />
+            <img 
+                [src]="product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/400x400?text=No+Image'" 
+                [alt]="product.name + ' product image'" 
+                (error)="$event.target.src='https://via.placeholder.com/400x400?text=No+Image'"
+                class="product-image" />
 
             <!-- Hover Overlay -->
             <div class="product-overlay">

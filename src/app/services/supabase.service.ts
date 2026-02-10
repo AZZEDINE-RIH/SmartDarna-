@@ -19,7 +19,7 @@ export class SupabaseService {
   constructor() {
     // Check if running in browser environment
     const isBrowser = typeof window !== 'undefined' && typeof localStorage !== 'undefined';
-    
+
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabaseAnonKey,
@@ -32,7 +32,7 @@ export class SupabaseService {
         }
       }
     );
-    
+
     if (isBrowser) {
       void this.initializeAuth().catch((error: any) => {
         const isAbort = error?.name === 'AbortError' || `${error?.message || ''}`.includes('signal is aborted');
@@ -66,7 +66,7 @@ export class SupabaseService {
   private async initializeAuthInternal() {
     if (this.isInitialized) return;
     let aborted = false;
-    
+
     try {
       if (!this.authListenerRegistered) {
         // Listen for auth changes (set this up early)
@@ -82,7 +82,7 @@ export class SupabaseService {
       if (error) {
         console.error('Error getting initial session:', error);
       }
-      
+
       console.log('🔍 Initial session:', session?.user?.id);
       this.authState$.next(session);
     } catch (error: any) {
@@ -167,7 +167,7 @@ export class SupabaseService {
     if (error) console.error('Error creating profile:', error);
     return { data, error };
   }
-  
+
   async updateProfile(id: string, updates: any) {
     const { data, error } = await this.supabase
       .from('profiles')

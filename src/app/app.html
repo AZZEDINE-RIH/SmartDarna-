@@ -2,8 +2,8 @@
   @if (isLoggedIn() && userRole() === 'admin') {
     <!-- Admin routes render their own integrated layout -->
     <router-outlet></router-outlet>
-  } @else if (isLoggedIn() && userRole() === 'seller') {
-    <!-- Seller layout with sidebar and navbar -->
+  } @else if (isLoggedIn() && userRole() === 'seller' && isSellerRoute()) {
+    <!-- Seller layout with sidebar and navbar - ONLY on /user routes -->
     <app-sidebar></app-sidebar>
     <div class="main-wrapper">
       <app-dashboard-navbar></app-dashboard-navbar>

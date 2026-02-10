@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem } from './cart.service';
+import { SupabaseService } from '../../services/supabase.service';
 
 export interface CustomerInfo {
     name: string;
@@ -41,7 +42,7 @@ export class OrderService {
     private currentOrderSubject = new BehaviorSubject<Order | null>(null);
     public currentOrder$ = this.currentOrderSubject.asObservable();
 
-    constructor() {
+    constructor(private supabase: SupabaseService) {
         // Load orders from localStorage if needed
         const savedOrders = localStorage.getItem('smartdarna_orders');
         if (savedOrders) {
@@ -49,14 +50,14 @@ export class OrderService {
         }
     }
 
-    createOrder(
+    async createOrder(
         cartItems: CartItem[],
         customerInfo: CustomerInfo,
         paymentMethod: 'cod' | 'online'
-    ): Order {
+    ): Promise<Order> {
         const orderId = 'SD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
         const trackingNumber = 'TRK-' + Math.random().toString(36).substr(2, 12).toUpperCase();
-        
+
         const orderItems: OrderItem[] = cartItems.map(item => ({
             productId: item.product.id,
             name: item.product.name,
@@ -65,11 +66,11 @@ export class OrderService {
             selectedColor: item.selectedColor,
             image: item.product.images[0]
         }));
-        
+
         const subtotal = orderItems.reduce((total, item) => total + (item.price * item.quantity), 0);
         const shipping = 0; // Free shipping
         const total = subtotal + shipping;
-        
+
         const order: Order = {
             id: orderId,
             orderDate: new Date(),
@@ -89,11 +90,53 @@ export class OrderService {
             status: 'confirmed',
             trackingNumber
         };
-        
+
+        // Save to Supabase database
+        try {
+            // Store all order details in shipping_address as JSON since other columns don't exist
+            const orderDetails = {
+                customer: {
+                    name: customerInfo.name,
+                    email: customerInfo.email,
+                    phone: customerInfo.phone,
+                    address: customerInfo.address,
+                    city: customerInfo.city
+                },
+                items: orderItems,
+                payment_method: paymentMethod,
+                tracking_number: trackingNumber
+            };
+
+            const dbOrder = {
+                // Match actual database schema from screenshot:
+                // id, customer_id, total_amount, status, shipping_address, created_at, updated_at, user_id, seller_id
+                customer_id: null, // Guest checkout
+                total_amount: total,
+                status: 'pending',
+                shipping_address: JSON.stringify(orderDetails),
+                user_id: null, // Guest checkout
+                seller_id: null // No seller association
+            };
+
+            console.log('📦 OrderService: Saving order to database...', dbOrder);
+            const { data, error } = await this.supabase.createOrder(dbOrder);
+
+            if (error) {
+                console.error('❌ OrderService: Failed to save order to database:', error);
+                // Continue with localStorage as fallback
+            } else {
+                console.log('✅ OrderService: Order saved to database successfully:', data);
+            }
+        } catch (error) {
+            console.error('❌ OrderService: Exception saving order:', error);
+            // Continue with localStorage as fallback
+        }
+
+        // Also save to localStorage as backup
         this.orders.push(order);
         this.saveOrders();
         this.currentOrderSubject.next(order);
-        
+
         return order;
     }
 

@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ThemeService } from '../../theme.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -16,7 +17,11 @@ export class Navbar implements OnInit, OnDestroy {
   isDarkMode: boolean = false;
   private themeSubscription?: Subscription;
 
-  constructor(private themeService: ThemeService, private router: Router) { }
+  constructor(
+    private themeService: ThemeService,
+    private router: Router,
+    private supabaseService: SupabaseService // Add SupabaseService or AuthService
+  ) { }
 
   ngOnInit() {
     // Subscribe to theme changes
@@ -39,5 +44,10 @@ export class Navbar implements OnInit, OnDestroy {
 
   goToSettings(): void {
     this.router.navigate(['/user/settings']);
+  }
+
+  async logout() {
+    await this.supabaseService.signOut();
+    this.router.navigate(['/auth/login']);
   }
 }

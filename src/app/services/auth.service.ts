@@ -24,6 +24,7 @@ export interface SignUpData {
 })
 export class AuthService {
   user = new BehaviorSubject<User | null>(null);
+  private loading = new BehaviorSubject<boolean>(true);
   private supabase!: SupabaseClient;
   private lastRedirectedUserId: string | null = null;
   private cachedProfile: LoggedInUser | null = null;
@@ -39,6 +40,7 @@ export class AuthService {
     this.supabaseService.getSession().subscribe((session) => {
       const currentUser = session?.user ?? null;
       this.user.next(currentUser);
+      this.loading.next(false); // Auth check complete
 
       if (!currentUser) {
         this.lastRedirectedUserId = null;
@@ -53,6 +55,10 @@ export class AuthService {
       this.lastRedirectedUserId = currentUser.id;
       void this.redirectToUserDashboard();
     });
+  }
+
+  get isLoading$() {
+    return this.loading.asObservable();
   }
 
   // Email/Password Sign Up
@@ -202,17 +208,35 @@ export class AuthService {
     data?: { name?: string; role?: string }
   ): Promise<void> {
     try {
-      await this.supabase
+      // Check if profile exists first
+      const { data: existingProfile, error: fetchError } = await this.supabase
         .from('profiles')
-        .upsert(
-          {
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Error checking profile:', fetchError);
+        return;
+      }
+
+      // Only insert if profile doesn't exist
+      if (!existingProfile) {
+        const { error } = await this.supabase
+          .from('profiles')
+          .insert({
             id: user.id,
             email: user.email || null,
-            name: data?.name ?? user.user_metadata?.['name'] ?? user.email ?? 'User',
+            name: data?.name ?? user.user_metadata?.['name'] ?? user.email?.split('@')[0] ?? 'User',
             role: data?.role ?? user.user_metadata?.['role'] ?? 'user'
-          },
-          { onConflict: 'id' }
-        );
+          });
+
+        if (error) {
+          console.error('Error creating profile:', error);
+        } else {
+          console.log('✅ Profile created for user:', user.id);
+        }
+      }
     } catch (e) {
       console.error('Error ensuring profile exists:', e);
     }

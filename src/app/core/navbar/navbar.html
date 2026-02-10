@@ -23,6 +23,18 @@
     <!-- Actions -->
     <div class="navbar-actions">
 
+      <!-- Login/Logout Button -->
+       <ng-container *ngIf="isLoggedIn; else loginBtn">
+          <button (click)="logout()" class="auth-btn logout">
+            Logout
+          </button>
+       </ng-container>
+       <ng-template #loginBtn>
+          <a routerLink="/auth/login" class="auth-btn login">
+            Login
+          </a>
+       </ng-template>
+
       <!-- Cart -->
       <div class="cart-wrapper">
         <a routerLink="/cart" class="cart-button">

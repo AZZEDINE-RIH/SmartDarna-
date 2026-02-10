@@ -87,6 +87,22 @@ export const routes: Routes = [
     path: 'order-confirmation',
     component: OrderConfirmationComponent,
   },
+  {
+    path: 'debug-products',
+    loadComponent: () => import('./debug-products.component').then(m => m.DebugProductsComponent),
+  },
+  {
+    path: 'debug-orders',
+    loadComponent: () => import('./debug-orders.component').then(m => m.DebugOrdersComponent),
+  },
+  {
+    path: 'test-order',
+    loadComponent: () => import('./test-order-save.component').then(m => m.TestOrderSaveComponent),
+  },
+  {
+    path: 'update-images',
+    loadComponent: () => import('./update-images.component').then(m => m.UpdateImagesComponent),
+  },
   // Protected Routes
   {
     path: 'home',

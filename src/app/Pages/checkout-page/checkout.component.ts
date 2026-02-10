@@ -72,7 +72,7 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  placeOrder(): void {
+  async placeOrder(): Promise<void> {
     if (this.cartItems().length === 0) return;
     if (this.checkoutForm.invalid) {
       this.checkoutForm.markAllAsTouched();
@@ -91,7 +91,7 @@ export class CheckoutComponent implements OnInit {
       city: [v.city, v.state, v.postalCode, v.country].filter(Boolean).join(', ')
     };
 
-    this.orderService.createOrder(this.cartItems(), customerInfo, paymentMethod);
+    await this.orderService.createOrder(this.cartItems(), customerInfo, paymentMethod);
     this.cartService.clearCart();
     this.router.navigate(['/order-confirmation']);
   }

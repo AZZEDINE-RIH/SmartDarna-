@@ -23,7 +23,10 @@
             <div class="cart-items-list">
                 <div *ngFor="let item of cartItems; let i = index" class="cart-item-card card slide-up">
                     <div class="item-image">
-                        <img [src]="item.product.images[0]" [alt]="item.product.name" />
+                        <img 
+                            [src]="item.product.images && item.product.images.length > 0 ? item.product.images[0] : 'https://via.placeholder.com/400x400?text=No+Image'" 
+                            [alt]="item.product.name + ' product image'" 
+                            (error)="$event.target.src='https://via.placeholder.com/400x400?text=No+Image'" />
                     </div>
 
                     <div class="item-details">

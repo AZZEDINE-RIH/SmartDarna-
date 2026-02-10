@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ThemeService } from '../../theme.service';
+import { SupabaseService } from '../../services/supabase.service';
+import { AuthService } from '../../services/auth.service';
 
 export interface UserProfile {
   id: string;
@@ -62,14 +64,77 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private themeService: ThemeService
-  ) {}
+    private themeService: ThemeService,
+    private supabaseService: SupabaseService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.themeSub = this.themeService.isDarkMode$.subscribe(
       (value: boolean) => (this.isDarkMode = value)
     );
     this.initializeForm();
+    this.loadProfile();
+  }
+
+  async loadProfile(): Promise<void> {
+    try {
+      console.log('👤 ProfileComponent: Loading profile...');
+      const { data: { user } } = await this.supabaseService.getClient().auth.getUser();
+
+      if (!user) {
+        console.warn('👤 ProfileComponent: No authenticated user found');
+        return;
+      }
+
+      console.log('👤 ProfileComponent: User ID:', user.id);
+
+      const { data: profile, error } = await this.supabaseService.getClient()
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) {
+        console.error('👤 ProfileComponent: Error loading profile:', error);
+        return;
+      }
+
+      console.log('👤 ProfileComponent: Loaded profile from Supabase:', profile);
+
+      if (profile) {
+        // Parse name into firstName and lastName
+        const nameParts = (profile.name || '').split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        this.currentUser = {
+          id: profile.id,
+          firstName,
+          lastName,
+          email: profile.email || user.email || '',
+          phone: profile.phone || '',
+          company: profile.company || '',
+          taxId: profile.tax_id || '',
+          address: profile.address || '',
+          city: profile.city || '',
+          country: profile.country || '',
+          postalCode: profile.postal_code || '',
+          avatar: '👤',
+          role: profile.role || 'user',
+          createdAt: profile.created_at || new Date().toISOString(),
+          lastLogin: profile.updated_at || new Date().toISOString()
+        };
+
+        console.log('👤 ProfileComponent: Updated currentUser:', this.currentUser);
+        this.initializeForm();
+        this.cdr.detectChanges();
+      }
+    } catch (error) {
+      console.error('Error in loadProfile:', error);
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnDestroy(): void {
@@ -101,7 +166,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileForm.reset(this.currentUser);
   }
 
-  onSaveProfile(): void {
+  async onSaveProfile(): Promise<void> {
     if (this.profileForm.invalid) {
       this.markFormGroupTouched(this.profileForm);
       return;
@@ -109,23 +174,59 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     this.isSaving = true;
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { data: { user } } = await this.supabaseService.getClient().auth.getUser();
+
+      if (!user) {
+        console.error('No authenticated user');
+        this.isSaving = false;
+        return;
+      }
+
+      const formValue = this.profileForm.value;
+      const fullName = `${formValue.firstName} ${formValue.lastName}`.trim();
+
+      const { error } = await this.supabaseService.getClient()
+        .from('profiles')
+        .update({
+          name: fullName,
+          phone: formValue.phone,
+          company: formValue.company,
+          tax_id: formValue.taxId,
+          address: formValue.address,
+          city: formValue.city,
+          country: formValue.country,
+          postal_code: formValue.postalCode,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error saving profile:', error);
+        this.isSaving = false;
+        return;
+      }
+
       // Update current user with form values
       this.currentUser = {
         ...this.currentUser,
-        ...this.profileForm.value
+        ...formValue
       };
 
       this.isSaving = false;
       this.isEditing = false;
       this.saveSuccess = true;
+      this.cdr.detectChanges();
 
       // Hide success message after 3 seconds
       setTimeout(() => {
         this.saveSuccess = false;
+        this.cdr.detectChanges();
       }, 3000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error in onSaveProfile:', error);
+      this.isSaving = false;
+    }
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {

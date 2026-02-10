@@ -1,5 +1,5 @@
-import { Component, ElementRef, AfterViewInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, AfterViewInit, ViewChildren, QueryList, OnDestroy, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 interface Stat {
     label: string;
@@ -26,11 +26,14 @@ export class TrustedByComponent implements AfterViewInit, OnDestroy {
 
     @ViewChildren('statCard') statCards!: QueryList<ElementRef>;
     private observer!: IntersectionObserver;
+    private platformId = inject(PLATFORM_ID);
 
     constructor() { }
 
     ngAfterViewInit() {
-        this.setupIntersectionObserver();
+        if (isPlatformBrowser(this.platformId)) {
+            this.setupIntersectionObserver();
+        }
     }
 
     setupIntersectionObserver() {

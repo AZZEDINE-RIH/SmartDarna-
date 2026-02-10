@@ -4,6 +4,9 @@ import { Info } from './info/info';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ThemeService } from '../../theme.service';
 import { Subscription } from 'rxjs';
+import { SellerDashboardService } from '../../services/seller-dashboard.service';
+import { SupabaseService } from '../../services/supabase.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Order {
   id: number;
@@ -36,151 +39,69 @@ export class Orders implements OnInit, OnDestroy {
   isDarkMode: boolean = false;
   private themeSubscription?: Subscription;
 
-  constructor(private themeService: ThemeService) {}
+  isLoading = true;
 
-  ngOnInit() {
+  constructor(
+    private themeService: ThemeService,
+    private sellerService: SellerDashboardService,
+    private supabase: SupabaseService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  async ngOnInit() {
     this.themeSubscription = this.themeService.isDarkMode$.subscribe((isDark: boolean) => {
       this.isDarkMode = isDark;
     });
+
+    await this.loadOrders();
+  }
+
+  async loadOrders() {
+    try {
+      console.log('📦 Orders: Loading...');
+      const { data: { user } } = await this.supabase.getClient().auth.getUser();
+      if (user) {
+        console.log('📦 Orders: User ID:', user.id);
+        this.sellerService.getAllSellerOrders(user.id).subscribe(orders => {
+          console.log('📦 Orders: Received:', orders);
+          if (orders.length === 0) {
+            console.warn('📦 Orders: No orders found for this seller.');
+          }
+          this.orders = orders.map(o => ({
+            ...o,
+            relativeTime: this.formatRelativeTime(o.relativeTime)
+          }));
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
+      } else {
+        console.warn('📦 Orders: No authenticated user.');
+      }
+    } catch (e) {
+      console.error('Error loading orders:', e);
+      this.isLoading = false;
+    }
+  }
+
+  formatRelativeTime(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return 'just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+    return date.toLocaleDateString();
   }
 
   ngOnDestroy() {
     this.themeSubscription?.unsubscribe();
   }
 
-  orders: Order[] = [
-  {
-    id: 1,
-    orderNumber: 'ORD-1001',
-    customerName: 'Ahmed Benali',
-    customerEmail: 'ahmed.benali@gmail.com',
-    items: [
-      'Amazon Echo Dot (Deep Sea Blue)',
-      'Google Nest Mini (2nd gen)'
-    ],
-    totalAmount: 2500,
-    status: 'pending',
-    date: '2026-01-28',
-    time: '10:45 AM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=12',
-    relativeTime: '2 hours ago',
-    isRead: false,
-    isArchived: false
-  },
+  orders: Order[] = [];
 
-  {
-    id: 2,
-    orderNumber: 'ORD-1002',
-    customerName: 'Sara El Amrani',
-    customerEmail: 'sara.elamrani@gmail.com',
-    items: [
-      'Apple HomePod Mini (Blue)'
-    ],
-    totalAmount: 1500,
-    status: 'processing',
-    date: '2026-01-26',
-    time: '02:30 PM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=32',
-    relativeTime: '1 day ago',
-    isRead: true,
-    isArchived: false
-  },
 
-  {
-    id: 3,
-    orderNumber: 'ORD-1003',
-    customerName: 'Youssef Rahmani',
-    customerEmail: 'y.rahmani@gmail.com',
-    items: [
-      'Google Nest Hub Max'
-    ],
-    totalAmount: 3000,
-    status: 'completed',
-    date: '2026-01-22',
-    time: '09:10 AM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=15',
-    relativeTime: '5 days ago',
-    isRead: true,
-    isArchived: false
-  },
-
-  {
-    id: 4,
-    orderNumber: 'ORD-1004',
-    customerName: 'Imane Zahraoui',
-    customerEmail: 'imane.z@gmail.com',
-    items: [
-      'Ecobee Smart Thermostat Premium',
-      'Google Nest Thermostat'
-    ],
-    totalAmount: 5000,
-    status: 'pending',
-    date: '2026-01-29',
-    time: '06:20 PM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=47',
-    relativeTime: '30 minutes ago',
-    isRead: false,
-    isArchived: false
-  },
-
-  {
-    id: 5,
-    orderNumber: 'ORD-1005',
-    customerName: 'Omar Haddad',
-    customerEmail: 'omar.haddad@gmail.com',
-    items: [
-      'Nest Doorbell (battery)',
-      'Arlo Video Doorbell'
-    ],
-    totalAmount: 3000,
-    status: 'processing',
-    date: '2026-01-25',
-    time: '11:55 AM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=8',
-    relativeTime: '2 days ago',
-    isRead: true,
-    isArchived: false
-  },
-
-  {
-    id: 6,
-    orderNumber: 'ORD-1006',
-    customerName: 'Khadija Mansouri',
-    customerEmail: 'khadija.m@gmail.com',
-    items: [
-      'Amazon Echo Dot Kids (Dragon)'
-    ],
-    totalAmount: 1099,
-    status: 'completed',
-    date: '2026-01-20',
-    time: '04:40 PM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=28',
-    relativeTime: '1 week ago',
-    isRead: true,
-    isArchived: false
-  },
-
-  {
-    id: 7,
-    orderNumber: 'ORD-1007',
-    customerName: 'Mehdi Ait Lahcen',
-    customerEmail: 'mehdi.ait@gmail.com',
-    items: [
-      'Yale Assure Lock 2',
-      'Google Home Speaker'
-    ],
-    totalAmount: 4550,
-    status: 'pending',
-    date: '2026-01-30',
-    time: '09:05 AM',
-    avatarUrl: 'https://i.pravatar.cc/150?img=19',
-    relativeTime: 'just now',
-    isRead: false,
-    isArchived: false
-  }
-];
-
-    
 
   // ✅ MAIN FILTER
   get filteredOrders(): Order[] {

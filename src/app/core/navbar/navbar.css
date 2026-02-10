@@ -141,6 +141,42 @@
     box-shadow: var(--shadow-sm);
 }
 
+/* ===== AUTH BUTTONS ===== */
+.auth-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.auth-btn.login {
+    background-color: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(96, 206, 214, 0.2);
+}
+
+.auth-btn.login:hover {
+    background-color: #4dbbc3;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(96, 206, 214, 0.3);
+}
+
+.auth-btn.logout {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.auth-btn.logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
 /* ===== CART ===== */
 .cart-wrapper {
     position: relative;

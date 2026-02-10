@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   userRole = signal('');
   isDarkMode = signal(false);
   isAuthRoute = signal(false);
+  isSellerRoute = signal(false);
 
   private themeSubscription?: Subscription;
   private authSubscription?: Subscription;
@@ -54,11 +55,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     // Track current route to prevent dashboard flash on login
     this.routerSubscription = this.router.events.subscribe(event => {
-      this.isAuthRoute.set(this.router.url.includes('/auth'));
+      this.updateRouteFlags();
     });
 
     // Initial check
-    this.isAuthRoute.set(this.router.url.includes('/auth'));
+    this.updateRouteFlags();
 
     // Theme subscription
     this.themeSubscription = this.themeService.isDarkMode$.subscribe(
@@ -125,5 +126,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   async onLogout() {
     await this.authService.signOut();
     this.router.navigate(['/auth/login']);
+  }
+
+  private updateRouteFlags() {
+    const url = this.router.url;
+    this.isAuthRoute.set(url.includes('/auth'));
+    this.isSellerRoute.set(url.startsWith('/user'));
   }
 }

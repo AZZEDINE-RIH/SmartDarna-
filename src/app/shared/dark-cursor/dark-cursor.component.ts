@@ -21,14 +21,16 @@ export class DarkCursorComponent implements OnInit, OnDestroy {
     this.checkDarkMode();
 
     // Listen for theme changes
-    const observer = new MutationObserver(() => {
-      this.checkDarkMode();
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      const observer = new MutationObserver(() => {
+        this.checkDarkMode();
+      });
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
   }
 
   ngOnDestroy() {
