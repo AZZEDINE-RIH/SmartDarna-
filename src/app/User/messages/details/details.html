@@ -1,0 +1,134 @@
+<div class="details-container" [class.dark]="isDarkMode">
+  <div class="details-card">
+    <!-- Header with back button and actions -->
+    <div class="details-header">
+      <div class="header-content">
+        <!-- Back button and title -->
+        <div class="back-section">
+          <button
+            (click)="goBackToList()"
+            class="back-button">
+            <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Messages
+          </button>
+          <div class="page-title">
+            Message Details
+          </div>
+        </div>
+        
+        <!-- Action buttons -->
+        <div class="action-buttons">
+          <!-- Mark as Read/Unread -->
+          <button
+            (click)="toggleMessageStatus()"
+            class="btn-primary">
+            {{ message.isRead ? 'Mark as Unread' : 'Mark as Read' }}
+          </button>
+
+          <!-- Archive -->
+          <button
+            (click)="archiveMessage()"
+            *ngIf="!message.isArchived"
+            class="btn-secondary">
+            Archive
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message Details Content -->
+    <div class="details-content">
+      <!-- Customer Info Card -->
+      <div class="customer-card">
+        <div class="customer-info">
+          <!-- Avatar and basic info -->
+          <div class="customer-basic">
+            <img
+              [src]="message.avatarUrl"
+              [alt]="message.name"
+              class="customer-avatar">
+            
+            <div>
+              <h2 class="customer-name">
+                {{ message.name }}
+              </h2>
+              <p class="customer-email">{{ message.email }}</p>
+
+              <!-- Status badge -->
+              <div class="status-badge">
+                <span [class]="'status-dot ' + getStatusInfo().color"></span>
+                <span class="status-label">
+                  {{ getStatusInfo().label }}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Date and time -->
+          <div class="message-datetime">
+            <div class="datetime-label">Received</div>
+            <div class="datetime-date">
+              {{ message.date }}
+            </div>
+            <div class="datetime-time">
+              {{ message.time }} • {{ message.relativeTime }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="subject-section">
+        <div class="section-label">Subject</div>
+        <h1 class="subject-title">
+          {{ message.subject }}
+        </h1>
+      </div>
+
+      <!-- Message Content -->
+      <div class="message-section">
+        <div class="section-label">Message</div>
+        <div class="message-content">
+          <div class="message-text">
+            {{ message.fullContent }}
+          </div>
+          
+          <!-- Message metadata -->
+          <div class="message-metadata">
+            <div class="metadata-info">
+              <svg class="metadata-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Sent: {{ message.date }} at {{ message.time }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reply Section -->
+      <div class="reply-section">
+        <div class="section-label">Reply to {{ message.name }}</div>
+        <div class="reply-card">
+          <textarea 
+            [(ngModel)]="replyContent"
+            placeholder="Type your reply here..."
+            rows="6"
+            class="reply-textarea">
+          </textarea>
+          
+          <div class="reply-actions">
+            <button
+              (click)="sendReply()"
+              [disabled]="!replyContent.trim()"
+              [class]="!replyContent.trim() ? 'btn-disabled' : 'btn-primary'">
+              Send Reply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

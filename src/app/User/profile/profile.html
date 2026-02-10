@@ -1,0 +1,388 @@
+<div class="profile-container" [class.dark]="isDarkMode">
+  <!-- Header -->
+  <div class="profile-header">
+    <h1 class="profile-title">
+      My Profile
+    </h1>
+    <p class="profile-subtitle">
+      Manage your personal and business information
+    </p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="saveSuccess" class="success-message">
+    <div class="success-content">
+      <span class="success-icon">✅</span>
+      <div>
+        <h3 class="success-title">Profile Updated Successfully!</h3>
+        <p class="success-description">Your changes have been saved.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-grid">
+    <!-- Left Column - Profile Card -->
+    <div class="profile-left">
+      <div class="profile-card">
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+          <div class="avatar-container">
+            <div class="avatar">
+              {{ currentUser.avatar }}
+            </div>
+            <button
+              *ngIf="isEditing"
+              type="button"
+              class="avatar-upload-btn"
+              (click)="triggerAvatarUpload()"
+            >
+              📷
+            </button>
+            <input
+              #avatarUpload
+              id="avatar-upload"
+              type="file"
+              class="hidden"
+              accept="image/*"
+              (change)="onAvatarChange($event)"
+            />
+          </div>
+          <h3 class="profile-name">
+            {{ currentUser.firstName }} {{ currentUser.lastName }}
+          </h3>
+          <span class="role-badge">
+            {{ getRoleDisplay(currentUser.role) }}
+          </span>
+        </div>
+
+        <!-- Account Info -->
+        <div class="account-info">
+          <div class="info-item">
+            <p class="info-label">
+              Email Address
+            </p>
+            <p class="info-value">
+              {{ currentUser.email }}
+            </p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">
+              Member Since
+            </p>
+            <p class="info-value">
+              {{ formatDate(currentUser.createdAt) }}
+            </p>
+          </div>
+          <div class="info-item">
+            <p class="info-label">
+              Last Login
+            </p>
+            <p class="info-value">
+              {{ formatDate(currentUser.lastLogin) }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Form -->
+    <div class="profile-right">
+      <div class="profile-card">
+        <!-- Form Header -->
+        <div class="form-header">
+          <h2 class="form-title">
+            Personal Information
+          </h2>
+          <div class="form-actions">
+            <button
+              *ngIf="!isEditing"
+              type="button"
+              class="btn-primary"
+              (click)="enableEditing()"
+            >
+              Edit Profile
+            </button>
+            <button
+              *ngIf="isEditing"
+              type="button"
+              class="btn-secondary"
+              (click)="cancelEditing()"
+            >
+              Cancel
+            </button>
+            <button
+              *ngIf="isEditing"
+              type="button"
+              [disabled]="profileForm.invalid || isSaving"
+              class="btn-primary"
+              [class]="isSaving ? 'saving' : ''"
+              (click)="onSaveProfile()"
+            >
+              <span *ngIf="!isSaving">Save Changes</span>
+              <span *ngIf="isSaving">Saving...</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Profile Form -->
+        <form [formGroup]="profileForm" *ngIf="isEditing">
+          <div class="form-grid">
+            <!-- First Name -->
+            <div class="form-field">
+              <label class="form-label">
+                First Name
+              </label>
+              <input
+                type="text"
+                formControlName="firstName"
+                class="form-input"
+                [class.error]="getControl('firstName')?.invalid && getControl('firstName')?.touched"
+              />
+              <div
+                *ngIf="getControl('firstName')?.invalid && getControl('firstName')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('firstName')?.errors?.['required']">First name is required</span>
+                <span *ngIf="getControl('firstName')?.errors?.['minlength']">Must be at least 2 characters</span>
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-field">
+              <label class="form-label">
+                Last Name
+              </label>
+              <input
+                type="text"
+                formControlName="lastName"
+                class="form-input"
+                [class.error]="getControl('lastName')?.invalid && getControl('lastName')?.touched"
+              />
+              <div
+                *ngIf="getControl('lastName')?.invalid && getControl('lastName')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('lastName')?.errors?.['required']">Last name is required</span>
+                <span *ngIf="getControl('lastName')?.errors?.['minlength']">Must be at least 2 characters</span>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-field">
+              <label class="form-label">
+                Email Address
+              </label>
+              <input
+                type="email"
+                formControlName="email"
+                class="form-input"
+                [class.error]="getControl('email')?.invalid && getControl('email')?.touched"
+              />
+              <div
+                *ngIf="getControl('email')?.invalid && getControl('email')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="getControl('email')?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-field">
+              <label class="form-label">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                formControlName="phone"
+                class="form-input"
+                [class.error]="getControl('phone')?.invalid && getControl('phone')?.touched"
+              />
+              <div
+                *ngIf="getControl('phone')?.invalid && getControl('phone')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('phone')?.errors?.['required']">Phone is required</span>
+                <span *ngIf="getControl('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
+              </div>
+            </div>
+
+            <!-- Company -->
+            <div class="form-field">
+              <label class="form-label">
+                Company Name
+              </label>
+              <input
+                type="text"
+                formControlName="company"
+                class="form-input"
+                [class.error]="getControl('company')?.invalid && getControl('company')?.touched"
+              />
+              <div
+                *ngIf="getControl('company')?.invalid && getControl('company')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('company')?.errors?.['required']">Company name is required</span>
+              </div>
+            </div>
+
+            <!-- Tax ID -->
+            <div class="form-field">
+              <label class="form-label">
+                Tax ID
+              </label>
+              <input
+                type="text"
+                formControlName="taxId"
+                class="form-input"
+                [class.error]="getControl('taxId')?.invalid && getControl('taxId')?.touched"
+              />
+              <div
+                *ngIf="getControl('taxId')?.invalid && getControl('taxId')?.touched"
+                class="error-text"
+              >
+                <span *ngIf="getControl('taxId')?.errors?.['required']">Tax ID is required</span>
+                <span *ngIf="getControl('taxId')?.errors?.['pattern']">Tax ID must contain only letters and numbers</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address Section -->
+          <div class="address-section">
+            <h3 class="section-title">
+              Address Information
+            </h3>
+            <div class="form-grid">
+              <!-- Address -->
+              <div class="form-field address-field">
+                <label class="form-label">
+                  Street Address
+                </label>
+                <input
+                  type="text"
+                  formControlName="address"
+                  class="form-input"
+                  [class.error]="getControl('address')?.invalid && getControl('address')?.touched"
+                />
+                <div
+                  *ngIf="getControl('address')?.invalid && getControl('address')?.touched"
+                  class="error-text"
+                >
+                  <span *ngIf="getControl('address')?.errors?.['required']">Address is required</span>
+                </div>
+              </div>
+
+              <!-- City -->
+              <div class="form-field">
+                <label class="form-label">
+                  City
+                </label>
+                <input
+                  type="text"
+                  formControlName="city"
+                  class="form-input"
+                  [class.error]="getControl('city')?.invalid && getControl('city')?.touched"
+                />
+                <div
+                  *ngIf="getControl('city')?.invalid && getControl('city')?.touched"
+                  class="error-text"
+                >
+                  <span *ngIf="getControl('city')?.errors?.['required']">City is required</span>
+                </div>
+              </div>
+
+              <!-- Country -->
+              <div class="form-field">
+                <label class="form-label">
+                  Country
+                </label>
+                <input
+                  type="text"
+                  formControlName="country"
+                  class="form-input"
+                  [class.error]="getControl('country')?.invalid && getControl('country')?.touched"
+                />
+                <div
+                  *ngIf="getControl('country')?.invalid && getControl('country')?.touched"
+                  class="error-text"
+                >
+                  <span *ngIf="getControl('country')?.errors?.['required']">Country is required</span>
+                </div>
+              </div>
+
+              <!-- Postal Code -->
+              <div class="form-field">
+                <label class="form-label">
+                  Postal Code
+                </label>
+                <input
+                  type="text"
+                  formControlName="postalCode"
+                  class="form-input"
+                  [class.error]="getControl('postalCode')?.invalid && getControl('postalCode')?.touched"
+                />
+                <div
+                  *ngIf="getControl('postalCode')?.invalid && getControl('postalCode')?.touched"
+                  class="error-text"
+                >
+                  <span *ngIf="getControl('postalCode')?.errors?.['required']">Postal code is required</span>
+                  <span *ngIf="getControl('postalCode')?.errors?.['minlength']">Must be at least 3 characters</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <!-- View Mode - Display Current Info -->
+        <div *ngIf="!isEditing" class="view-mode">
+          <div class="form-grid">
+            <div class="info-item">
+              <p class="info-label">
+                Full Name
+              </p>
+              <p class="info-value">
+                {{ currentUser.firstName }} {{ currentUser.lastName }}
+              </p>
+            </div>
+            <div class="info-item">
+              <p class="info-label">
+                Phone Number
+              </p>
+              <p class="info-value">
+                {{ currentUser.phone }}
+              </p>
+            </div>
+            <div class="info-item">
+              <p class="info-label">
+                Company
+              </p>
+              <p class="info-value">
+                {{ currentUser.company }}
+              </p>
+            </div>
+            <div class="info-item">
+              <p class="info-label">
+                Tax ID
+              </p>
+              <p class="info-value">
+                {{ currentUser.taxId }}
+              </p>
+            </div>
+          </div>
+
+          <div class="address-section">
+            <h3 class="section-title">
+              Address Information
+            </h3>
+            <div class="info-section">
+              <p class="info-value">
+                {{ currentUser.address }}, {{ currentUser.city }}, {{ currentUser.country }} {{ currentUser.postalCode }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

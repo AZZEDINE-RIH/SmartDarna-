@@ -1,106 +1,75 @@
-import { Component, computed, signal } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { Component, signal, OnInit, OnDestroy } from '@angular/core';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Navbar } from './User/navbar/navbar';
+import { Sidebar } from './User/sidebar/sidebar';
 import { AuthService } from './services/auth.service';
-import { filter } from 'rxjs/operators';
+import { ThemeService } from './theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule],
+  imports: [RouterOutlet, CommonModule, Navbar, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('smartDarna');
+export class App implements OnInit, OnDestroy {
   isLoggedIn = signal(false);
   userName = signal('');
   userRole = signal('');
   isDarkMode = signal(false);
-  currentUrl = signal('');
+  isAuthRoute = signal(false);
 
-  private readonly themeStorageKey = 'smartdarna_theme';
+  private themeSubscription?: Subscription;
+  private authSubscription?: Subscription;
+  private routerSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
+    private themeService: ThemeService,
     private router: Router
-  ) {
-    this.initTheme();
-    this.updateAuthState();
+  ) { }
 
-    if (typeof window !== 'undefined') {
-      this.currentUrl.set(this.router.url || '');
-      this.router.events
-        .pipe(filter((e: any) => e instanceof NavigationEnd))
-        .subscribe(() => {
-          this.currentUrl.set(this.router.url || '');
-          this.syncThemeFromStorage();
-          this.updateAuthState();
-        });
-    }
+  ngOnInit() {
+    // Track current route to prevent dashboard flash on login
+    // We check if url contains '/auth'
+    this.routerSubscription = this.router.events.subscribe(event => {
+      // Use direct router.url check which is reliable
+      this.isAuthRoute.set(this.router.url.includes('/auth'));
+    });
+
+    // Initial check
+    this.isAuthRoute.set(this.router.url.includes('/auth'));
+
+    // Theme subscription
+    this.themeSubscription = this.themeService.isDarkMode$.subscribe(
+      (mode) => this.isDarkMode.set(mode)
+    );
+
+    // Auth subscription to update UI state
+    this.authSubscription = this.authService.currentUser.subscribe(user => {
+      this.isLoggedIn.set(!!user);
+      if (user) {
+        const profile = this.authService.getUserSync();
+        if (profile) {
+          this.userName.set(profile.name || '');
+          this.userRole.set(profile.role || '');
+        }
+      } else {
+        this.userName.set('');
+        this.userRole.set('');
+      }
+    });
   }
 
-  toggleTheme(): void {
-    this.applyTheme(!this.isDarkMode(), true);
+  ngOnDestroy() {
+    this.themeSubscription?.unsubscribe();
+    this.authSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
   }
 
-  showNavbar(): boolean {
-    return false;
-  }
-
-  showFloatingThemeToggle(): boolean {
-    return !this.isLoggedIn();
-  }
-
-  private initTheme(): void {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-    const saved = window.localStorage.getItem(this.themeStorageKey);
-    if (saved === 'dark') {
-      this.applyTheme(true, false);
-      return;
-    }
-    if (saved === 'light') {
-      this.applyTheme(false, false);
-      return;
-    }
-
-    this.applyTheme(false, false);
-  }
-
-  private syncThemeFromStorage(): void {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
-    const saved = window.localStorage.getItem(this.themeStorageKey);
-    if (saved === 'dark') {
-      this.applyTheme(true, false);
-      return;
-    }
-    if (saved === 'light') {
-      this.applyTheme(false, false);
-    }
-  }
-
-  private applyTheme(isDark: boolean, persist: boolean): void {
-    this.isDarkMode.set(isDark);
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('dark', isDark);
-    }
-    if (persist && typeof window !== 'undefined') {
-      window.localStorage.setItem(this.themeStorageKey, isDark ? 'dark' : 'light');
-    }
-  }
-
-  private updateAuthState(): void {
-    this.isLoggedIn.set(this.authService.isLoggedIn());
-    const user = this.authService.getUserSync();
-    if (user) {
-      this.userName.set(user.name || '');
-      this.userRole.set(user.role || '');
-    }
-  }
-
-  onLogout(): void {
-    this.authService.logout();
-    this.updateAuthState();
-    this.router.navigate(['/login']);
+  async onLogout() {
+    await this.authService.signOut();
+    this.router.navigate(['/auth/login']);
   }
 }

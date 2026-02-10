@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthSwapComponent } from './Auth/auth-swap/auth-swap.component';
 import { HomeComponent } from './dashboard/home/home';
-import { VendeurDashboardComponent } from './dashboard/vendeur-dashboard/vendeur-dashboard';
 import { AdminDashboardComponent } from './dashboard/admin-dashboard/admin-dashboard.component';
 import { AdminOverviewComponent } from './dashboard/admin-dashboard/pages/overview/overview.component';
 import { ProductsPageComponent } from './dashboard/admin-dashboard/pages/products/products.component';
@@ -14,11 +13,17 @@ import { ProfilePageComponent } from './dashboard/admin-dashboard/pages/profile/
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { PermissionGuard } from './guards/permission.guard';
+import { Dashboard } from './User/dashboard/dashboard';
+import { Declaration } from './User/declaration/declaration';
+import { Messages } from './User/messages/messages';
+import { Orders } from './User/orders/orders';
+import { SettingsComponent } from './User/settings/settings';
+import { ProfileComponent } from './User/profile/profile';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo:'/dashboard/overview',
+    redirectTo: 'auth/login',
     pathMatch: 'full'
   },
   {
@@ -42,10 +47,18 @@ export const routes: Routes = [
     data: { roles: ['user'] }
   },
   {
-    path: 'vendeur-dashboard',
-    component: VendeurDashboardComponent,
+    path: 'user',
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['seller'] }
+    data: { roles: ['seller', 'user'] },
+    children: [
+      { path: 'dashboard', component: Dashboard },
+      { path: 'declarations', component: Declaration },
+      { path: 'messages', component: Messages },
+      { path: 'orders', component: Orders },
+      { path: 'settings', component: SettingsComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
   },
   {
     path: 'dashboard',
@@ -106,6 +119,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/dashboard/overview'
+    redirectTo: 'auth/login'
   }
 ];

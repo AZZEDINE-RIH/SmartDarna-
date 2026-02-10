@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import "tailwindcss";
+
 :root {
   --bg: #f8fafc;
   --bg-soft: #f1f5f9;
@@ -39,6 +41,19 @@ html.dark {
   --warning: #fbbf24;
 }
 
+/* Dark mode styles from saraBranch */
+.dark-theme {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #475569;
+  --accent-color: #60CED6;
+  --accent-hover: #4db8c2;
+}
+
 html,
 body {
   height: 100%;
@@ -58,6 +73,7 @@ html.dark body {
 
 * {
   box-sizing: border-box;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 a {
@@ -118,15 +134,10 @@ html.dark .perm-item {
 .activity-card,
 .recent-transactions-container,
 .seller-requests-container,
-.auth-card,
 .sign {
   background: var(--surface) !important;
   border-color: var(--border) !important;
   box-shadow: var(--shadow) !important;
-}
-
-.auth-container {
-  background: var(--bg) !important;
 }
 
 .seller-item,

@@ -1,0 +1,54 @@
+<div class="declaration" [class.dark]="isDarkMode">
+  <div class="stats-grid">
+    <!-- Total Pending Card -->
+    <div class="stat-card">
+      <div class="stat-label">Total Pending</div>
+      <div class="stat-content">
+        <div class="stat-value">03</div>
+        <div class="stat-status pending">Requires Action</div>
+      </div>
+    </div>
+
+    <!-- Next Deadline Card -->
+    <div class="stat-card">
+      <div class="stat-label">Next Deadline</div>
+      <div class="stat-content">
+        <div class="stat-value">Nov 15</div>
+        <div class="stat-status">VAT Q4 Report</div>
+      </div>
+    </div>
+
+    <!-- Status Compliance Card -->
+    <div class="stat-card">
+      <div class="stat-label">Status Compliance</div>
+      <div class="stat-content">
+        <div class="stat-value compliance">98%</div>
+        <div class="stat-status">Excellent</div>
+      </div>
+    </div>
+  </div>
+
+  <app-new-declaration-form></app-new-declaration-form>
+
+  <!-- Info Box -->
+  <div class="info-container">
+    <div class="info-box">
+      <div class="info-content">
+        <div class="info-icon">
+          <div class="icon-circle">
+            <span class="icon-text">i</span>
+          </div>
+        </div>
+
+        <div class="info-text">
+          <h3 class="info-title">Important Note for Sellers</h3>
+          <p class="info-description">
+            Please ensure all VAT declarations are submitted by the 15th of the
+            following month to avoid late processing fees. Rejected declarations
+            must be corrected and resubmitted within 48 hours of notification.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

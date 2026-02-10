@@ -1,5 +1,6 @@
 .auth-container {
   min-height: 100vh;
+  width: 100vw;        /* ✅ FORCE FULL SCREEN WIDTH */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8,11 +9,13 @@
   overflow: hidden;
 }
 
+
 .swap-shell {
   width: 100%;
   max-width: 460px;
   position: relative;
   padding-top: 0;
+  opacity: 1;
 }
 
 .card-stack {
@@ -27,6 +30,7 @@
   width: 100%;
   background: #ffffff;
   border-radius: 10px;
+  
   border: 1px solid rgba(15, 23, 42, 0.10);
   padding: 34px 30px 28px 30px;
   overflow: visible;

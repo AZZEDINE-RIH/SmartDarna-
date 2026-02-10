@@ -1,0 +1,506 @@
+:host {
+  display: contents;
+}
+
+/* Info Container */
+.info-container {
+  margin-top: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.info-container:not(.dark) {
+  background-color: #f3f4f6;
+}
+
+.info-container.dark {
+  background-color: #111827;
+}
+
+/* Info Card */
+.info-card {
+  max-width: 80rem;
+  margin: 0 auto;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
+}
+
+.info-container:not(.dark) .info-card {
+  background-color: #ffffff;
+}
+
+.info-container.dark .info-card {
+  background-color: #1f2937;
+}
+
+/* Header */
+.info-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid;
+  transition: border-color 0.3s ease;
+}
+
+.info-container:not(.dark) .info-header {
+  border-color: #e5e7eb;
+}
+
+.info-container.dark .info-header {
+  border-color: #374151;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s ease;
+}
+
+.info-container:not(.dark) .back-button {
+  color: #6b7280;
+}
+
+.info-container:not(.dark) .back-button:hover {
+  color: #111827;
+}
+
+.info-container.dark .back-button {
+  color: #d1d5db;
+}
+
+.info-container.dark .back-button:hover {
+  color: #ffffff;
+}
+
+.back-icon {
+  font-size: 1.25rem;
+}
+
+.order-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.order-number {
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .order-number {
+  color: #6b7280;
+}
+
+.info-container.dark .order-number {
+  color: #9ca3af;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Status Badge Colors - Light Mode */
+.info-container:not(.dark) .status-badge {
+  color: #92400e;
+  background-color: #fef3c7;
+}
+
+.info-container:not(.dark) .status-badge.processing {
+  color: #1e40af;
+  background-color: #dbeafe;
+}
+
+.info-container:not(.dark) .status-badge.completed {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.info-container:not(.dark) .status-badge.cancelled {
+  color: #991b1b;
+  background-color: #fef2f2;
+}
+
+/* Status Badge Colors - Dark Mode */
+.info-container.dark .status-badge {
+  color: #fef3c7;
+  background-color: #78350f;
+}
+
+.info-container.dark .status-badge.processing {
+  color: #dbeafe;
+  background-color: #1e3a8a;
+}
+
+.info-container.dark .status-badge.completed {
+  color: #dcfce7;
+  background-color: #14532d;
+}
+
+.info-container.dark .status-badge.cancelled {
+  color: #fef2f2;
+  background-color: #7f1d1d;
+}
+
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.status-dot.pending {
+  background-color: #facc15;
+}
+
+.status-dot.processing {
+  background-color: #60a5fa;
+}
+
+.status-dot.completed {
+  background-color: #4ade80;
+}
+
+.status-dot.cancelled {
+  background-color: #f87171;
+}
+
+/* Info Content */
+.info-content {
+  padding: 1.5rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Customer Section */
+.customer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-card-section {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.info-container:not(.dark) .info-card-section {
+  background-color: #f9fafb;
+}
+
+.info-container.dark .info-card-section {
+  background-color: #374151;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .section-title {
+  color: #111827;
+}
+
+.info-container.dark .section-title {
+  color: #ffffff;
+}
+
+.customer-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.customer-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.customer-name {
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .customer-name {
+  color: #111827;
+}
+
+.info-container.dark .customer-name {
+  color: #ffffff;
+}
+
+.customer-email {
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .customer-email {
+  color: #6b7280;
+}
+
+.info-container.dark .customer-email {
+  color: #9ca3af;
+}
+
+/* Items List */
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid;
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.info-container:not(.dark) .item-row {
+  border-color: #e5e7eb;
+}
+
+.info-container.dark .item-row {
+  border-color: #4b5563;
+}
+
+.item-text {
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .item-text {
+  color: #374151;
+}
+
+.info-container.dark .item-text {
+  color: #d1d5db;
+}
+
+/* Summary Section */
+.summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-label {
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .detail-label {
+  color: #6b7280;
+}
+
+.info-container.dark .detail-label {
+  color: #9ca3af;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.info-container:not(.dark) .detail-value {
+  color: #111827;
+}
+
+.info-container.dark .detail-value {
+  color: #ffffff;
+}
+
+.detail-value.total {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Actions Section */
+.actions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.action-btn.processing {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.action-btn.processing:hover {
+  background-color: #1d4ed8;
+}
+
+.action-btn.completed {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.action-btn.completed:hover {
+  background-color: #15803d;
+}
+
+.action-btn.secondary {
+  transition: all 0.2s ease;
+}
+
+.info-container:not(.dark) .action-btn.secondary {
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.info-container:not(.dark) .action-btn.secondary:hover {
+  background-color: #f9fafb;
+}
+
+.info-container.dark .action-btn.secondary {
+  border: 1px solid #4b5563;
+  color: #d1d5db;
+}
+
+.info-container.dark .action-btn.secondary:hover {
+  background-color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .info-container {
+    padding: 0.5rem 1rem;
+  }
+  
+  .info-content {
+    padding: 1rem;
+  }
+  
+  .content-grid {
+    gap: 1rem;
+  }
+  
+  .info-card-section {
+    padding: 0.75rem;
+  }
+  
+  .customer-details {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .customer-avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .order-info {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .customer-name {
+    font-size: 0.875rem;
+  }
+  
+  .customer-email {
+    font-size: 0.75rem;
+  }
+  
+  .item-text {
+    font-size: 0.875rem;
+  }
+  
+  .detail-label,
+  .detail-value {
+    font-size: 0.75rem;
+  }
+  
+  .detail-value.total {
+    font-size: 1rem;
+  }
+  
+  .action-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Focus states for accessibility */
+.back-button:focus,
+.action-btn:focus {
+  outline: 2px solid #60CED6;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+.info-container,
+.info-container * {
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}

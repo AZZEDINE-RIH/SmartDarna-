@@ -58,7 +58,7 @@ export class AuthService {
   // Email/Password Sign Up
   async signUp(data: SignUpData): Promise<AuthResponse> {
     const { email, password, name, role = 'user' } = data;
-    
+
     const response = await this.supabase.auth.signUp({
       email,
       password,
@@ -84,7 +84,7 @@ export class AuthService {
   // Email/Password Sign In
   async signIn(email: string, password: string): Promise<AuthResponse> {
     console.log('AuthService.signIn called with:', email);
-    
+
     const response = await this.supabase.auth.signInWithPassword({
       email,
       password
@@ -119,6 +119,8 @@ export class AuthService {
 
   // Sign Out
   async signOut() {
+    // Immediately clear user state to prevent UI flash
+    this.user.next(null);
     await this.supabase.auth.signOut();
   }
 
@@ -221,15 +223,15 @@ export class AuthService {
     try {
       const userProfile = await this.getUser();
       const userRole = userProfile?.role || 'user';
-      
+
       console.log('Redirecting user with role:', userRole);
-      
+
       switch (userRole) {
         case 'admin':
           this.router.navigate(['/dashboard/overview']);
           break;
         case 'seller':
-          this.router.navigate(['/vendeur-dashboard']);
+          this.router.navigate(['/user/dashboard']);
           break;
         case 'user':
           this.router.navigate(['/home']);

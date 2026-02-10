@@ -1,0 +1,224 @@
+<div class="dashboard" [class.dark]="isDarkMode">
+    <div class="stats-grid">
+        <!-- Total Sales Card -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Total Sales</h3>
+                <div class="stat-icon">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">
+                <p class="value" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">12,450.00 MAD</p>
+            </div>
+            <div class="stat-change">
+                <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span class="change-text positive" [ngClass]="isDarkMode ? 'text-green-500' : 'text-green-500'">+12.4%</span>
+                <span class="change-label" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">vs last month</span>
+            </div>
+        </div>
+        <!-- Active Orders Card -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Active Orders</h3>
+                <div class="stat-icon">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">
+                <p class="value" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">42</p>
+            </div>
+            <div class="stat-change">
+                <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span class="change-text positive" [ngClass]="isDarkMode ? 'text-green-500' : 'text-green-500'">+5.2%</span>
+                <span class="change-label" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">from yesterday</span>
+            </div>
+        </div>
+        <!-- Avg. Order Value Card -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Avg. Order Value</h3>
+                <div class="stat-icon">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">
+                <p class="value" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">296.00 MAD</p>
+            </div>
+            <div class="stat-change">
+                <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span class="change-text positive" [ngClass]="isDarkMode ? 'text-green-500' : 'text-green-500'">+2.1%</span>
+                <span class="change-label" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">steady growth</span>
+            </div>
+        </div>
+        <!-- Return Rate Card -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Return Rate</h3>
+                <div class="stat-icon negative">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="stat-value">
+                <p class="value" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">1.2%</p>
+            </div>
+            <div class="stat-change">
+                <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                </svg>
+                <span class="change-text negative" [ngClass]="isDarkMode ? 'text-red-500' : 'text-red-500'">-0.4%</span>
+                <span class="change-label" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">improvement</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="revenue-chart">
+            <div class="chart-header">
+                <!-- Title & Subtitle -->
+                 <div>
+                    <h2 class="chart-title" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">Monthly Revenue</h2>
+                    <p class="chart-subtitle" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">Revenue performance for the last months</p>
+                </div>
+                <!-- Monthly / Weekly toggle -->
+                <div class="chart-toggle">
+                    <button class="toggle-btn active" style="background-color: #60CED6;">Monthly</button>
+                    <button class="toggle-btn" [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-600'">Weekly</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Top Products Card -->
+        <div class="top-products">
+            <h2 class="section-title" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">Top Products</h2>
+
+        <div class="products-list">
+            @for (product of products; track product.id) {
+                <div class="product-item">
+                    <!-- Product Image -->
+                    <div class="product-image">
+                        <img
+                        [src]="product.image"
+                        [alt]="product.title"
+                        class="product-img"
+                        />
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="product-info">
+                        <h3 class="product-title" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">{{ product.title }}</h3>
+                        <p class="product-meta" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-400'">{{ product.mark }} • {{ product.in_stock ? 'In stock' : 'Out of stock' }}</p>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="product-price">
+                        <p class="price" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">{{ product.price }} MAD</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+      <!-- View All Button -->
+      <button class="view-all-btn" style="border-color: #60CED6; color: #60CED6;" [ngClass]="isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-cyan-50'">
+        View All Inventory
+      </button>
+    </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="orders-table" [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'">
+        <!-- Header -->
+        <div class="table-header" [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-100'">
+            <h2 class="section-title" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-900'">Recent Orders</h2>
+            <div class="table-actions">
+                <button class="action-btn" [ngClass]="isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'">
+                    <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+                    </svg>
+                </button>
+                <button class="export-btn" [ngClass]="isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-900'">Export CSV</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="orders-table-content">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1 -->
+                    <tr [ngClass]="isDarkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-50'">
+                        <td class="order-id" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">#SD-9012</td>
+                        <td [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">Vision Pro Doorbell</td>
+                        <td class="customer" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Sarah Jenkins</td>
+                        <td class="date" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Oct 24, 2023</td>
+                        <td class="amount" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">299.00 MAD</td>
+                        <td>
+                            <span class="status delivered" [ngClass]="isDarkMode ? 'text-green-500' : 'text-green-500'">Delivered</span>
+                        </td>
+                        <td>
+                            <button class="details-btn" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-[#60CED6]'">Details</button>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2 -->
+                    <tr [ngClass]="isDarkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-50'">
+                        <td class="order-id" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">#SD-9013</td>
+                        <td [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">Eco Thermostat v2</td>
+                        <td class="customer" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Michael Chen</td>
+                        <td class="date" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Oct 25, 2023</td>
+                        <td class="amount" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">185.00 MAD</td>
+                        <td>
+                            <span class="status processing" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-yellow-700'">Processing</span>
+                        </td>
+                        <td>
+                            <button class="details-btn" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-[#60CED6]'">Details</button>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3 -->
+                    <tr [ngClass]="isDarkMode ? 'hover:bg-gray-500' : 'hover:bg-gray-50'">
+                        <td class="order-id" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">#SD-9014</td>
+                        <td [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">Ambiance Kit (4-pack)</td>
+                        <td class="customer" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Emma Wilson</td>
+                        <td class="date" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-500'">Oct 25, 2023</td>
+                        <td class="amount" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-gray-900'">120.00 MAD</td>
+                        <td>
+                            <span class="status pending" [ngClass]="isDarkMode ? 'text-yellow-600' : 'text-yellow-700'">Pending</span>
+                        </td>
+                        <td>
+                            <button class="details-btn" [ngClass]="isDarkMode ? 'text-gray-50' : 'text-[#60CED6]'">Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

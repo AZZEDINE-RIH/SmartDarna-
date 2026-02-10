@@ -1,0 +1,22 @@
+id,image_id,seller_id,title,description,price,color,mark,category_id,rating,stock
+0,0,1,Amazon Echo Dot,"Strong audio and even stronger smart home skills make the new Amazon Echo.",1300,"Glacier White; Charcoal; Deep Sea Blue",Amazon,"1; 2; 3",1,15
+1,1,2,Amazon Echo Studio (newest model),"Turn your space into a concert hall. Immersive sound with spatial audio.",1125,"Graphite; Glacier White",Amazon,"1; 2; 3",1,8
+2,2,3,Amazon Echo Dot Kids,"A fun, screen-free smart speaker made just for kids.",1099,"Owl; Dragon; Rainbow Swirl; Stardust",Amazon,"1; 2; 3; 6",1,22
+3,3,1,Google Nest Hub (2nd gen),"Smart display with motion sensing for sleep tracking and gesture control.",1250,"Chalk; Charcoal; mist; sand",Google,"1; 2; 3",1,12
+4,4,2,Google Nest Audio,"Smart speaker designed for rich, room-filling sound with clear vocals.",950,"Chalk; Charcoal; Sky; Sage; Sand",Google,"1; 2; 3",1,30
+5,5,3,Google Nest Mini (2nd gen),"Audio Anywhere Package (2 Nest Mini Bundle) for flexible listening.",1200,"charcoal",Google,"1; 2; 3",1,45
+6,6,1,Google Nest Hub Max,"10-inch HD touchscreen, powerful stereo speakers, and built-in Assistant.",3000,"Chalk; Charcoal",Google,"1; 2",1,5
+7,7,2,Google Home,"Next-generation smart speaker that combines rich 360° sound with Gemini AI.",1550,"Jade; Berry; Porcelain; Hazel",Google,"1; 2; 3",1,10
+8,8,3,Apple HomePod,"Compact smart speaker with powerful 360-degree sound and Siri integration.",3000,"White; Midnight",Apple,"1; 2; 3",1,7
+9,9,1,Apple HomePod Mini,"Rich 360-degree sound and seamless Apple ecosystem integration.",1500,"Blue; Yellow; Orange; White; Space Gray",Apple,"1; 2; 3",1,25
+10,10,2,Google Nest Thermostat,"Smart comfort that saves energy and money by adjusting when you’re away.",1500,"Snow; Charcoal; Fog; Sand",Google,"1; 4",1,18
+11,11,3,Nest Learning Thermostat (4th gen),"Learns your schedule and programs itself to help lower utility costs.",3000,"Polished Obsidian; Polished Gold; Polished Silver",Google,"1; 4",1,11
+12,12,1,Ecobee SmartThermostat premium,"Learns your routines to save energy and help create a comfortable climate.",3500,"Black",Ecobee,"1; 4",1,9
+13,13,2,Ecobee Smart Thermostat Enhanced,"Adapts to your routine and lets you control your system from anywhere.",2500,"White",Ecobee,"1; 4",1,14
+14,14,3,Ecobee Smart Thermostat Essential,"Simple, affordable smart thermostat with a full-color touchscreen.",2000,"White",Ecobee,"1; 4",1,20
+15,15,1,Wyze Thermostat,"Budget-friendly smart thermostat with Wi-Fi and app control.",1000,"White",Wyze,"1; 4",1,50
+16,16,2,Nest Doorbell (battery),"See, hear, and speak to visitors from anywhere with HD video.",2300,"Snow; Ash; lvy; Linen",Google,"1; 5",1,13
+17,17,3,Wired Doorbell Pro,"Advanced wired doorbell featuring 4K video and 3D Motion Detection.",2700,"Deep Silver; Polished Sandstone; Polished Night Navy; Polished Mocha",Ring,"1; 5",1,6
+18,18,1,Arlo Video Doorbell,"Head-to-toe coverage and a wide 180° field of view for total visibility.",700,"White",Arlo,"1; 5",1,35
+19,19,2,Nest x Yale Lock,"Key-free deadbolt that connects to the Nest app for remote access.",2800,"Satin Nickel; Oil Rubbed Bronze; Polished Brass; Black Suede",Yale,"1; 5",1,4
+20,20,3,Yale Assure Lock 2,"Sleek, key-free smart lock offering advanced security.",3000,"Daim black; Oil Rubbed Bronze; Satin Nickel",Yale,"1; 5",1,17

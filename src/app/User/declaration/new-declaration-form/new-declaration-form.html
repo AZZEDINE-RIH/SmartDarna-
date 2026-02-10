@@ -1,0 +1,267 @@
+<div class="form-container" [class.dark]="isDarkMode">
+  <!-- Header -->
+  <div class="form-header">
+    <h1 class="form-title" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+      New Declaration
+    </h1>
+    <p class="form-subtitle" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+      Submit your tax, sales, or compliance declaration
+    </p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="submitted" class="success-message">
+    <div class="success-content">
+      <span class="success-icon">✅</span>
+      <div>
+        <h3 class="success-title">Declaration Submitted Successfully!</h3>
+        <p class="success-description">Your declaration has been received and is being processed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Declaration Form -->
+  <div class="form-card" [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'">
+    <form [formGroup]="declarationForm" (ngSubmit)="onSubmit()">
+      <!-- Declaration Type Selection -->
+      <div class="form-group">
+        <label class="form-label" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+          Declaration Type
+        </label>
+        <div class="declaration-grid">
+          <div
+            *ngFor="let type of declarationTypes"
+            class="declaration-card"
+            [class.selected]="declarationForm.get('declarationType')?.value === type.id"
+            [ngClass]="{
+              'border-gray-200 hover:border-gray-300': !isDarkMode && declarationForm.get('declarationType')?.value !== type.id,
+              'border-gray-600 hover:border-gray-500': isDarkMode && declarationForm.get('declarationType')?.value !== type.id
+            }"
+            (click)="declarationForm.get('declarationType')?.setValue(type.id); onDeclarationTypeChange(type.id)"
+          >
+            <div class="declaration-content">
+              <span class="declaration-icon">{{ type.icon }}</span>
+              <div class="declaration-info">
+                <h3 class="declaration-name" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+                  {{ type.name }}
+                </h3>
+                <p class="declaration-description" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+                  {{ type.description }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="declarationForm.get('declarationType')?.invalid && declarationForm.get('declarationType')?.touched"
+          class="error-text"
+        >
+          Please select a declaration type
+        </div>
+      </div>
+
+      <!-- Period and Year -->
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            Period
+          </label>
+          <select
+            formControlName="period"
+            class="form-select"
+            [ngClass]="{
+              'error': declarationForm.get('period')?.invalid && declarationForm.get('period')?.touched,
+              'bg-gray-700 text-white': isDarkMode,
+              'bg-white text-gray-900': !isDarkMode
+            }"
+          >
+            <option value="">Select period</option>
+            <option value="january">January 2024</option>
+            <option value="february">February 2024</option>
+            <option value="march">March 2024</option>
+            <option value="q1">Q1 2024</option>
+            <option value="april">April 2024</option>
+            <option value="may">May 2024</option>
+            <option value="june">June 2024</option>
+            <option value="q2">Q2 2024</option>
+            <option value="july">July 2024</option>
+            <option value="august">August 2024</option>
+            <option value="september">September 2024</option>
+            <option value="q3">Q3 2024</option>
+            <option value="october">October 2024</option>
+            <option value="november">November 2024</option>
+            <option value="december">December 2024</option>
+            <option value="q4">Q4 2024</option>
+            <option value="annual">Annual 2024</option>
+          </select>
+          <div
+            *ngIf="declarationForm.get('period')?.invalid && declarationForm.get('period')?.touched"
+            class="error-text"
+          >
+            Period is required
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            Year
+          </label>
+          <input
+            type="number"
+            formControlName="year"
+            class="form-input"
+            placeholder="2024"
+            [ngClass]="{
+              'error': declarationForm.get('year')?.invalid && declarationForm.get('year')?.touched,
+              'bg-gray-700 text-white': isDarkMode,
+              'bg-white text-gray-900': !isDarkMode
+            }"
+          />
+          <div
+            *ngIf="declarationForm.get('year')?.invalid && declarationForm.get('year')?.touched"
+            class="error-text"
+          >
+            <span *ngIf="declarationForm.get('year')?.errors?.['required']">Year is required</span>
+            <span *ngIf="declarationForm.get('year')?.errors?.['min']">Year must be 2020 or later</span>
+            <span *ngIf="declarationForm.get('year')?.errors?.['max']">Year must be 2030 or earlier</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+          Description
+        </label>
+        <textarea
+          formControlName="description"
+          rows="4"
+          class="form-textarea"
+          placeholder="Provide detailed description of your declaration..."
+          [ngClass]="{
+            'error': declarationForm.get('description')?.invalid && declarationForm.get('description')?.touched,
+            'bg-gray-700 text-white': isDarkMode,
+            'bg-white text-gray-900': !isDarkMode
+          }"
+        ></textarea>
+        <div class="form-footer">
+          <div
+            *ngIf="declarationForm.get('description')?.invalid && declarationForm.get('description')?.touched"
+            class="error-text"
+          >
+            <span *ngIf="declarationForm.get('description')?.errors?.['required']">Description is required</span>
+            <span *ngIf="declarationForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters</span>
+          </div>
+          <div class="char-counter" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            {{ declarationForm.get('description')?.value?.length || 0 }} / 500 characters
+          </div>
+        </div>
+      </div>
+
+      <!-- File Attachments -->
+      <div class="form-group">
+        <label class="form-label" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+          Attachments (Optional)
+        </label>
+        <div class="file-upload-area" 
+             [ngClass]="isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-300 bg-gray-50'">
+          <input
+            type="file"
+            multiple
+            (change)="onFileSelect($event)"
+            class="hidden"
+            id="file-upload"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+          />
+          <label for="file-upload" class="file-upload-label">
+            <span class="file-upload-icon">📎</span>
+            <p class="file-upload-text" [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+              Click to upload or drag and drop
+            </p>
+            <p class="file-upload-hint" [ngClass]="isDarkMode ? 'text-gray-500' : 'text-gray-500'">
+              PDF, DOC, XLS, JPG, PNG (MAX. 5MB per file)
+            </p>
+          </label>
+        </div>
+
+        <!-- Attached Files -->
+        <div *ngIf="declarationForm.get('attachments')?.value?.length > 0" class="attachments-list">
+          <div
+            *ngFor="let attachment of declarationForm.get('attachments')?.value; let i = index"
+            class="attachment-item"
+            [ngClass]="isDarkMode ? 'border-gray-600 bg-gray-700' : 'border-gray-200 bg-gray-50'"
+          >
+            <div class="attachment-content">
+              <span class="attachment-icon">📄</span>
+              <div>
+                <p class="attachment-name" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+                  {{ attachment.name }}
+                </p>
+                <p class="attachment-size" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+                  {{ formatFileSize(attachment.size) }}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              (click)="removeAttachment(i)"
+              class="attachment-remove"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terms Agreement -->
+      <div class="form-group">
+        <label class="terms-label">
+          <input
+            type="checkbox"
+            formControlName="agreeToTerms"
+            class="custom-checkbox"
+          />
+          <span class="terms-text" [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+            I hereby declare that the information provided is true and accurate to the best of my knowledge.
+            I understand that false declarations may result in penalties and legal consequences.
+          </span>
+        </label>
+        <div
+          *ngIf="declarationForm.get('agreeToTerms')?.invalid && declarationForm.get('agreeToTerms')?.touched"
+          class="error-text"
+        >
+          You must agree to the terms to submit
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-secondary"
+          [ngClass]="isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'"
+          (click)="clearForm()"
+        >
+          Clear Form
+        </button>
+        <button
+          type="submit"
+          [disabled]="declarationForm.invalid || isSubmitting"
+          class="btn-primary"
+          [ngClass]="{
+            'bg-gray-400 cursor-wait': isSubmitting
+          }"
+        >
+          <span *ngIf="!isSubmitting" class="btn-content">
+            <span>Submit Declaration</span>
+            <span>📤</span>
+          </span>
+          <span *ngIf="isSubmitting" class="btn-content">
+            <span>Submitting...</span>
+            <span class="spinner">⏳</span>
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

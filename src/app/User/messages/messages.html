@@ -1,0 +1,159 @@
+<!-- Messages List View -->
+<div *ngIf="!showDetails" class="messages-container" [class.dark]="isDarkMode">
+  <div class="messages-card">
+    <!-- ===================== TABS ===================== -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <!-- ALL -->
+        <button
+          (click)="setActiveTab('all')"
+          class="tab-button"
+          [class.active]="activeTab === 'all'"
+        >
+          All Messages
+        </button>
+
+        <!-- UNREAD -->
+        <button
+          (click)="setActiveTab('unread')"
+          class="tab-button"
+          [class.active]="activeTab === 'unread'"
+        >
+          Unread ({{ getUnreadCount() }})
+        </button>
+
+        <!-- ARCHIVED -->
+        <button
+          (click)="setActiveTab('archived')"
+          class="tab-button"
+          [class.active]="activeTab === 'archived'"
+        >
+          Archived
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================== TABLE ===================== -->
+    <div class="table-container">
+      <table class="messages-table">
+        <thead>
+          <tr class="table-header">
+            <th class="table-th">Customer</th>
+            <th class="table-th">Subject & Message</th>
+            <th class="table-th">Date</th>
+            <th class="table-th">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let message of filteredMessages"
+            (click)="onMessageClick(message)"
+            class="table-row"
+          >
+            <!-- Customer -->
+            <td class="table-td">
+              <div class="customer-info">
+                <img
+                  [src]="message.avatarUrl.replace('80', '40')"
+                  [alt]="message.name"
+                  class="customer-avatar">
+
+                <div>
+                  <div class="customer-name">
+                    {{ message.name }}
+                  </div>
+                  <div class="customer-email">
+                    {{ message.email }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Subject -->
+            <td class="table-td">
+              <div>
+                <div
+                  class="message-subject"
+                  [class.unread]="!message.isRead">
+                  {{ message.subject }}
+                </div>
+
+                <div class="message-preview">
+                  {{ message.preview }}
+                </div>
+              </div>
+            </td>
+
+            <!-- Date -->
+            <td class="table-td">
+              <div class="message-date">
+                {{ message.relativeTime }}
+              </div>
+              <div
+                class="message-time"
+                *ngIf="message.relativeTime !== message.date">
+                {{ message.time }}
+              </div>
+            </td>
+
+            <!-- Status -->
+            <td class="table-td">
+              <span class="status-indicator">
+                <span
+                  class="status-dot"
+                  [class.unread]="!message.isRead"
+                  [class.read]="message.isRead && !message.isArchived"
+                  [class.archived]="message.isArchived">
+                </span>
+
+                <span class="status-text">
+                  {{
+                    message.isArchived
+                      ? 'Archived'
+                      : message.isRead
+                        ? 'Read'
+                        : 'Unread'
+                  }}
+                </span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <div class="table-footer">
+      <div class="footer-info">
+        Showing {{ filteredMessages.length }} messages
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn">
+          ‹
+        </button>
+
+        <button class="pagination-btn active">
+          1
+        </button>
+
+        <button class="pagination-btn">
+          2
+        </button>
+
+        <button class="pagination-btn">
+          ›
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DETAILS VIEW ===================== -->
+<div *ngIf="showDetails && selectedMessage">
+  <app-details
+    [message]="selectedMessage!"
+    (backToList)="onBackToList()">
+  </app-details>
+</div>

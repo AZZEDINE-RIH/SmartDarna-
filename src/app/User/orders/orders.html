@@ -1,0 +1,166 @@
+<!-- Orders List View -->
+<div *ngIf="!showDetails" class="orders-container" [class.dark]="isDarkMode">
+  <div class="orders-card">
+    <!-- ===================== TABS ===================== -->
+    <div class="tabs-container">
+      <div class="tabs-nav">
+        <!-- ALL -->
+        <button
+          (click)="setActiveTab('all')"
+          class="tab-button"
+          [class.active]="activeTab === 'all'">
+          All Orders
+        </button>
+
+        <!-- PENDING -->
+        <button
+          (click)="setActiveTab('pending')"
+          class="tab-button"
+          [class.active]="activeTab === 'pending'">
+          Pending ({{ getPendingCount() }})
+        </button>
+
+        <!-- PROCESSING -->
+        <button
+          (click)="setActiveTab('processing')"
+          class="tab-button"
+          [class.active]="activeTab === 'processing'">
+          Processing ({{ getProcessingCount() }})
+        </button>
+
+        <!-- COMPLETED -->
+        <button
+          (click)="setActiveTab('completed')"
+          class="tab-button"
+          [class.active]="activeTab === 'completed'">
+          Completed ({{ getCompletedCount() }})
+        </button>
+
+        <!-- CANCELLED -->
+        <button
+          (click)="setActiveTab('cancelled')"
+          class="tab-button"
+          [class.active]="activeTab === 'cancelled'">
+          Cancelled ({{ getCancelledCount() }})
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================== TABLE ===================== -->
+    <div class="table-container">
+      <table class="orders-table">
+        <thead>
+          <tr class="table-header">
+            <th class="table-th">Customer</th>
+            <th class="table-th">Items & Total</th>
+            <th class="table-th">Date</th>
+            <th class="table-th">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let order of filteredOrders"
+            (click)="onOrderClick(order)"
+            class="table-row">
+            <!-- Customer -->
+            <td class="table-td">
+              <div class="customer-info">
+                <img
+                  [src]="order.avatarUrl.replace('80', '40')"
+                  [alt]="order.customerName"
+                  class="customer-avatar">
+
+                <div>
+                  <div class="customer-name">
+                    {{ order.customerName }}
+                  </div>
+                  <div class="customer-email">
+                    {{ order.customerEmail }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Items & Total -->
+            <td class="table-td">
+              <div>
+                <div
+                  class="order-items"
+                  [class.unread]="!order.isRead">
+                  {{ order.items.join(', ') }}
+                </div>
+
+                <div class="order-total">
+                  {{ order.totalAmount.toFixed(2) }}MAD
+                </div>
+              </div>
+            </td>
+
+            <!-- Date -->
+            <td class="table-td">
+              <div class="order-date">
+                {{ order.relativeTime }}
+              </div>
+              <div
+                class="order-time"
+                *ngIf="order.relativeTime !== order.date">
+                {{ order.time }}
+              </div>
+            </td>
+
+            <!-- Status -->
+            <td class="table-td">
+              <span class="status-indicator">
+                <span
+                  class="status-dot"
+                  [class.pending]="order.status === 'pending'"
+                  [class.processing]="order.status === 'processing'"
+                  [class.completed]="order.status === 'completed'"
+                  [class.cancelled]="order.status === 'cancelled'">
+                </span>
+
+                <span class="status-text">
+                  {{ order.status.charAt(0).toUpperCase() + order.status.slice(1) }}
+                </span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <div class="table-footer">
+      <div class="footer-info">
+        Showing {{ filteredOrders.length }} orders
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn">
+          ‹
+        </button>
+
+        <button class="pagination-btn active">
+          1
+        </button>
+
+        <button class="pagination-btn">
+          2
+        </button>
+
+        <button class="pagination-btn">
+          ›
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DETAILS VIEW ===================== -->
+<div *ngIf="showDetails && selectedOrder">
+  <app-info
+    [order]="selectedOrder"
+    (backToList)="onBackToList()">
+  </app-info>
+</div>

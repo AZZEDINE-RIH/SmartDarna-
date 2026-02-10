@@ -1,0 +1,49 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "image": "assets/images/Amazon Echo Dot white.png",
+      "title": "Amazon Echo Dot",
+      "description": "Smart speaker with Alexa",
+      "price": 1300,
+      "mark": "Amazon",
+      "in_stock": true
+    },
+    {
+      "id": 2,
+      "image": "assets/images/google nest mini.png",
+      "title": "Google Nest Mini",
+      "description": "Compact smart speaker",
+      "price": 1200,
+      "mark": "Google",
+      "in_stock": true
+    },
+    {
+      "id": 3,
+      "image": "assets/images/homepodmini white.png",
+      "title": "HomePod Mini",
+      "description": "Wireless smart speaker",
+      "price": 1500,
+      "mark": "Apple",
+      "in_stock": true
+    },
+    {
+      "id": 4,
+      "image": "assets/images/arlo video doorbell .png",
+      "title": "Arlo Video Doorbell",
+      "description": "Wireless video doorbell",
+      "price": 179.99,
+      "mark": "Arlo",
+      "in_stock": true
+    },
+    {
+      "id": 5,
+      "image": "assets/images/ecobee smart thermostat .png",
+      "title": "Ecobee Smart Thermostat",
+      "description": "Smart home thermostat",
+      "price": 249.00,
+      "mark": "Ecobee",
+      "in_stock": true
+    }
+  ]
+}

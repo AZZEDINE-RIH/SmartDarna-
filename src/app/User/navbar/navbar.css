@@ -1,0 +1,407 @@
+:host {
+  display: contents;
+}
+
+/* Remove all focus outlines */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Main navbar styles */
+.navbar {
+  position: fixed;
+  top: 0.25rem;
+  left: 275px;
+  width: calc(100% - 295px);
+  height: 70px;
+  border-radius: 1rem;
+  border: 1px solid;
+  z-index: 50;
+  transition: all 0.3s ease;
+}
+
+.navbar:not(.dark) {
+  background-color: #ffffff;
+  border-color: #e5e7eb;
+}
+
+.navbar.dark {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+/* Search container styles */
+.search-container {
+  flex: 1;
+  max-width: 42rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-icon {
+  color: #9ca3af;
+  font-size: 20px;
+}
+
+.navbar.dark .search-icon {
+  color: #9ca3af;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 3rem;
+  padding-right: 6rem;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.navbar:not(.dark) .search-input {
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+  color: #111827;
+}
+
+.navbar:not(.dark) .search-input::placeholder {
+  color: #6b7280;
+}
+
+.navbar.dark .search-input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.navbar.dark .search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-shortcuts {
+  position: absolute;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar:not(.dark) .search-shortcuts {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+}
+
+.navbar.dark .search-shortcuts {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+.kbd {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.navbar:not(.dark) .kbd {
+  color: #4b5563;
+}
+
+.navbar.dark .kbd {
+  color: #d1d5db;
+}
+
+.kbd-plus {
+  font-size: 0.75rem;
+}
+
+.navbar:not(.dark) .kbd-plus {
+  color: #9ca3af;
+}
+
+.navbar.dark .kbd-plus {
+  color: #6b7280;
+}
+
+/* Navbar actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.action-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-button {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.navbar:not(.dark) .action-button {
+  background-color: #ffffff;
+  border-color: #d1d5db;
+}
+
+.navbar.dark .action-button {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+.action-icon {
+  font-size: 20px;
+  transition: color 0.2s ease;
+}
+
+.navbar:not(.dark) .action-icon {
+  color: #374151;
+}
+
+.navbar.dark .action-icon {
+  color: #d1d5db;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  cursor: pointer;
+  position: relative;
+  width: 5rem;
+  height: 2.5rem;
+  
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  padding: 0 0.25rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.navbar:not(.dark) .theme-toggle {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.navbar.dark .theme-toggle {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+.theme-toggle-slider {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  z-index: 10;
+  transition: transform 0.3s ease;
+}
+
+.navbar:not(.dark) .theme-toggle-slider {
+  background-color: #facc15;
+  transform: translateX(0);
+}
+
+.navbar.dark .theme-toggle-slider {
+  background-color: #60ced6;
+  transform: translateX(40px);
+}
+
+.theme-toggle-icons {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 0.5rem;
+  padding-right: 0.375rem;
+  z-index: 10;
+}
+
+.theme-icon {
+  transition: color 0.2s ease;
+  font-size: 16px;
+}
+
+.sun-icon {
+  color: #6b7280;
+}
+
+.navbar.dark .sun-icon {
+  color: #ffffff;
+}
+
+.moon-icon {
+  color: #4b5563;
+}
+
+.navbar.dark .moon-icon {
+  color: #ffffff;
+}
+
+/* Logout section */
+.logout-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid;
+  color: #ef4444;
+  cursor: pointer;
+  
+  transition: all 0.2s ease;
+}
+
+.logout-section:hover {
+  background-color: #f3f4f6;
+}
+
+.navbar:not(.dark) .logout-section {
+  border-color: #d1d5db;
+  background-color: #ffffff;
+}
+
+.navbar.dark .logout-section {
+  border-color: #4b5563;
+  background-color: #374151;
+}
+
+.logout-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.logout-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Hover states */
+.navbar:not(.dark) .action-button:hover {
+  background-color: #f9fafb;
+}
+
+.navbar.dark .action-button:hover {
+  background-color: #4b5563;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    left: 0;
+    width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .navbar-container {
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .search-container {
+    max-width: none;
+  }
+  
+  .search-input {
+    padding-right: 4rem;
+  }
+  
+  .search-shortcuts {
+    display: none;
+  }
+  
+  .navbar-actions {
+    gap: 0.5rem;
+  }
+  
+  .action-button {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+  
+  .theme-toggle {
+    width: 4rem;
+  }
+  
+  .logout-section {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .logout-text {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-container {
+    gap: 0.25rem;
+  }
+  
+  .action-icons {
+    gap: 0.25rem;
+  }
+  
+  .theme-toggle {
+    width: 3.5rem;
+  }
+  
+  .logout-section {
+    padding: 0.5rem 0.5rem;
+  }
+}

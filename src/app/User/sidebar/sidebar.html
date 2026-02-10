@@ -1,0 +1,60 @@
+<aside class="sidebar" [class.dark]="isDarkMode">
+  <!-- Header -->
+  <header class="sidebar-header">
+    <img [src]="logoSrc" alt="Logo" class="sidebar-logo" />
+    <span class="sidebar-title">
+      Smart<span class="sidebar-title-accent">D</span>arna
+    </span>
+  </header>
+
+  <!-- Main Menu -->
+  <ul class="sidebar-menu">
+    <li *ngFor="let item of sidebarItems">
+      <button
+        class="sidebar-menu-item"
+        [class.active]="activeItem === item.id"
+        (click)="handleItemClick(item)"
+      >
+        <ion-icon
+          [attr.name]="item.icon"
+          class="sidebar-icon"
+          [class.active]="activeItem === item.id"
+        ></ion-icon>
+
+        <span>{{ item.label }}</span>
+      </button>
+    </li>
+  </ul>
+
+  <!-- Bottom Section -->
+  <ul class="sidebar-bottom">
+    <li>
+      <button
+        class="sidebar-menu-item"
+        [class.active]="activeItem === settingsItem.id"
+        (click)="handleItemClick(settingsItem)"
+      >
+        <ion-icon
+          [attr.name]="settingsItem.icon"
+          class="sidebar-icon"
+          [class.active]="activeItem === settingsItem.id"
+        ></ion-icon>
+
+        <span>{{ settingsItem.label }}</span>
+      </button>
+    </li>
+
+    <!-- Profile -->
+    <li class="sidebar-profile">
+      <button (click)="navigateToProfile()" class="profile-button">
+        <div class="profile-info">
+          <div class="profile-name">Sara Jamal</div>
+          <div class="profile-email">Sara@example.com</div>
+        </div>
+        <div class="profile-avatar">
+          SJ
+        </div>
+      </button>
+    </li>
+  </ul>
+</aside>
