@@ -1,44 +1,24 @@
-<aside
-  class="fixed top-0 left-0 h-screen w-[260px] flex flex-col gap-2 px-4 transition-colors duration-300 border-r"
-  [ngClass]="isDarkMode ? 'bg-[#111827] border-gray-800' : 'bg-white border-gray-100'"
->
+<aside class="sidebar" [class.dark]="isDarkMode">
   <!-- Header -->
-  <header
-    class="flex items-center gap-3 h-[70px] pt-2.5 pb-1.5 border-b transition-colors duration-300"
-    [ngClass]="isDarkMode ? 'border-gray-800' : 'border-gray-100'"
-  >
-    <img [src]="logoSrc" alt="Logo" class="h-8 ml-0" />
-    <span
-      class="pt-3.5 font-bold h-10 text-2xl"
-      [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-    >
-      Smart<span class="text-[#60CED6]">D</span>arna
+  <header class="sidebar-header">
+    <img [src]="logoSrc" alt="Logo" class="sidebar-logo" />
+    <span class="sidebar-title">
+      Smart<span class="sidebar-title-accent">D</span>arna
     </span>
   </header>
 
   <!-- Main Menu -->
-  <ul class="list-none p-0 m-0 mt-4 flex-1 overflow-y-auto space-y-1">
+  <ul class="sidebar-menu">
     <li *ngFor="let item of sidebarItems">
       <button
-        class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
-        [ngClass]="{
-          'bg-[#60CED6]/25 text-[#60CED6]': isDarkMode && activeItem === item.id,
-          'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === item.id,
-          'text-gray-400 hover:bg-gray-700 hover:text-[#60CED6]': isDarkMode && activeItem !== item.id,
-          'text-gray-500 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== item.id
-        }"
+        class="sidebar-menu-item"
+        [class.active]="activeItem === item.id"
         (click)="handleItemClick(item)"
       >
         <ion-icon
           [attr.name]="item.icon"
-          class="text-[20px] transition-colors"
-          [ngClass]="
-            activeItem === item.id
-              ? 'text-[#60CED6]'
-              : isDarkMode
-                ? 'text-gray-400 group-hover:text-[#60CED6]'
-                : 'text-gray-500 group-hover:text-[#60CED6]'
-          "
+          class="sidebar-icon"
+          [class.active]="activeItem === item.id"
         ></ion-icon>
 
         <span>{{ item.label }}</span>
@@ -47,48 +27,31 @@
   </ul>
 
   <!-- Bottom Section -->
-  <ul
-    class="list-none p-0 m-0 mt-auto border-t pt-4"
-    [ngClass]="isDarkMode ? 'border-gray-800' : 'border-gray-100'"
-  >
+  <ul class="sidebar-bottom">
     <li>
       <button
-        class="flex items-center w-full gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group"
-        [ngClass]="{
-          'bg-[#60CED6]/25 text-[#60CED6]': isDarkMode && activeItem === settingsItem.id,
-          'bg-gray-100 text-[#60CED6]': !isDarkMode && activeItem === settingsItem.id,
-          'text-gray-400 hover:bg-gray-700 hover:text-[#60CED6]': isDarkMode && activeItem !== settingsItem.id,
-          'text-gray-500 hover:bg-gray-50 hover:text-[#60CED6]': !isDarkMode && activeItem !== settingsItem.id
-        }"
+        class="sidebar-menu-item"
+        [class.active]="activeItem === settingsItem.id"
         (click)="handleItemClick(settingsItem)"
       >
         <ion-icon
           [attr.name]="settingsItem.icon"
-          class="text-[20px]"
-          [ngClass]="
-            activeItem === settingsItem.id
-              ? 'text-[#60CED6]'
-              : isDarkMode
-                ? 'text-gray-400 group-hover:text-[#60CED6]'
-                : 'text-gray-500 group-hover:text-[#60CED6]'
-          "
+          class="sidebar-icon"
+          [class.active]="activeItem === settingsItem.id"
         ></ion-icon>
 
         <span>{{ settingsItem.label }}</span>
-
       </button>
     </li>
 
     <!-- Profile -->
-    <li class="pb-4 mt-1">
-      <button (click)="navigateToProfile()">
-        <div class="text-left">
-          <div class="text-sm font-semibold"
-            [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">Sara Jamal</div>
-          <div class="text-xs"
-            [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Sara@example.com</div>
+    <li class="sidebar-profile">
+      <button (click)="navigateToProfile()" class="profile-button">
+        <div class="profile-info">
+          <div class="profile-name">Sara Jamal</div>
+          <div class="profile-email">Sara@example.com</div>
         </div>
-        <div class="ml-auto w-10 h-10 rounded-full bg-linear-to-br from-[#60CED6] to-purple-900 flex items-center justify-center text-white font-semibold">
+        <div class="profile-avatar">
           SJ
         </div>
       </button>

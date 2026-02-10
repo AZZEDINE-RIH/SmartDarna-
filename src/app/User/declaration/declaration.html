@@ -1,80 +1,29 @@
-<div
-  class="px-8 transition-colors duration-300"
-  [ngClass]="isDarkMode ? 'bg-gray-900' : 'bg-gray-100'"
->
-  <div
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-5 pt-3"
-  >
+<div class="declaration" [class.dark]="isDarkMode">
+  <div class="stats-grid">
     <!-- Total Pending Card -->
-    <div
-      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
-      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
-    >
-      <div
-        class="text-xs font-semibold uppercase tracking-wider mb-2"
-        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
-      >
-        Total Pending
-      </div>
-      <div class="flex items-baseline gap-3">
-        <div
-          class="text-5xl font-bold"
-          [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-        >
-          03
-        </div>
-        <div class="text-orange-500 font-semibold text-sm">
-          Requires Action
-        </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Pending</div>
+      <div class="stat-content">
+        <div class="stat-value">03</div>
+        <div class="stat-status pending">Requires Action</div>
       </div>
     </div>
 
     <!-- Next Deadline Card -->
-    <div
-      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
-      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
-    >
-      <div
-        class="text-xs font-semibold uppercase tracking-wider mb-2"
-        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
-      >
-        Next Deadline
-      </div>
-      <div class="flex items-baseline gap-3">
-        <div
-          class="text-5xl font-bold"
-          [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-        >
-          Nov 15
-        </div>
-        <div
-          class="font-medium text-sm"
-          [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
-        >
-          VAT Q4 Report
-        </div>
+    <div class="stat-card">
+      <div class="stat-label">Next Deadline</div>
+      <div class="stat-content">
+        <div class="stat-value">Nov 15</div>
+        <div class="stat-status">VAT Q4 Report</div>
       </div>
     </div>
 
     <!-- Status Compliance Card -->
-    <div
-      class="rounded-2xl p-6 shadow-sm transition-colors duration-300"
-      [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
-    >
-      <div
-        class="text-xs font-semibold uppercase tracking-wider mb-2"
-        [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-400'"
-      >
-        Status Compliance
-      </div>
-      <div class="flex items-baseline gap-3">
-        <div class="text-5xl font-bold text-green-500">98%</div>
-        <div
-          class="font-medium text-sm"
-          [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'"
-        >
-          Excellent
-        </div>
+    <div class="stat-card">
+      <div class="stat-label">Status Compliance</div>
+      <div class="stat-content">
+        <div class="stat-value compliance">98%</div>
+        <div class="stat-status">Excellent</div>
       </div>
     </div>
   </div>
@@ -82,35 +31,18 @@
   <app-new-declaration-form></app-new-declaration-form>
 
   <!-- Info Box -->
-  <div class=" mx-auto py-8">
-    <div
-      class="border rounded-2xl p-6 transition-colors duration-300"
-      [ngClass]="
-        isDarkMode
-          ? 'bg-cyan-900/20 border-[#60CED6]'
-          : 'bg-cyan-50 border-cyan-400'
-      "
-    >
-      <div class="flex gap-4">
-        <div class="flex-shrink-0">
-          <div
-            class="w-8 h-8 bg-[#60CED6] rounded-full flex items-center justify-center"
-          >
-            <span class="text-white text-sm font-light">i</span>
+  <div class="info-container">
+    <div class="info-box">
+      <div class="info-content">
+        <div class="info-icon">
+          <div class="icon-circle">
+            <span class="icon-text">i</span>
           </div>
         </div>
 
-        <div>
-          <h3
-            class="font-semibold text-lg mb-2"
-            [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'"
-          >
-            Important Note for Sellers
-          </h3>
-          <p
-            class="leading-relaxed"
-            [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-600'"
-          >
+        <div class="info-text">
+          <h3 class="info-title">Important Note for Sellers</h3>
+          <p class="info-description">
             Please ensure all VAT declarations are submitted by the 15th of the
             following month to avoid late processing fees. Rejected declarations
             must be corrected and resubmitted within 48 hours of notification.

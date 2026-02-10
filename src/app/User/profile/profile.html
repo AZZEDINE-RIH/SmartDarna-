@@ -1,40 +1,40 @@
-<div class="max-w-6xl mx-auto p-6">
+<div class="profile-container" [class.dark]="isDarkMode">
   <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold mb-2" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+  <div class="profile-header">
+    <h1 class="profile-title">
       My Profile
     </h1>
-    <p class="text-lg" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-600'">
+    <p class="profile-subtitle">
       Manage your personal and business information
     </p>
   </div>
 
   <!-- Success Message -->
-  <div *ngIf="saveSuccess" class="mb-6 p-4 rounded-lg bg-green-50 border border-green-200">
-    <div class="flex items-center">
-      <span class="text-2xl mr-3">✅</span>
+  <div *ngIf="saveSuccess" class="success-message">
+    <div class="success-content">
+      <span class="success-icon">✅</span>
       <div>
-        <h3 class="font-bold text-green-800">Profile Updated Successfully!</h3>
-        <p class="text-green-600">Your changes have been saved.</p>
+        <h3 class="success-title">Profile Updated Successfully!</h3>
+        <p class="success-description">Your changes have been saved.</p>
       </div>
     </div>
   </div>
 
   <!-- Profile Content -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="profile-grid">
     <!-- Left Column - Profile Card -->
-    <div class="lg:col-span-1">
-      <div [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'" class="rounded-xl shadow-lg p-6">
+    <div class="profile-left">
+      <div class="profile-card">
         <!-- Avatar Section -->
-        <div class="text-center mb-6">
-          <div class="relative inline-block">
-            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-[#60CED6] to-[#4FA8B0] flex items-center justify-center text-4xl text-white font-bold">
+        <div class="avatar-section">
+          <div class="avatar-container">
+            <div class="avatar">
               {{ currentUser.avatar }}
             </div>
             <button
               *ngIf="isEditing"
               type="button"
-              class="absolute bottom-0 right-0 bg-[#60CED6] text-white rounded-full p-2 hover:bg-[#4FA8B0] transition-colors"
+              class="avatar-upload-btn"
               (click)="triggerAvatarUpload()"
             >
               📷
@@ -48,38 +48,37 @@
               (change)="onAvatarChange($event)"
             />
           </div>
-          <h3 class="mt-4 text-xl font-bold" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+          <h3 class="profile-name">
             {{ currentUser.firstName }} {{ currentUser.lastName }}
           </h3>
-          <span class="inline-block px-3 py-1 rounded-full text-xs font-medium mt-2"
-                [ngClass]="isDarkMode ? 'bg-cyan-900/30 text-cyan-400' : 'bg-cyan-100 text-cyan-700'">
+          <span class="role-badge">
             {{ getRoleDisplay(currentUser.role) }}
           </span>
         </div>
 
         <!-- Account Info -->
-        <div class="space-y-4">
-          <div>
-            <p class="text-sm font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+        <div class="account-info">
+          <div class="info-item">
+            <p class="info-label">
               Email Address
             </p>
-            <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+            <p class="info-value">
               {{ currentUser.email }}
             </p>
           </div>
-          <div>
-            <p class="text-sm font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+          <div class="info-item">
+            <p class="info-label">
               Member Since
             </p>
-            <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+            <p class="info-value">
               {{ formatDate(currentUser.createdAt) }}
             </p>
           </div>
-          <div>
-            <p class="text-sm font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+          <div class="info-item">
+            <p class="info-label">
               Last Login
             </p>
-            <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+            <p class="info-value">
               {{ formatDate(currentUser.lastLogin) }}
             </p>
           </div>
@@ -88,18 +87,18 @@
     </div>
 
     <!-- Right Column - Form -->
-    <div class="lg:col-span-2">
-      <div [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'" class="rounded-xl shadow-lg p-8">
+    <div class="profile-right">
+      <div class="profile-card">
         <!-- Form Header -->
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl font-bold" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+        <div class="form-header">
+          <h2 class="form-title">
             Personal Information
           </h2>
-          <div class="flex gap-3">
+          <div class="form-actions">
             <button
               *ngIf="!isEditing"
               type="button"
-              class="px-4 py-2 bg-[#60CED6] text-white rounded-lg font-medium hover:bg-[#4FA8B0] transition-colors"
+              class="btn-primary"
               (click)="enableEditing()"
             >
               Edit Profile
@@ -107,7 +106,7 @@
             <button
               *ngIf="isEditing"
               type="button"
-              class="px-4 py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
+              class="btn-secondary"
               (click)="cancelEditing()"
             >
               Cancel
@@ -116,11 +115,8 @@
               *ngIf="isEditing"
               type="button"
               [disabled]="profileForm.invalid || isSaving"
-              class="px-4 py-2 bg-[#60CED6] text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              [ngClass]="{
-                'hover:bg-[#4FA8B0]': !isSaving,
-                'bg-gray-400 cursor-wait': isSaving
-              }"
+              class="btn-primary"
+              [class]="isSaving ? 'saving' : ''"
               (click)="onSaveProfile()"
             >
               <span *ngIf="!isSaving">Save Changes</span>
@@ -131,26 +127,21 @@
 
         <!-- Profile Form -->
         <form [formGroup]="profileForm" *ngIf="isEditing">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="form-grid">
             <!-- First Name -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 First Name
               </label>
               <input
                 type="text"
                 formControlName="firstName"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('firstName')?.invalid && getControl('firstName')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('firstName')?.invalid && getControl('firstName')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('firstName')?.invalid && getControl('firstName')?.touched"
               />
               <div
                 *ngIf="getControl('firstName')?.invalid && getControl('firstName')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('firstName')?.errors?.['required']">First name is required</span>
                 <span *ngIf="getControl('firstName')?.errors?.['minlength']">Must be at least 2 characters</span>
@@ -158,24 +149,19 @@
             </div>
 
             <!-- Last Name -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 Last Name
               </label>
               <input
                 type="text"
                 formControlName="lastName"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('lastName')?.invalid && getControl('lastName')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('lastName')?.invalid && getControl('lastName')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('lastName')?.invalid && getControl('lastName')?.touched"
               />
               <div
                 *ngIf="getControl('lastName')?.invalid && getControl('lastName')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('lastName')?.errors?.['required']">Last name is required</span>
                 <span *ngIf="getControl('lastName')?.errors?.['minlength']">Must be at least 2 characters</span>
@@ -183,24 +169,19 @@
             </div>
 
             <!-- Email -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 Email Address
               </label>
               <input
                 type="email"
                 formControlName="email"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('email')?.invalid && getControl('email')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('email')?.invalid && getControl('email')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('email')?.invalid && getControl('email')?.touched"
               />
               <div
                 *ngIf="getControl('email')?.invalid && getControl('email')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('email')?.errors?.['required']">Email is required</span>
                 <span *ngIf="getControl('email')?.errors?.['email']">Please enter a valid email</span>
@@ -208,24 +189,19 @@
             </div>
 
             <!-- Phone -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 Phone Number
               </label>
               <input
                 type="tel"
                 formControlName="phone"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('phone')?.invalid && getControl('phone')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('phone')?.invalid && getControl('phone')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('phone')?.invalid && getControl('phone')?.touched"
               />
               <div
                 *ngIf="getControl('phone')?.invalid && getControl('phone')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('phone')?.errors?.['required']">Phone is required</span>
                 <span *ngIf="getControl('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
@@ -233,48 +209,38 @@
             </div>
 
             <!-- Company -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 Company Name
               </label>
               <input
                 type="text"
                 formControlName="company"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('company')?.invalid && getControl('company')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('company')?.invalid && getControl('company')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('company')?.invalid && getControl('company')?.touched"
               />
               <div
                 *ngIf="getControl('company')?.invalid && getControl('company')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('company')?.errors?.['required']">Company name is required</span>
               </div>
             </div>
 
             <!-- Tax ID -->
-            <div>
-              <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+            <div class="form-field">
+              <label class="form-label">
                 Tax ID
               </label>
               <input
                 type="text"
                 formControlName="taxId"
-                class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                [ngClass]="{
-                  'border-red-500': getControl('taxId')?.invalid && getControl('taxId')?.touched,
-                  'border-gray-300': !isDarkMode && !(getControl('taxId')?.invalid && getControl('taxId')?.touched),
-                  'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                  'bg-white text-gray-900': !isDarkMode
-                }"
+                class="form-input"
+                [class.error]="getControl('taxId')?.invalid && getControl('taxId')?.touched"
               />
               <div
                 *ngIf="getControl('taxId')?.invalid && getControl('taxId')?.touched"
-                class="mt-1 text-sm text-red-500"
+                class="error-text"
               >
                 <span *ngIf="getControl('taxId')?.errors?.['required']">Tax ID is required</span>
                 <span *ngIf="getControl('taxId')?.errors?.['pattern']">Tax ID must contain only letters and numbers</span>
@@ -283,102 +249,82 @@
           </div>
 
           <!-- Address Section -->
-          <div class="mt-8">
-            <h3 class="text-lg font-semibold mb-4" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+          <div class="address-section">
+            <h3 class="section-title">
               Address Information
             </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-grid">
               <!-- Address -->
-              <div class="md:col-span-2">
-                <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+              <div class="form-field address-field">
+                <label class="form-label">
                   Street Address
                 </label>
                 <input
                   type="text"
                   formControlName="address"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                  [ngClass]="{
-                    'border-red-500': getControl('address')?.invalid && getControl('address')?.touched,
-                    'border-gray-300': !isDarkMode && !(getControl('address')?.invalid && getControl('address')?.touched),
-                    'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                    'bg-white text-gray-900': !isDarkMode
-                  }"
+                  class="form-input"
+                  [class.error]="getControl('address')?.invalid && getControl('address')?.touched"
                 />
                 <div
                   *ngIf="getControl('address')?.invalid && getControl('address')?.touched"
-                  class="mt-1 text-sm text-red-500"
+                  class="error-text"
                 >
                   <span *ngIf="getControl('address')?.errors?.['required']">Address is required</span>
                 </div>
               </div>
 
               <!-- City -->
-              <div>
-                <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+              <div class="form-field">
+                <label class="form-label">
                   City
                 </label>
                 <input
                   type="text"
                   formControlName="city"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                  [ngClass]="{
-                    'border-red-500': getControl('city')?.invalid && getControl('city')?.touched,
-                    'border-gray-300': !isDarkMode && !(getControl('city')?.invalid && getControl('city')?.touched),
-                    'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                    'bg-white text-gray-900': !isDarkMode
-                  }"
+                  class="form-input"
+                  [class.error]="getControl('city')?.invalid && getControl('city')?.touched"
                 />
                 <div
                   *ngIf="getControl('city')?.invalid && getControl('city')?.touched"
-                  class="mt-1 text-sm text-red-500"
+                  class="error-text"
                 >
                   <span *ngIf="getControl('city')?.errors?.['required']">City is required</span>
                 </div>
               </div>
 
               <!-- Country -->
-              <div>
-                <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+              <div class="form-field">
+                <label class="form-label">
                   Country
                 </label>
                 <input
                   type="text"
                   formControlName="country"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                  [ngClass]="{
-                    'border-red-500': getControl('country')?.invalid && getControl('country')?.touched,
-                    'border-gray-300': !isDarkMode && !(getControl('country')?.invalid && getControl('country')?.touched),
-                    'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                    'bg-white text-gray-900': !isDarkMode
-                  }"
+                  class="form-input"
+                  [class.error]="getControl('country')?.invalid && getControl('country')?.touched"
                 />
                 <div
                   *ngIf="getControl('country')?.invalid && getControl('country')?.touched"
-                  class="mt-1 text-sm text-red-500"
+                  class="error-text"
                 >
                   <span *ngIf="getControl('country')?.errors?.['required']">Country is required</span>
                 </div>
               </div>
 
               <!-- Postal Code -->
-              <div>
-                <label class="block text-sm font-semibold mb-2" [ngClass]="isDarkMode ? 'text-gray-200' : 'text-gray-700'">
+              <div class="form-field">
+                <label class="form-label">
                   Postal Code
                 </label>
                 <input
                   type="text"
                   formControlName="postalCode"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors duration-200 focus:ring-2 focus:ring-[#60CED6] focus:border-transparent"
-                  [ngClass]="{
-                    'border-red-500': getControl('postalCode')?.invalid && getControl('postalCode')?.touched,
-                    'border-gray-300': !isDarkMode && !(getControl('postalCode')?.invalid && getControl('postalCode')?.touched),
-                    'border-gray-600 bg-gray-700 text-white': isDarkMode,
-                    'bg-white text-gray-900': !isDarkMode
-                  }"
+                  class="form-input"
+                  [class.error]="getControl('postalCode')?.invalid && getControl('postalCode')?.touched"
                 />
                 <div
                   *ngIf="getControl('postalCode')?.invalid && getControl('postalCode')?.touched"
-                  class="mt-1 text-sm text-red-500"
+                  class="error-text"
                 >
                   <span *ngIf="getControl('postalCode')?.errors?.['required']">Postal code is required</span>
                   <span *ngIf="getControl('postalCode')?.errors?.['minlength']">Must be at least 3 characters</span>
@@ -389,48 +335,48 @@
         </form>
 
         <!-- View Mode - Display Current Info -->
-        <div *ngIf="!isEditing" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <p class="text-sm font-medium mb-1" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+        <div *ngIf="!isEditing" class="view-mode">
+          <div class="form-grid">
+            <div class="info-item">
+              <p class="info-label">
                 Full Name
               </p>
-              <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+              <p class="info-value">
                 {{ currentUser.firstName }} {{ currentUser.lastName }}
               </p>
             </div>
-            <div>
-              <p class="text-sm font-medium mb-1" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <div class="info-item">
+              <p class="info-label">
                 Phone Number
               </p>
-              <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+              <p class="info-value">
                 {{ currentUser.phone }}
               </p>
             </div>
-            <div>
-              <p class="text-sm font-medium mb-1" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <div class="info-item">
+              <p class="info-label">
                 Company
               </p>
-              <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+              <p class="info-value">
                 {{ currentUser.company }}
               </p>
             </div>
-            <div>
-              <p class="text-sm font-medium mb-1" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <div class="info-item">
+              <p class="info-label">
                 Tax ID
               </p>
-              <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+              <p class="info-value">
                 {{ currentUser.taxId }}
               </p>
             </div>
           </div>
 
-          <div class="mt-8">
-            <h3 class="text-lg font-semibold mb-4" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+          <div class="address-section">
+            <h3 class="section-title">
               Address Information
             </h3>
-            <div class="p-4 rounded-lg border" [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-700/50' : 'border-gray-200 bg-gray-50'">
-              <p class="font-medium" [ngClass]="isDarkMode ? 'text-white' : 'text-gray-800'">
+            <div class="info-section">
+              <p class="info-value">
                 {{ currentUser.address }}, {{ currentUser.city }}, {{ currentUser.country }} {{ currentUser.postalCode }}
               </p>
             </div>

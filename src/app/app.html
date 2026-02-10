@@ -1,7 +1,9 @@
 <app-sidebar></app-sidebar>
 <app-navbar></app-navbar>
 
-<main class="ml-[260px] pt-[80px] pr-6 pb-6 h-screen overflow-y-auto bg-gray-100"
-      [ngClass]="isDarkMode ? 'bg-gray-900' : 'bg-gray-100'">
+<main
+  class="main-content"
+  [class.dark]="isDarkMode"
+>
   <router-outlet></router-outlet>
 </main>

@@ -1,45 +1,27 @@
 <!-- Order Details View -->
-<div *ngIf="order" class="mt-6 py-2 px-6 rounded-2xl">
-  <div class="max-w-7xl mx-auto rounded-2xl shadow-sm"
-       [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'">
-
+<div *ngIf="order" class="info-container" [class.dark]="isDarkMode">
+  <div class="info-card">
     <!-- Header -->
-    <div class="px-6 py-4 border-b"
-         [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-200'">
-      <div class="flex items-center justify-between">
+    <div class="info-header">
+      <div class="header-content">
         <button
           (click)="onBack()"
-          class="flex items-center space-x-2 transition-colors"
-          [ngClass]="isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'">
-          <ion-icon name="arrow-back-outline" class="text-xl"></ion-icon>
+          class="back-button">
+          <ion-icon name="arrow-back-outline" class="back-icon"></ion-icon>
           <span>Back to Orders</span>
         </button>
         
-        <div class="flex items-center space-x-3">
-          <span class="text-sm"
-                [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+        <div class="order-info">
+          <span class="order-number">
             Order #{{ order.orderNumber }}
           </span>
-          <span
-            class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium"
-            [ngClass]="{
-              'bg-yellow-100 text-yellow-800': order.status === 'pending' && !isDarkMode,
-              'bg-blue-100 text-blue-800': order.status === 'processing' && !isDarkMode,
-              'bg-green-100 text-green-800': order.status === 'completed' && !isDarkMode,
-              'bg-red-100 text-red-800': order.status === 'cancelled' && !isDarkMode,
-              'bg-yellow-900 text-yellow-200': order.status === 'pending' && isDarkMode,
-              'bg-blue-900 text-blue-200': order.status === 'processing' && isDarkMode,
-              'bg-green-900 text-green-200': order.status === 'completed' && isDarkMode,
-              'bg-red-900 text-red-200': order.status === 'cancelled' && isDarkMode
-            }">
+          <span class="status-badge">
             <span
-              class="w-2 h-2 rounded-full"
-              [ngClass]="{
-                'bg-yellow-400': order.status === 'pending',
-                'bg-blue-400': order.status === 'processing',
-                'bg-green-400': order.status === 'completed',
-                'bg-red-400': order.status === 'cancelled'
-              }">
+              class="status-dot"
+              [class.pending]="order.status === 'pending'"
+              [class.processing]="order.status === 'processing'"
+              [class.completed]="order.status === 'completed'"
+              [class.cancelled]="order.status === 'cancelled'">
             </span>
             {{ order.status.charAt(0).toUpperCase() + order.status.slice(1) }}
           </span>
@@ -48,30 +30,26 @@
     </div>
 
     <!-- Order Content -->
-    <div class="p-6">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="info-content">
+      <div class="content-grid">
 
         <!-- Customer Information -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="customer-section">
           <!-- Customer Details -->
-          <div class="rounded-lg p-4"
-               [ngClass]="isDarkMode ? 'bg-gray-700' : 'bg-gray-50'">
-            <h3 class="text-lg font-semibold mb-4"
-                [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+          <div class="info-card-section">
+            <h3 class="section-title">
               Customer Information
             </h3>
-            <div class="flex items-center space-x-4">
+            <div class="customer-details">
               <img
                 [src]="order.avatarUrl"
                 [alt]="order.customerName"
-                class="w-16 h-16 rounded-full">
+                class="customer-avatar">
               <div>
-                <div class="font-medium"
-                     [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+                <div class="customer-name">
                   {{ order.customerName }}
                 </div>
-                <div class="text-sm"
-                     [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+                <div class="customer-email">
                   {{ order.customerEmail }}
                 </div>
               </div>
@@ -79,19 +57,15 @@
           </div>
 
           <!-- Order Items -->
-          <div class="rounded-lg p-4"
-               [ngClass]="isDarkMode ? 'bg-gray-700' : 'bg-gray-50'">
-            <h3 class="text-lg font-semibold mb-4"
-                [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+          <div class="info-card-section">
+            <h3 class="section-title">
               Order Items
             </h3>
-            <div class="space-y-2">
+            <div class="items-list">
               <div
                 *ngFor="let item of order.items; let i = index"
-                class="flex items-center justify-between py-2 last:border-0"
-                [ngClass]="isDarkMode ? 'border-gray-600' : 'border-gray-200'">
-                <span
-                  [ngClass]="isDarkMode ? 'text-gray-300' : 'text-gray-700'">
+                class="item-row">
+                <span class="item-text">
                   {{ i + 1 }}. {{ item }}
                 </span>
               </div>
@@ -100,42 +74,34 @@
         </div>
 
         <!-- Order Summary -->
-        <div class="space-y-6">
+        <div class="summary-section">
           <!-- Order Details -->
-          <div class="rounded-lg p-4"
-               [ngClass]="isDarkMode ? 'bg-gray-700' : 'bg-gray-50'">
-            <h3 class="text-lg font-semibold mb-4"
-                [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+          <div class="info-card-section">
+            <h3 class="section-title">
               Order Details
             </h3>
-            <div class="space-y-3">
-              <div class="flex justify-between">
-                <span class="text-sm"
-                      [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+            <div class="details-list">
+              <div class="detail-row">
+                <span class="detail-label">
                   Order Date
                 </span>
-                <span class="text-sm font-medium"
-                      [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+                <span class="detail-value">
                   {{ order.date }}
                 </span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-sm"
-                      [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+              <div class="detail-row">
+                <span class="detail-label">
                   Order Time
                 </span>
-                <span class="text-sm font-medium"
-                      [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+                <span class="detail-value">
                   {{ order.time }}
                 </span>
               </div>
-              <div class="flex justify-between">
-                <span class="text-sm"
-                      [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">
+              <div class="detail-row">
+                <span class="detail-label">
                   Total Amount
                 </span>
-                <span class="text-lg font-semibold"
-                      [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'">
+                <span class="detail-value total">
                   {{ order.totalAmount.toFixed(2) }}MAD
                 </span>
               </div>
@@ -143,20 +109,19 @@
           </div>
 
           <!-- Actions -->
-          <div class="space-y-2">
+          <div class="actions-section">
             <button
               *ngIf="order.status === 'pending'"
-              class="w-full px-4 py-2 rounded-lg transition-colors text-white bg-blue-600 hover:bg-blue-700">
+              class="action-btn processing">
               Mark as Processing
             </button>
             <button
               *ngIf="order.status === 'processing'"
-              class="w-full px-4 py-2 rounded-lg transition-colors text-white bg-green-600 hover:bg-green-700">
+              class="action-btn completed">
               Mark as Completed
             </button>
             <button
-              class="w-full px-4 py-2 rounded-lg transition-colors"
-              [ngClass]="isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'">
+              class="action-btn secondary">
               Download Invoice
             </button>
           </div>

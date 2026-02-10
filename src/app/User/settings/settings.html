@@ -1,200 +1,85 @@
-<div class="p-8">
-    <div [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'" class="max-w-7xl mx-auto rounded-lg shadow-sm">
-        <!-- Header -->
-        <div [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-200'" class="border-b p-6 flex justify-between items-start">
-            <div>
-                <h1 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-2xl font-bold">Store Settings</h1>
-                <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-sm mt-1">Manage your store's look, feel, and privacy preferences.</p>
-            </div>
-            <button (click)="saveSettings()" class="bg-[#60CED6] hover:bg-[#60CED6] text-white px-4 py-2 rounded-lg text-sm font-medium">
-                Save All Changes
-            </button>
-        </div>
-
-        <!-- Layout Preferences Section -->
-        <div [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'" class="p-6 border-b">
-            <div class="flex items-center gap-2 mb-4">
-                <svg class="w-5 h-5 text-[#60CED6]" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                </svg>
-                <h2 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">Layout Preferences</h2>
-            </div>
-
-            <!-- Dark Mode Interface -->
-            <div class="flex items-center justify-between py-3">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">Dark Mode Interface</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">Switch between light and dark themes for the dashboard.</p>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" [checked]="isDarkMode" (change)="toggleTheme()" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#60CED6] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-600' : 'bg-gray-200'"></div>
-                </label>
-            </div>
-
-            <!-- Product Grid View -->
-            <div class="flex items-center justify-between py-3">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">Product Grid View</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">Choose your default product display format in the inventory manager.</p>
-                </div>
-                <div class="flex gap-2">
-                    <button class="px-3 py-1.5 bg-[#60CED6] text-white rounded text-xs font-medium flex items-center gap-1">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                        </svg>
-                        GRID
-                    </button>
-                    <button [ngClass]="isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-600'" class="px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 hover:bg-gray-200">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                        LIST
-                    </button>
-                </div>
-            </div>
-
-            <!-- Auto-Collapse Sidebar -->
-            <div class="flex items-center justify-between py-3">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">Auto-Collapse Sidebar</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">Automatically hide the sidebar to maximize screen space.</p>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#60CED6] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#60CED6]"></div>
-                </label>
-            </div>
-        </div>
-
-        <!-- Notification Controls Section -->
-        <div [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'" class="p-6 border-b">
-            <div class="flex items-center gap-2 mb-4">
-                <svg class="w-5 h-5 text-[#60CED6]" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
-                </svg>
-                <h2 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">Notification Controls</h2>
-            </div>
-
-            <!-- Table Header -->
-            <div class="grid grid-cols-2 gap-4 mb-2">
-                <div class="text-xs font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Event Type</div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="text-xs font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-center">Email</div>
-                    <div class="text-xs font-medium" [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-center">Push</div>
-                </div>
-            </div>
-
-            <!-- New Orders -->
-            <div [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-100'" class="grid grid-cols-2 gap-4 py-3 border-t">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">New Orders</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">Instantly when a customer buys a product.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex justify-center">
-                        <input type="checkbox" checked class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                    <div class="flex justify-center">
-                        <input type="checkbox" checked class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Customer Messages -->
-            <div [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-100'" class="grid grid-cols-2 gap-4 py-3 border-t">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">Customer Messages</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">When a customer sends a message.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex justify-center">
-                        <input type="checkbox" checked class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                    <div class="flex justify-center">
-                        <input type="checkbox" class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- System Updates -->
-            <div [ngClass]="isDarkMode ? 'border-gray-700' : 'border-gray-100'" class="grid grid-cols-2 gap-4 py-3 border-t">
-                <div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-medium">System Updates</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs mt-0.5">Platform changes and maintenance alerts.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex justify-center">
-                        <input type="checkbox" class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                    <div class="flex justify-center">
-                        <input type="checkbox" checked class="w-4 h-4 text-[#60CED6]" [ngClass]="isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-100 border-gray-300'" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Visibility & Privacy Section -->
-        <div [ngClass]="isDarkMode ? 'bg-gray-800' : 'bg-white'" class="p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <svg class="w-5 h-5 text-[#60CED6]" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
-                </svg>
-                <h2 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-lg font-semibold">Visibility & Privacy</h2>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Store Online Status -->
-                <div [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-700' : 'border-gray-200 bg-white'" class="p-4 border rounded-lg">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#60CED6] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#60CED6]"></div>
-                        </label>
-                    </div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-semibold mb-1">Store Online Status</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs">Turn off to put your store in "Maintenance Mode"</p>
-                </div>
-
-                <!-- Public Search Visibility -->
-                <div [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-700' : 'border-gray-200 bg-white'" class="p-4 border rounded-lg">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#60CED6] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#60CED6]"></div>
-                        </label>
-                    </div>
-                    <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-semibold mb-1">Public Search Visibility</h3>
-                    <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs">Allow search engines to index your store profile.</p>
-                </div>
-            </div>
-
-            <!-- Data Privacy & GDPR -->
-            <div [ngClass]="isDarkMode ? 'border-gray-700 bg-gray-700' : 'border-gray-200 bg-white'" class="mt-4 p-4 border rounded-lg flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-[#60CED6]/15 rounded-lg flex items-center justify-center">
-                        <svg class="w-6 h-6 text-[#60CED6]" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 [ngClass]="isDarkMode ? 'text-white' : 'text-gray-900'" class="text-sm font-semibold">Data Privacy & GDPR</h3>
-                        <p [ngClass]="isDarkMode ? 'text-gray-400' : 'text-gray-500'" class="text-xs">Manage how we process your personal and customer data.</p>
-                    </div>
-                </div>
-                <button class="text-[#60CED6] text-sm font-medium hover:underline">View Policy</button>
-            </div>
-        </div>
+<div class="settings-wrapper" [class.dark]="isDarkMode">
+  <div class="settings-card">
+    <!-- Header -->
+    <div class="settings-header">
+      <div>
+        <h1 class="title">Store Settings</h1>
+        <p class="subtitle">
+          Manage your store's look, feel, and privacy preferences.
+        </p>
+      </div>
+      <button class="primary-btn" (click)="saveSettings()">
+        Save All Changes
+      </button>
     </div>
+
+    <!-- Layout Preferences -->
+    <div class="section">
+      <div class="section-title">
+        <svg class="icon-accent" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+        </svg>
+        <h2>Layout Preferences</h2>
+      </div>
+
+      <!-- Toggle row -->
+      <div class="row">
+        <div>
+          <h3>Dark Mode Interface</h3>
+          <p>Switch between light and dark themes for the dashboard.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" [checked]="isDarkMode" (change)="toggleTheme()">
+          <span></span>
+        </label>
+      </div>
+
+      <!-- Grid / List -->
+      <div class="row">
+        <div>
+          <h3>Product Grid View</h3>
+          <p>Choose your default product display format.</p>
+        </div>
+        <div class="btn-group">
+          <button class="primary-btn small">GRID</button>
+          <button class="secondary-btn small">LIST</button>
+        </div>
+      </div>
+
+      <!-- Auto collapse -->
+      <div class="row">
+        <div>
+          <h3>Auto-Collapse Sidebar</h3>
+          <p>Automatically hide the sidebar to maximize space.</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox">
+          <span></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Visibility & Privacy -->
+    <div class="section last">
+      <div class="section-title">
+        <svg class="icon-accent" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+          <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10z"/>
+        </svg>
+        <h2>Visibility & Privacy</h2>
+      </div>
+
+      <div class="privacy-grid">
+        <div class="privacy-card">
+          <h3>Store Online Status</h3>
+          <p>Turn off to put your store in maintenance mode.</p>
+        </div>
+
+        <div class="privacy-card">
+          <h3>Public Search Visibility</h3>
+          <p>Allow search engines to index your store profile.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
