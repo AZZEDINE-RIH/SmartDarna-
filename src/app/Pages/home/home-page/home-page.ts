@@ -8,6 +8,7 @@ import { CustomerReviewsComponent } from '../reviews/reviews.component';
 import { TrustedByComponent } from '../trusted-by/trusted-by.component';
 import { BrandMarqueeComponent } from '../../../shared/brand-marquee/brand-marquee.component';
 import { ValueMarqueeComponent } from '../../../shared/value-marquee/value-marquee.component';
+import { ChatbotComponent } from '../../../dashboard/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-home-page',
@@ -20,7 +21,9 @@ import { ValueMarqueeComponent } from '../../../shared/value-marquee/value-marqu
     InstallationCtaComponent,
     BestSellersComponent,
     CustomerReviewsComponent,
-    ValueMarqueeComponent
+
+    ValueMarqueeComponent,
+    ChatbotComponent
   ],
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.css'],

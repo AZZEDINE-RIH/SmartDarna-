@@ -129,7 +129,7 @@ interface BotResponse {
   styles: [`
     .chatbot-widget {
       position: fixed;
-      right: 18px;
+      left: 18px; /* Moved to left */
       bottom: 18px;
       z-index: 1000;
     }
