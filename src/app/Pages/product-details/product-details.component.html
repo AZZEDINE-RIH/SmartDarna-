@@ -16,9 +16,6 @@
                      [alt]="product.name" 
                      class="product-img"
                      [class.color-transition]="isTransitioning">
-                <div class="image-overlay">
-                    <div class="zoom-text">Zoom</div>
-                </div>
             </div>
             
             <!-- Thumbnails -->
@@ -45,7 +42,6 @@
                 </div>
                 <div class="price-section">
                     <span class="price">{{ product.price }} MAD</span>
-                    <span class="price-label">Tax Included</span>
                 </div>
             </div>
 
@@ -76,44 +72,10 @@
                 </div>
             </div>
 
-            <!-- Product Description -->
-            <div class="description-section">
-                <h3 class="section-title">Product Description</h3>
-                <p class="description" *ngIf="product.description">{{ product.description }}</p>
-            </div>
-
-            <!-- Product Features -->
-            <div class="features-section">
-                <div class="feature-item">
-                    <div class="feature-icon"></div>
-                    <div class="feature-text">
-                        <h4>Fast Delivery</h4>
-                        <p>Delivery within 3-5 business days</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon"></div>
-                    <div class="feature-text">
-                        <h4>2 Year Warranty</h4>
-                        <p>Warranty against any malfunction</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon"></div>
-                    <div class="feature-text">
-                        <h4>Secure Payment</h4>
-                        <p>Secure and encrypted payment</p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Action Buttons -->
             <div class="action-section">
-                <button class="btn secondary" (click)="onAddToCart()">
+                <button class="btn primary" (click)="onAddToCart()">
                     <span class="btn-text">Add to Cart</span>
-                </button>
-                <button class="btn primary" (click)="onBuyNow()">
-                    <span class="btn-text">Buy Now</span>
                 </button>
             </div>
         </div>

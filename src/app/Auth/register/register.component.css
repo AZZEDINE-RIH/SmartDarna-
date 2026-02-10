@@ -165,14 +165,14 @@ select.form-control {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #14b8a6 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #60CED6 0%, #4db8c2 100%);
   color: white;
   width: 100%;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(20, 184, 166, 0.22);
+  box-shadow: 0 10px 24px rgba(96, 206, 214, 0.3);
 }
 
 .btn-block {

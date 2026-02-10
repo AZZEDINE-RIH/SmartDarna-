@@ -118,7 +118,8 @@
 }
 
 .nav-action-link,
-.cart-button {
+.cart-button,
+.login-button {
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -133,7 +134,8 @@
 }
 
 .nav-action-link:hover,
-.cart-button:hover {
+.cart-button:hover,
+.login-button:hover {
     border-color: var(--accent-color);
     color: var(--accent-color);
     background-color: var(--bg-secondary);
@@ -271,7 +273,8 @@
     }
 
     .nav-action-link,
-    .cart-button {
+    .cart-button,
+    .login-button {
         width: 40px;
         height: 40px;
     }

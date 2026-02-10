@@ -51,7 +51,7 @@ export class ProductService {
     getBestSellers(): Observable<Product[]> {
         return this.getProducts().pipe(
             map(products => {
-                // Filter for best sellers
+                // Filter for best sellings
                 const best = products.filter(p => p.bestSeller);
                 // Return exactly 4 items (or less if not enough)
                 return best.slice(0, 4);

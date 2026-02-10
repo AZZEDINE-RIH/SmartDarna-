@@ -6,6 +6,11 @@
     min-height: 100vh;
 }
 
+.section-title {
+    margin-bottom: 5rem;
+    padding-top: 5rem;
+}
+
 .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1.5fr;

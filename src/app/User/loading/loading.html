@@ -1,0 +1,23 @@
+<div class="loading-container" [class.dark]="isDarkMode">
+  <div class="loading-card">
+    <div class="loading-circle">
+      <div class="loading-progress">
+        <div class="progress-ring">
+          <svg class="progress-ring-svg" viewBox="0 0 120 120">
+            <circle class="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+            <circle class="progress-ring-fill" cx="60" cy="60" r="54" fill="none" stroke="#60CED6" stroke-width="8"
+                    stroke-linecap="round" [style.stroke-dasharray]="progressCircumference"
+                    [style.stroke-dashoffset]="progressOffset"/>
+          </svg>
+          <div class="progress-text">
+            <span class="progress-percentage">{{ progressPercentage }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="loading-title-container">
+      <h2 class="loading-title">LOADING</h2>
+      <p class="loading-subtitle">Smart Darna is being prepared...</p>
+    </div>
+  </div>
+</div>
