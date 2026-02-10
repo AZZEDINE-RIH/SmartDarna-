@@ -1,0 +1,270 @@
+/* Section Layout */
+.customer-reviews {
+    padding: var(--spacing-2xl) 0;
+    background-color: var(--bg-color);
+}
+
+.section-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Section Title - Inherits global styles (Corinthia font) */
+.section-title {
+    /* Color inherited or overridden if needed. 
+       Global controls font-family and size. 
+       We keep margin from global. */
+    display: block;
+    /* Ensure it behaves correctly */
+}
+
+/* Reviews Grid */
+
+/* Reviews Grid */
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* Review Card */
+/* Review Card */
+/* Review Card & Form Container Shared Styles */
+.review-card,
+.form-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-xl);
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    /* Subtle inner gradient hint using pseudo-element */
+}
+
+/* Specific to Grid Cards to ensure height match */
+.review-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Inner subtle gradient hint */
+.review-card::before,
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at top left, var(--accent-color), transparent 70%);
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card-content,
+.review-form {
+    position: relative;
+    z-index: 1;
+}
+
+.review-card:hover,
+.form-container:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-color);
+}
+
+.rating {
+    color: #D4AF37;
+    /* Soft gold tone */
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    /* Soft gold glow */
+    letter-spacing: 3px;
+}
+
+.review-text {
+    font-family: 'Georgia', serif;
+    /* Elegant serif fallback or use site serif if available */
+    font-style: italic;
+    font-weight: 300;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.8;
+    font-size: 1.05rem;
+    opacity: 0.9;
+}
+
+.review-divider {
+    height: 2px;
+    width: 40px;
+    background-color: var(--accent-color);
+    margin: var(--spacing-md) auto;
+    opacity: 0.3;
+    border-radius: 2px;
+}
+
+.user-name {
+    color: var(--accent-color);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    /* Very subtle depth */
+}
+
+/* Share Experience Section */
+.share-experience-section {
+    margin-top: var(--spacing-3xl);
+}
+
+.section-subtitle {
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-lg);
+    letter-spacing: 1px;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    /* Ensure it behaves like a card but with auto height for form */
+    display: block;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: center;
+    /* Center inputs */
+}
+
+.form-input {
+    width: 100%;
+    max-width: 400px;
+    /* Limit input width for cleaner look */
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    /* Subtle border */
+    background-color: rgba(255, 255, 255, 0.03);
+    /* Very subtle tint */
+    color: var(--text-color);
+    font-family: inherit;
+    transition: all 0.3s ease;
+    text-align: center;
+    /* Center text in inputs */
+}
+
+.form-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1);
+    background-color: var(--bg-color);
+}
+
+/* Rating Selector */
+.rating-group {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+    margin: var(--spacing-sm) 0;
+}
+
+.rating-group label {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: var(--accent-color);
+}
+
+.rating-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.star-btn {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--border-color);
+    /* Inactive color matching border/subtle */
+    transition: all 0.2s ease;
+}
+
+.star-btn.active,
+.star-btn:hover {
+    color: #D4AF37;
+    /* Soft gold tone */
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    transform: scale(1.1);
+}
+
+/* Submit Button */
+.btn-submit {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 12px 40px;
+    border-radius: 50px;
+    /* Pill shape for premium feel */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    align-self: center;
+    /* Center button */
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-submit:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    /* Contrast text on hover */
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .review-card {
+        padding: var(--spacing-lg);
+    }
+}

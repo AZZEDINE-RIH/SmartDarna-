@@ -1,0 +1,50 @@
+<section class="services-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Our <span class="text-primary">Services</span></h2>
+      <p class="section-subtitle">Comprehensive smart home solutions for modern living</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card" *ngFor="let service of services">
+        <div class="card-content">
+          <div class="service-icon">
+            <!-- Lightbulb Icon -->
+            <svg *ngIf="service.icon === 'lightbulb'" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4m0 12a4 4 0 0 1-4 4h8a4 4 0 0 1-4-4m0-12a6 6 0 0 0-6 6c0 2.5 1.5 4.5 3.5 5.5L12 22l2.5-2.5C16.5 18.5 18 16.5 18 14a6 6 0 0 0-6-6z"/>
+            </svg>
+            
+            <!-- Wrench Icon -->
+            <svg *ngIf="service.icon === 'wrench'" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+            </svg>
+            
+            <!-- Shopping Cart Icon -->
+            <svg *ngIf="service.icon === 'shopping-cart'" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"/>
+              <circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            
+            <!-- Truck Icon -->
+            <svg *ngIf="service.icon === 'truck'" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16,8 20,8 23,16 16,16"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            
+            <!-- Laptop Icon -->
+            <svg *ngIf="service.icon === 'laptop'" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="12" rx="2" ry="2"/>
+              <line x1="6" y1="16" x2="18" y2="16"/>
+            </svg>
+          </div>
+          
+          <h3 class="service-title">{{ service.title }}</h3>
+          <p class="service-description">{{ service.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

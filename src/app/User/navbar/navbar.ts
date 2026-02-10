@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-dashboard-navbar',
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './navbar.html',
@@ -16,7 +16,7 @@ export class Navbar implements OnInit, OnDestroy {
   isDarkMode: boolean = false;
   private themeSubscription?: Subscription;
 
-  constructor(private themeService: ThemeService, private router: Router) {}
+  constructor(private themeService: ThemeService, private router: Router) { }
 
   ngOnInit() {
     // Subscribe to theme changes

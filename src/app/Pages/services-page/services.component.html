@@ -1,0 +1,43 @@
+<div class="services-page">
+    <!-- Hero Section -->
+    <section class="services-hero">
+        <div class="container">
+            <h1 class="hero-title">Our Services</h1>
+            <p class="hero-subtitle">
+                From consultation to installation, we provide end-to-end smart home solutions
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="services-section">
+        <div class="container">
+            <div class="services-grid">
+                <div *ngFor="let service of services" class="service-card">
+                    <div class="service-icon">{{ service.icon }}</div>
+                    <h3 class="service-title">{{ service.title }}</h3>
+                    <p class="service-description">{{ service.description }}</p>
+                    <ul class="service-features">
+                        <li *ngFor="let feature of service.features">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            {{ feature }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="services-cta">
+        <div class="container">
+            <h2>Ready to Transform Your Home?</h2>
+            <p>Get in touch with our experts to start your smart home journey</p>
+            <a routerLink="/contact" class="btn main">Contact Us</a>
+        </div>
+    </section>
+</div>

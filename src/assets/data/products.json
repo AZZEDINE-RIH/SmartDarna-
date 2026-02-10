@@ -1,0 +1,125 @@
+[
+    {
+        "id": "smart-hub-pro-v2",
+        "name": "Smart Hub Pro v2",
+        "category": "Smart Hub",
+        "brand": "Amazon",
+        "price": 1299,
+        "images": [
+            "/assets/Amazon Echo (4th gen).png",
+            "/assets/Amazon Echo Dot white.png"
+        ],
+        "colors": [
+            "Black",
+            "White"
+        ],
+        "rating": 4.9,
+        "description": "The ultimate central hub for your home ecosystem. Connect and control all your smart devices with ease.",
+        "stock": 45,
+        "bestSeller": true
+    },
+    {
+        "id": "nest-doorbell-battery",
+        "name": "Google Nest Doorbell",
+        "category": "Doorbell",
+        "brand": "Google",
+        "price": 899,
+        "images": [
+            "/assets/Google Nest Doorbell battery snow.png",
+            "/assets/Google Nest Doorbell battery ash.png",
+            "/assets/Google Nest Doorbell battery linen.png"
+        ],
+        "colors": [
+            "Snow",
+            "Ash",
+            "Linen"
+        ],
+        "rating": 4.8,
+        "description": "Smart recognition and crystal clear 2K video. See who's at the door from anywhere.",
+        "stock": 30,
+        "bestSeller": true
+    },
+    {
+        "id": "ecobee-smart-thermostat",
+        "name": "Eco-Smart Thermostat",
+        "category": "Thermostat",
+        "brand": "Ecobee",
+        "price": 749,
+        "images": [
+            "/assets/ecobee smart thermostat enhanced .png",
+            "/assets/ecobee smart thermostat enhanced2.png"
+        ],
+        "colors": [
+            "Black"
+        ],
+        "rating": 4.7,
+        "description": "Optimize your energy savings automatically with intelligent room sensors.",
+        "stock": 25,
+        "bestSeller": true
+    },
+    {
+        "id": "google-nest-hub-2nd-gen",
+        "name": "Google Nest Hub (2nd gen)",
+        "category": "Smart Display",
+        "brand": "Google",
+        "price": 450,
+        "images": [
+            "/assets/Google Nest Hub (2nd gen) Mist.png",
+            "/assets/Google Nest Hub (2nd gen) Sand.png",
+            "/assets/GoogleNest Hub (2nd gen) charcol.png"
+        ],
+        "colors": [
+            "Mist",
+            "Sand",
+            "Charcoal"
+        ],
+        "rating": 4.9,
+        "description": "The center of your helpful home. Control your home, watch videos, and get more things done with just your voice.",
+        "stock": 60,
+        "bestSeller": true
+    },
+    {
+        "id": "nest-yale-lock",
+        "name": "Nest × Yale Lock",
+        "category": "Lock",
+        "brand": "Nest",
+        "price": 2200,
+        "images": [
+            "/assets/nest&yale lock Black suede.png",
+            "/assets/nest&yale lock Polished brass.png",
+            "/assets/nest&yale lock oil rubbed bronze.png"
+        ],
+        "colors": [
+            "Black Suede",
+            "Polished Brass",
+            "Oil Rubbed Bronze"
+        ],
+        "rating": 4.9,
+        "description": "The secure, tamper-proof smart lock from Nest and Yale. Connect it to your Nest app to lock and unlock from anywhere.",
+        "stock": 15,
+        "bestSeller": false
+    },
+    {
+        "id": "homepod-mini",
+        "name": "HomePod mini",
+        "category": "Speaker",
+        "brand": "Apple",
+        "price": 999,
+        "images": [
+            "/assets/homepodmini blue.png",
+            "/assets/homepodmini orange.png",
+            "/assets/homepodmini yellow.png",
+            "/assets/homepodmini white.png"
+        ],
+        "colors": [
+            "Blue",
+            "Orange",
+            "Yellow",
+            "White"
+        ],
+        "rating": 4.7,
+        "description": "Room-filling sound. An intelligent assistant. Jam-packed with innovation, HomePod mini delivers unexpectedly big sound for a speaker of its size.",
+        "stock": 40,
+        "bestSeller": false
+    }
+]

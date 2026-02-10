@@ -1,0 +1,157 @@
+.installation-cta {
+    padding-bottom: var(--spacing-3xl);
+}
+
+.cta-wrapper {
+    background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-color) 100%);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-2xl);
+    color: var(--text-color);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* In dark mode we want a more vibrant glow, in light mode a subtle one */
+.glow-effect {
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cta-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.cta-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    letter-spacing: 4px;
+    margin-bottom: var(--spacing-sm);
+}
+
+.cta-title {
+    color: var(--text-color);
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.2;
+}
+
+.cta-description {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+    max-width: 600px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.cta-features {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+}
+
+.cta-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.icon-circle {
+    width: 28px;
+    height: 28px;
+    background-color: var(--accent-color);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cta-action {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.pill-cta {
+    background-color: var(--accent-color);
+    color: #fff;
+    padding: 1.25rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+}
+
+.pill-cta:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-hover);
+    filter: brightness(1.1);
+}
+
+.pill-cta svg {
+    transition: transform 0.3s ease;
+}
+
+.pill-cta:hover svg {
+    transform: translateX(5px);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .cta-wrapper {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--spacing-2xl);
+    }
+
+    .cta-features {
+        justify-content: center;
+        gap: var(--spacing-md);
+    }
+
+    .cta-description {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .pill-cta {
+        width: fit-content;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .cta-features {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm);
+    }
+}

@@ -1,0 +1,35 @@
+<div class="carousel" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+  <div class="carousel-header" *ngIf="showArrows">
+    <button type="button" class="carousel-arrow left" (click)="prev()" aria-label="Previous">
+      <span aria-hidden="true">‹</span>
+    </button>
+    <button type="button" class="carousel-arrow right" (click)="next()" aria-label="Next">
+      <span aria-hidden="true">›</span>
+    </button>
+  </div>
+
+  <div class="carousel-viewport" #viewport>
+    <div
+      class="carousel-track"
+      #track
+      [class.is-transitioning]="transitionEnabled"
+      (transitionend)="onTrackTransitionEnd($event)"
+    >
+      <div class="carousel-item" *ngFor="let item of renderedItems">
+        <ng-container *ngIf="itemTemplate" [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }">
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="carousel-dots" *ngIf="showDots && items.length > 1">
+    <button
+      type="button"
+      class="dot"
+      *ngFor="let d of dots"
+      [class.active]="d === activeDot"
+      (click)="goToDot(d)"
+      [attr.aria-label]="'Go to slide ' + (d + 1)"
+    ></button>
+  </div>
+</div>

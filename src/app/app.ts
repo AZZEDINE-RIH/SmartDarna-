@@ -1,19 +1,38 @@
-import { Component, signal, OnInit, OnDestroy } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { Navbar } from './User/navbar/navbar';
+import { Component, signal, OnInit, OnDestroy, ElementRef, AfterViewInit, PLATFORM_ID, inject } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { filter } from 'rxjs/operators';
+import { Navbar as DashboardNavbar } from './User/navbar/navbar';
+import { Navbar as PublicNavbar } from './core/navbar/navbar';
 import { Sidebar } from './User/sidebar/sidebar';
+import { Footer } from './core/footer/footer';
 import { AuthService } from './services/auth.service';
 import { ThemeService } from './theme.service';
 import { Subscription } from 'rxjs';
+import { WhatsappButtonComponent } from './shared/whatsapp-button/whatsapp-button.component';
+import { ScrollTopComponent } from './shared/scroll-top/scroll-top.component';
+import { CursorFollowComponent } from './shared/cursor-follow/cursor-follow.component';
+import { DarkCursorComponent } from './shared/dark-cursor/dark-cursor.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, Navbar, Sidebar],
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    DashboardNavbar,
+    PublicNavbar,
+    Sidebar,
+    Footer,
+    WhatsappButtonComponent,
+    ScrollTopComponent,
+    CursorFollowComponent,
+    DarkCursorComponent
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoggedIn = signal(false);
   userName = signal('');
   userRole = signal('');
@@ -23,18 +42,18 @@ export class App implements OnInit, OnDestroy {
   private themeSubscription?: Subscription;
   private authSubscription?: Subscription;
   private routerSubscription?: Subscription;
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private authService: AuthService,
     private themeService: ThemeService,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef
   ) { }
 
   ngOnInit() {
     // Track current route to prevent dashboard flash on login
-    // We check if url contains '/auth'
     this.routerSubscription = this.router.events.subscribe(event => {
-      // Use direct router.url check which is reliable
       this.isAuthRoute.set(this.router.url.includes('/auth'));
     });
 
@@ -59,6 +78,41 @@ export class App implements OnInit, OnDestroy {
         this.userName.set('');
         this.userRole.set('');
       }
+    });
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      // Small delay to ensure view is rendered
+      setTimeout(() => this.initScrollReveal(), 100);
+    });
+  }
+
+  ngAfterViewInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      this.initScrollReveal();
+    }
+  }
+
+  private initScrollReveal() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px'
+    });
+
+    const sections = this.elementRef.nativeElement.querySelectorAll('section, .section, .hero, .features-grid, .product-card');
+    sections.forEach((section: any) => {
+      section.classList.add('reveal');
+      observer.observe(section);
     });
   }
 

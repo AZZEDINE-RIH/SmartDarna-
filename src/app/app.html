@@ -1,21 +1,30 @@
 <div class="app-container" [class.dark]="isDarkMode()">
-  @if (isLoggedIn() && !isAuthRoute()) {
-    @if (userRole() === 'admin') {
-      <!-- Admin routes render their own integrated layout -->
-      <router-outlet></router-outlet>
-    } @else {
-      <!-- Seller/User layout with sidebar and navbar -->
-      <app-sidebar></app-sidebar>
-      <div class="main-wrapper">
-        <app-navbar></app-navbar>
-        <main class="main-content">
-          <router-outlet></router-outlet>
-        </main>
-      </div>
-    }
+  @if (isLoggedIn() && userRole() === 'admin') {
+    <!-- Admin routes render their own integrated layout -->
+    <router-outlet></router-outlet>
+  } @else if (isLoggedIn() && userRole() === 'seller') {
+    <!-- Seller layout with sidebar and navbar -->
+    <app-sidebar></app-sidebar>
+    <div class="main-wrapper">
+      <app-dashboard-navbar></app-dashboard-navbar>
+      <main class="main-content">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   } @else {
-    <main class="auth-content">
+    <!-- Public/User Layout -->
+    @if (!isAuthRoute()) {
+      <app-public-navbar></app-public-navbar>
+    }
+    <main [class.auth-content]="isAuthRoute()" [class.public-content]="!isAuthRoute()">
       <router-outlet></router-outlet>
     </main>
+    @if (!isAuthRoute()) {
+      <app-footer></app-footer>
+      <app-whatsapp-button></app-whatsapp-button>
+      <app-scroll-top></app-scroll-top>
+      <app-cursor-follow></app-cursor-follow>
+      <app-dark-cursor></app-dark-cursor>
+    }
   }
 </div>

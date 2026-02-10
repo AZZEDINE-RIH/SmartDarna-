@@ -1,0 +1,41 @@
+<section class="team-page">
+  <div class="team-header">
+    <span class="pill">Team</span>
+    <h1 class="title">Meet the <span class="accent">Organization</span></h1>
+    <p class="subtitle">A clean, premium org chart with clear hierarchy.</p>
+  </div>
+
+  <div class="org-chart">
+    <div class="director-row">
+      <div class="relative flex items-center justify-center">
+        <!-- Director Card -->
+        <app-team-card [person]="director" size="director"></app-team-card>
+
+        <!-- Assistant Node (Absolute Right) -->
+        <div class="absolute left-[100%] ml-12 flex items-center">
+          <!-- Connector Line -->
+          <div class="w-12 h-px bg-white/20"></div>
+          <!-- Assistant Card -->
+          <div class="scale-90 origin-left">
+            <app-team-card [person]="assistant" size="member"></app-team-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="managers-area">
+      <div class="manager-group" *ngFor="let group of managerGroups; let i = index" [class.group-1]="i === 0"
+        [class.group-2]="i === 1" [class.group-3]="i === 2">
+        <div class="person manager">
+          <app-team-card [person]="group.manager" size="manager"></app-team-card>
+        </div>
+
+        <div class="members" [class.layout-row-2]="i === 0 || i === 2" [class.layout-grid-2x2]="i === 1">
+          <div class="member" *ngFor="let m of group.members">
+            <app-team-card [person]="m" size="member"></app-team-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

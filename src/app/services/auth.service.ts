@@ -234,10 +234,10 @@ export class AuthService {
           this.router.navigate(['/user/dashboard']);
           break;
         case 'user':
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
           break;
         default:
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
       }
     } catch (error) {
       console.error('Error in role-based redirect:', error);

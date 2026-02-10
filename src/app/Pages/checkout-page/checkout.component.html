@@ -1,0 +1,154 @@
+<div class="checkout-page">
+  <div class="container">
+    <h1 class="checkout-header">Checkout</h1>
+
+    <div *ngIf="cartItems().length === 0" class="empty-state">
+      <p>Your cart is empty. Add items before checkout.</p>
+      <a routerLink="/collection" class="btn-place-order">Browse Collection</a>
+    </div>
+
+    <form *ngIf="cartItems().length > 0" [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" class="checkout-grid">
+      <div class="checkout-main">
+        <section class="checkout-card">
+          <h2 class="card-title">Shipping Information</h2>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="fullName">Full Name *</label>
+              <input id="fullName" type="text" formControlName="fullName" placeholder="John Doe" class="checkout-input" [class.input-error]="hasError('fullName', 'required')" />
+              <span *ngIf="hasError('fullName', 'required')" class="error-msg">Required</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="addressLine1">Address Line 1 *</label>
+              <input id="addressLine1" type="text" formControlName="addressLine1" placeholder="123 Main Street" class="checkout-input" [class.input-error]="hasError('addressLine1', 'required')" />
+              <span *ngIf="hasError('addressLine1', 'required')" class="error-msg">Required</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="addressLine2">Address Line 2 (Optional)</label>
+              <input id="addressLine2" type="text" formControlName="addressLine2" placeholder="Apt, suite, etc." class="checkout-input" />
+            </div>
+          </div>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input id="city" type="text" formControlName="city" placeholder="Casablanca" class="checkout-input" [class.input-error]="hasError('city', 'required')" />
+              <span *ngIf="hasError('city', 'required')" class="error-msg">Required</span>
+            </div>
+            <div class="form-group">
+              <label for="state">State / Region</label>
+              <input id="state" type="text" formControlName="state" placeholder="Grand Casablanca" class="checkout-input" />
+            </div>
+          </div>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="postalCode">Postal Code *</label>
+              <input id="postalCode" type="text" formControlName="postalCode" placeholder="20000" class="checkout-input" [class.input-error]="hasError('postalCode', 'required')" />
+              <span *ngIf="hasError('postalCode', 'required')" class="error-msg">Required</span>
+            </div>
+            <div class="form-group">
+              <label for="country">Country *</label>
+              <input id="country" type="text" formControlName="country" placeholder="Morocco" class="checkout-input" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="phone">Phone *</label>
+              <input id="phone" type="tel" formControlName="phone" placeholder="+212 6XX XXX XXX" class="checkout-input" [class.input-error]="hasError('phone', 'required')" />
+              <span *ngIf="hasError('phone', 'required')" class="error-msg">Required</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="email">Email *</label>
+              <input id="email" type="email" formControlName="email" placeholder="you@example.com" class="checkout-input" [class.input-error]="hasError('email', 'required') || hasError('email', 'email')" />
+              <span *ngIf="hasError('email', 'required')" class="error-msg">Required</span>
+              <span *ngIf="hasError('email', 'email')" class="error-msg">Valid email required</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="checkout-card">
+          <h2 class="card-title">Payment Method</h2>
+          <div class="payment-options">
+            <label class="payment-option">
+              <input type="radio" formControlName="paymentMethod" value="credit_card" />
+              <span class="payment-label">Credit Card</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" formControlName="paymentMethod" value="paypal" />
+              <span class="payment-label">PayPal</span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" formControlName="paymentMethod" value="cod" />
+              <span class="payment-label">Cash on Delivery (COD)</span>
+            </label>
+          </div>
+
+          <div *ngIf="checkoutForm.get('paymentMethod')?.value === 'credit_card'" class="card-details">
+            <div class="form-row">
+              <div class="form-group full">
+                <label for="cardNumber">Card Number *</label>
+                <input id="cardNumber" type="text" formControlName="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" class="checkout-input" [class.input-error]="hasError('cardNumber', 'required')" />
+                <span *ngIf="hasError('cardNumber', 'required')" class="error-msg">Required</span>
+              </div>
+            </div>
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label for="cardExpiry">MM / YY *</label>
+                <input id="cardExpiry" type="text" formControlName="cardExpiry" placeholder="12/28" maxlength="5" class="checkout-input" [class.input-error]="hasError('cardExpiry', 'required')" />
+                <span *ngIf="hasError('cardExpiry', 'required')" class="error-msg">Required</span>
+              </div>
+              <div class="form-group">
+                <label for="cardCvv">CVV *</label>
+                <input id="cardCvv" type="text" formControlName="cardCvv" placeholder="123" maxlength="4" class="checkout-input" [class.input-error]="hasError('cardCvv', 'required')" />
+                <span *ngIf="hasError('cardCvv', 'required')" class="error-msg">Required</span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group full">
+                <label for="cardholderName">Cardholder Name *</label>
+                <input id="cardholderName" type="text" formControlName="cardholderName" placeholder="Name on card" class="checkout-input" [class.input-error]="hasError('cardholderName', 'required')" />
+                <span *ngIf="hasError('cardholderName', 'required')" class="error-msg">Required</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="order-summary-aside">
+        <div class="order-summary-card">
+          <h2 class="card-title">Order Summary</h2>
+          <div class="summary-items">
+            <div *ngFor="let item of cartItems()" class="summary-item">
+              <img [src]="item.product.images[0]" [alt]="item.product.name" />
+              <div class="summary-item-info">
+                <span class="item-name">{{ item.product.name }}</span>
+                <span class="item-meta">{{ item.selectedColor }} · Qty {{ item.quantity }}</span>
+                <span class="item-price">{{ item.product.price * item.quantity }} MAD</span>
+              </div>
+            </div>
+          </div>
+          <div class="summary-totals">
+            <div class="summary-line">
+              <span>Subtotal</span>
+              <span>{{ subtotal() }} MAD</span>
+            </div>
+            <div class="summary-line">
+              <span>Shipping</span>
+              <span class="free">FREE</span>
+            </div>
+            <div class="summary-total">
+              <span>Total</span>
+              <span>{{ total() }} MAD</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-place-order">Place Order</button>
+          <a routerLink="/cart" class="back-link">← Back to Cart</a>
+        </div>
+      </aside>
+    </form>
+  </div>
+</div>

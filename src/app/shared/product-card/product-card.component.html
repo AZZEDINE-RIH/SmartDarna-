@@ -1,0 +1,52 @@
+<div class="product-card">
+    <!-- Best Seller Badge -->
+    <div *ngIf="product.bestSeller && showBadge" class="best-seller-badge">
+        Best Seller
+    </div>
+
+    <!-- Product Image (Clickable) -->
+    <a [routerLink]="['/product', product.id]" class="product-link">
+        <div class="product-image-wrapper">
+            <img [src]="product.images[0]" [alt]="product.name" class="product-image" />
+
+            <!-- Hover Overlay -->
+            <div class="product-overlay">
+                <p class="product-quick-info">{{ product.description }}</p>
+                <div class="overlay-buttons">
+                    <button (click)="$event.preventDefault(); $event.stopPropagation(); onAddToCart()"
+                        class="btn-quick-add">
+                        Quick Add
+                    </button>
+                    <button (click)="onBuyNow($event)"
+                        class="btn-buy-now">
+                        Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <h3 class="product-name">{{ product.name }}</h3>
+
+            <!-- Rating -->
+            <div class="product-rating">
+                <div class="stars">
+                    <span *ngFor="let star of getStars()" class="star" [class.filled]="star < product.rating">
+                        ★
+                    </span>
+                </div>
+                <span class="rating-value">({{ product.rating }})</span>
+            </div>
+
+            <!-- Price -->
+            <div class="product-price">
+                {{ product.price }} MAD
+            </div>
+
+            <div class="view-details-link">
+                View Details →
+            </div>
+        </div>
+    </a>
+</div>

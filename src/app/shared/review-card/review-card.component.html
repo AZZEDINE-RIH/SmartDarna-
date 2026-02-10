@@ -1,0 +1,30 @@
+<div class="review-card">
+    <!-- Header -->
+    <div class="review-header">
+        <!-- Avatar -->
+        <div class="review-avatar">
+            <img *ngIf="review.avatar" [src]="review.avatar" [alt]="review.customerName" />
+            <span *ngIf="!review.avatar" class="avatar-initials">
+                {{ getInitials(review.customerName) }}
+            </span>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="review-info">
+            <h4 class="customer-name">{{ review.customerName }}</h4>
+            <div class="review-rating">
+                <span *ngFor="let star of getStars()" class="star" [class.filled]="star < review.rating">
+                    ★
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment -->
+    <p class="review-comment">{{ review.comment }}</p>
+
+    <!-- Date -->
+    <div *ngIf="review.date" class="review-date">
+        {{ review.date }}
+    </div>
+</div>

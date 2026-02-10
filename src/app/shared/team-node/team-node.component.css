@@ -1,0 +1,250 @@
+:host {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: none;
+}
+
+@media (max-width: 1200px) {
+  :host.level-0 > .children {
+    flex-wrap: wrap;
+  }
+
+  :host.level-0 > .children::after {
+    left: 10%;
+    right: 10%;
+  }
+}
+
+/* Reveal */
+:host {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+:host.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.node-card {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.children {
+  position: relative;
+  z-index: 1;
+  list-style: none;
+  padding: 64px 0 0;
+  margin: 0;
+
+  display: flex;
+  justify-content: center;
+  gap: clamp(18px, 3vw, 48px);
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.child {
+  position: relative;
+  padding-top: 64px;
+  display: flex;
+  justify-content: center;
+  flex: 1 1 0;
+}
+
+/* Level-specific layout to match the reference org chart */
+:host.level-0 {
+  max-width: 1200px;
+}
+
+:host.level-0 > .children {
+  flex-wrap: nowrap;
+}
+
+:host.level-0 > .children::after {
+  left: 18%;
+  right: 18%;
+}
+
+:host.level-0 > .children > .child {
+  flex: 1 1 0;
+}
+
+:host.level-1 {
+  max-width: none;
+}
+
+:host.level-1 > .children {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  justify-items: center;
+  padding-top: 46px;
+}
+
+:host.level-1 > .children::after {
+  display: block;
+}
+
+:host.level-1 > .children > .child {
+  padding-top: 46px;
+  width: 100%;
+  max-width: 220px;
+  flex: none;
+}
+
+:host.level-1 > .children::before {
+  height: 46px;
+}
+
+:host.level-1 > .children::after {
+  top: 46px;
+}
+
+:host.level-1 > .children > .child::before {
+  height: 46px;
+  display: none;
+}
+
+/* In the reference design, only the first row gets drop-lines (cleaner when rows wrap) */
+:host.level-1 > .children > .child:nth-child(-n + 2)::before {
+  display: block;
+}
+
+@media (max-width: 980px) {
+  :host.level-1 > .children {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-top: 40px;
+  }
+
+  :host.level-1 > .children::before {
+    height: 40px;
+  }
+
+  :host.level-1 > .children::after {
+    top: 40px;
+  }
+
+  :host.level-1 > .children > .child::before {
+    height: 40px;
+  }
+
+  :host.level-1 > .children > .child {
+    padding-top: 40px;
+  }
+}
+
+@media (max-width: 520px) {
+  :host.level-1 > .children {
+    grid-template-columns: 1fr;
+    padding-top: 34px;
+  }
+
+  :host.level-1 > .children::before {
+    height: 34px;
+  }
+
+  :host.level-1 > .children::after {
+    top: 34px;
+  }
+
+  :host.level-1 > .children > .child {
+    padding-top: 34px;
+    max-width: 260px;
+  }
+
+  :host.level-1 > .children > .child::before {
+    height: 34px;
+  }
+
+  :host.level-1 > .children > .child::before {
+    display: block;
+  }
+}
+
+/* Vertical line from parent down to the horizontal hub */
+.children::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 64px;
+  background: color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 55%, var(--border-color));
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top;
+  transition: transform 850ms ease;
+  opacity: 0.9;
+}
+
+/* Horizontal connector line across all children */
+.children::after {
+  content: '';
+  position: absolute;
+  top: 64px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 55%, var(--border-color));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 900ms ease;
+  opacity: 0.9;
+}
+
+/* Vertical line from hub down to each child */
+.child::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 64px;
+  background: color-mix(in oklab, var(--primary-color, var(--color-primary, var(--accent-color))) 55%, var(--border-color));
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: top;
+  transition: transform 850ms ease;
+  opacity: 0.9;
+}
+
+/* Animate connectors only when node reveals */
+:host.active .children::before,
+:host.active .child::before {
+  transform: translateX(-50%) scaleY(1);
+}
+
+:host.active .children::after {
+  transform: scaleX(1);
+}
+
+/* Responsive: stack vertically and simplify connectors */
+@media (max-width: 1024px) {
+  :host {
+    max-width: none;
+  }
+
+  .children {
+    flex-direction: column;
+    align-items: center;
+    padding-top: 38px;
+  }
+
+  .children::after {
+    display: none;
+  }
+
+  .child {
+    padding-top: 38px;
+    flex: 0 1 auto;
+  }
+
+  .children::before,
+  .child::before {
+    height: 38px;
+  }
+}

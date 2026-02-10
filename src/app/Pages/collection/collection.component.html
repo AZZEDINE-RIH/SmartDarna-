@@ -1,0 +1,82 @@
+<div class="collection-page">
+    <div class="container">
+        <div class="collection-header">
+            <h1 class="section-title">Our <span class="text-primary">Collection</span></h1>
+            <p class="subtitle">Explore our wide range of premium smart home solutions.</p>
+        </div>
+
+        <div class="collection-content">
+            <!-- Filters Sidebar -->
+            <aside class="filters-sidebar">
+                <div class="filter-section">
+                    <h3>Categories</h3>
+                    <ul class="filter-list">
+                        <li *ngFor="let cat of categories">
+                            <label class="radio-container">
+                                <input type="radio" name="category" [value]="cat" [(ngModel)]="selectedCategory"
+                                    (change)="applyFilters()">
+                                <span class="radio-label">{{ cat }}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Price Range (MAD)</h3>
+                    <div class="price-slider-container">
+                        <input type="range" min="0" [max]="maxPrice" [(ngModel)]="priceRange" (change)="applyFilters()"
+                            class="price-slider">
+                        <div class="price-values">
+                            <span>0 MAD</span>
+                            <span class="current-price">{{ priceRange }} MAD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Brands</h3>
+                    <ul class="filter-list">
+                        <li *ngFor="let brand of brands">
+                            <label class="checkbox-container">
+                                <input type="checkbox" [(ngModel)]="selectedBrands[brand]" (change)="applyFilters()">
+                                <span class="checkbox-label">{{ brand }}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Product Grid -->
+            <div class="product-grid-container">
+                <div class="product-grid" *ngIf="pagedProducts.length > 0">
+                    <app-product-card *ngFor="let product of pagedProducts" [product]="product" [showBadge]="false"
+                        (addToCart)="onAddToCart($event)" (buyNow)="onBuyNow($event)" class="slide-up"></app-product-card>
+                </div>
+
+                <!-- No Results -->
+                <div class="no-results" *ngIf="pagedProducts.length === 0">
+                    <p>No products match your filters. Try adjusting them!</p>
+                    <button (click)="selectedCategory = 'All'; priceRange = 3500; applyFilters()"
+                        class="btn ghost">Clear All Filters</button>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" *ngIf="totalPages > 1">
+                    <button [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)" class="pagination-btn">
+                        ←
+                    </button>
+
+                    <button *ngFor="let i of [].constructor(totalPages); let idx = index" (click)="setPage(idx + 1)"
+                        [class.active]="currentPage === idx + 1" class="pagination-btn">
+                        {{ idx + 1 }}
+                    </button>
+
+                    <button [disabled]="currentPage === totalPages" (click)="setPage(currentPage + 1)"
+                        class="pagination-btn">
+                        →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

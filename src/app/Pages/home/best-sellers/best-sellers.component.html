@@ -1,0 +1,33 @@
+<section class="best-sellers section" id="best-sellers">
+    <div class="container">
+        <div class="section-header text-center slide-up">
+            <h2 class="section-title">Best Sellers</h2>
+            <p class="subtitle">Our most loved smart home products</p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading best sellers...</p>
+        </div>
+
+        <!-- Error State -->
+        <div *ngIf="!isLoading && errorMessage" class="error-state">
+            <p>{{ errorMessage }}</p>
+        </div>
+
+        <!-- Best Sellers Grid -->
+        <div *ngIf="!isLoading && !errorMessage && bestSellers.length > 0" class="best-sellers-grid">
+            <div *ngFor="let product of bestSellers" class="product-item slide-up">
+                <app-product-card [product]="product" [showBadge]="true" (addToCart)="onAddToCart($event)"
+                    (buyNow)="onBuyNow($event)">
+                </app-product-card>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!isLoading && !errorMessage && bestSellers.length === 0" class="empty-state">
+            <p>No best sellers available at the moment.</p>
+        </div>
+    </div>
+</section>

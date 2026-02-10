@@ -1,0 +1,54 @@
+<div 
+  class="team-card-3d-container"
+  [class.director]="size === 'director'" 
+  [class.manager]="size === 'manager'" 
+  [class.member]="size === 'member'"
+  #cardContainer
+>
+  <!-- 
+    The Card with 3D transforms
+  -->
+  <div 
+    class="team-card"
+    [style.transform]="cardTransform()"
+    [class.transition-none]="isHovering()"
+    [class.transition-transform]="!isHovering()"
+  >
+
+    <!-- Background Image Layer -->
+    <div class="card-photo-layer">
+      <div class="photo" 
+           [class.has-image]="person.photoUrl && person.photoUrl.trim() !== ''"
+           [style.background-image]="person.photoUrl && person.photoUrl.trim() !== '' ? 'url(' + person.photoUrl + ')' : 'none'">
+      </div>
+      <!-- Subtle gradient overlay -->
+      <div class="photo-overlay"></div>
+    </div>
+
+    <!-- Glare Effect Layer -->
+    <div 
+      class="glare-effect"
+      [style.transform]="glareTransform()"
+      [class.opacity-100]="isHovering()"
+      [class.opacity-0]="!isHovering()"
+    ></div>
+
+    <!-- Clean Content Layer -->
+    <div class="card-content-layer">
+      <!-- Person Info -->
+      <div class="person-info">
+        <h3 class="person-name">{{ person.name }}</h3>
+        <div class="person-role">{{ person.role }}</div>
+      </div>
+      
+      <!-- Status Indicator -->
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+      </div>
+    </div>
+
+    <!-- Elegant Border -->
+    <div class="card-border"></div>
+    
+  </div>
+</div>

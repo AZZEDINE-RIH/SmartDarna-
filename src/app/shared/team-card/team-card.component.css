@@ -1,0 +1,232 @@
+:host {
+  display: block;
+}
+
+/* 3D Container with perspective */
+.team-card-3d-container {
+  --team-line: var(--primary-color, var(--color-primary, var(--accent-color)));
+  
+  position: relative;
+  width: 220px;
+  height: 300px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+/* Size variations */
+.team-card-3d-container.director {
+  width: 240px;
+  height: 320px;
+}
+
+.team-card-3d-container.manager {
+  width: 200px;
+  height: 280px;
+}
+
+.team-card-3d-container.member {
+  width: 180px;
+  height: 260px;
+}
+
+/* Main 3D Card */
+.team-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 10px 20px rgba(0, 0, 0, 0.3);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth transitions when not hovering */
+.team-card.transition-transform {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* No transition during hover for smooth tracking */
+.team-card.transition-none {
+  transition: none;
+}
+
+/* Photo Layer */
+.card-photo-layer {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(0px);
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.7) contrast(1.1);
+  transition: filter 0.3s ease;
+}
+
+/* Default gradient for cards without images */
+.photo:not(.has-image) {
+  background:
+    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(0,0,0,0.3) 60%, 
+    rgba(0,0,0,0.8) 100%);
+}
+
+/* Glare Effect */
+.glare-effect {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    rgba(255,255,255,0.3) 0%, 
+    rgba(255,255,255,0) 70%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* Content Layer */
+.card-content-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  color: white;
+  transform: translateZ(30px);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* Person Info */
+.person-info {
+  flex: 1;
+}
+
+.person-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+}
+
+.person-role {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Status Indicator */
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--team-line);
+  box-shadow: 0 0 12px var(--team-line);
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Elegant Border */
+.card-border {
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  pointer-events: none;
+  transform: translateZ(10px);
+}
+
+/* Hover Effects */
+.team-card:hover .photo {
+  filter: brightness(0.8) contrast(1.2);
+}
+
+.team-card:hover .glare-effect {
+  opacity: 1;
+}
+
+.team-card:hover .status-indicator {
+  box-shadow: 0 0 20px var(--team-line);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .team-card-3d-container {
+    width: 180px;
+    height: 240px;
+  }
+  
+  .team-card-3d-container.director {
+    width: 200px;
+    height: 260px;
+  }
+  
+  .team-card-3d-container.manager {
+    width: 160px;
+    height: 220px;
+  }
+  
+  .team-card-3d-container.member {
+    width: 140px;
+    height: 200px;
+  }
+  
+  .card-content-layer {
+    padding: 16px;
+  }
+  
+  .person-name {
+    font-size: 16px;
+  }
+  
+  .person-role {
+    font-size: 11px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .team-card {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1.02, 1.02, 1.02) !important;
+  }
+  
+  .glare-effect {
+    opacity: 0 !important;
+  }
+}
