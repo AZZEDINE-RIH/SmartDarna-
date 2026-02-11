@@ -271,8 +271,8 @@ h6,
 
 .btn.ghost {
   background-color: transparent;
-  color: var(--text-primary);
-  border-color: var(--text-primary);
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .btn.ghost:hover {

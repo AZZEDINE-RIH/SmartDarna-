@@ -78,12 +78,11 @@
 .stat-number {
     font-size: 3.5rem;
     font-weight: 900;
-    color: var(--primary-color, var(--color-primary, var(--accent-color)));
+    color: #60CED6;
     line-height: 1;
     margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
-    text-shadow: 0 4px 20px rgba(96, 206, 214, 0.3);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 4px 20px rgba(96, 206, 214, 0.3);
 }
 
 .stat-label {
@@ -98,7 +97,7 @@
 .stat-divider {
     width: 1px;
     height: 60px;
-    background: linear-gradient(180deg, transparent, rgba(96, 206, 214, 0.3), transparent);
+    background: linear-gradient(180deg, transparent, #60CED6, transparent);
     opacity: 0.6;
 }
 
@@ -110,7 +109,8 @@
 }
 
 .about-header .section-title {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 5rem;
+    padding-top: 5rem;
 }
 
 .about-header .subtitle {

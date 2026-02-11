@@ -1,0 +1,141 @@
+/* Loading container - full screen with hidden navbar/sidebar */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Dark mode support */
+.loading-container.dark {
+  background: #111827;
+}
+
+/* Loading card */
+.loading-card {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Loading circle container */
+.loading-circle {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 2rem;
+}
+
+/* Progress ring */
+.progress-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+}
+
+.progress-ring-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  stroke: #e5e7eb;
+}
+
+.dark .progress-ring-bg {
+  stroke: #374151;
+}
+
+.progress-ring-fill {
+  transition: stroke-dashoffset 0.03s linear;
+}
+
+/* Progress text */
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.progress-percentage {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #60CED6;
+}
+
+/* Loading title container */
+.loading-title-container {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Loading title */
+.loading-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+
+.dark .loading-title {
+  color: #ffffff;
+}
+
+/* Loading subtitle */
+.loading-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.75rem 0 0 0;
+  font-weight: 400;
+}
+
+.dark .loading-subtitle {
+  color: #9ca3af;
+}
+
+/* Add decorative elements to match the design */
+.loading-title::before,
+.loading-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #60CED6, transparent);
+}
+
+.loading-title::before {
+  right: 100%;
+  margin-right: 20px;
+}
+
+.loading-title::after {
+  left: 100%;
+  margin-left: 20px;
+}
+
+/* Hide navbar and sidebar when loading is active */
+app-navbar,
+app-sidebar {
+  display: none !important;
+}
+
+/* Main content adjustments when loading */
+main,
+.main-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}

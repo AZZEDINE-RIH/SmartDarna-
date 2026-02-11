@@ -22,9 +22,9 @@ export class TeamComponent {
   };
 
   assistant: TeamPerson = {
-    name: 'Sarah',
-    role: 'Executive Assistant',
-    photoUrl: ''
+    name: 'Kaoutar Taki',
+    role: 'Partner',
+    photoUrl: '/assets/Kaoutar.jpeg',
   };
 
   managerGroups: ManagerGroup[] = [

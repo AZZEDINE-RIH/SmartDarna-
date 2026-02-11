@@ -1,9 +1,11 @@
 /* Brand Carousel - Infinite Marquee */
 
 .brand-carousel-section {
-  background-color: #f8f9fa;
-  padding: 2.5rem 0;
+  background-color: #000000;
+  padding: 1.5rem 0;
   overflow: hidden;
+  border-top: 1px solid #1f2937;
+  border-bottom: 1px solid #1f2937;
 }
 
 .brand-carousel-wrapper {
@@ -13,28 +15,24 @@
 
 .brand-carousel-mask {
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
+  -webkit-mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%);
+  mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%);
 }
 
 .brand-carousel-track {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: 4rem;
   width: max-content;
-  animation: marquee 40s linear infinite;
+  animation: marquee 30s linear infinite;
 }
 
 .brand-carousel-track.paused {
@@ -42,8 +40,13 @@
 }
 
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .brand-logo {
@@ -51,46 +54,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
+  opacity: 0.9;
 }
 
 .brand-logo img {
   height: 32px;
   width: auto;
-  max-width: 120px;
+  max-width: 160px;
   object-fit: contain;
-  filter: grayscale(100%) opacity(0.7);
-  transition: filter 0.3s ease;
-}
-
-.brand-logo:hover img {
-  filter: grayscale(0%) opacity(1);
+  filter: brightness(0) invert(1);
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
 .brand-logo:hover {
-  transform: scale(1.05);
-}
-
-:host-context(.dark) .brand-carousel-section {
-  background-color: #121820;
-}
-
-:host-context(.dark) .brand-logo img {
-  filter: grayscale(100%) opacity(0.5);
-}
-
-:host-context(.dark) .brand-logo:hover img {
-  filter: grayscale(0%) opacity(1);
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 @media (max-width: 768px) {
-  .brand-carousel-section { padding: 1.5rem 0; }
-  .brand-carousel-track { gap: 2rem; animation-duration: 30s; }
-  .brand-logo img { height: 24px; max-width: 90px; }
-}
+  .brand-carousel-section {
+    padding: 1rem 0;
+  }
 
-@media (max-width: 480px) {
-  .brand-carousel-track { gap: 1.5rem; animation-duration: 25s; }
-  .brand-logo img { height: 20px; max-width: 70px; }
+  .brand-carousel-track {
+    gap: 2.5rem;
+    animation-duration: 20s;
+  }
+
+  .brand-logo img {
+    height: 28px;
+    max-width: 120px;
+    filter: brightness(0) invert(1);
+  }
 }

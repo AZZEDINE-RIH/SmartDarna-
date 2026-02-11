@@ -22,6 +22,7 @@ export class ProductDetailsComponent implements OnInit {
     isLoading: boolean = true;
     error: string = '';
     isTransitioning: boolean = false;
+    activeTab: string = 'description';
 
     @ViewChild('loadingState', { static: true }) loadingState!: TemplateRef<any>;
 

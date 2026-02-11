@@ -20,6 +20,7 @@ import { SupabaseService } from './services/supabase.service';
         <button (click)="testDashboardQuery()" style="padding: 10px; font-weight: bold;">2. Test Seller Data</button>
         <button (click)="analyzeOrders()" style="padding: 10px; background: #e0f7fa; border: 1px solid #b2ebf2;">3. Check DB Orders</button>
         <button (click)="createTestOrder()" style="padding: 10px; background: #60CED6; color: white; border: none; font-weight: bold; cursor: pointer;">4. + Create Test Order</button>
+        <button (click)="generateBestSellerScript()" style="padding: 10px; background: #ffeb3b; border: 1px solid #fdd835; cursor: pointer;">5. Fix Best Sellers</button>
       </div>
 
       <div *ngIf="fixScript" style="background: #eef; padding: 15px; border: 1px solid #ccf; margin-bottom: 20px;">
@@ -51,6 +52,7 @@ import { SupabaseService } from './services/supabase.service';
                 <th>Product Name</th>
                 <th>Seller ID (Database)</th>
                 <th>Processing Check</th>
+                <th>Best Seller?</th>
             </tr>
             <tr *ngFor="let p of products">
                 <td>{{ p.name }}</td>
@@ -60,6 +62,9 @@ import { SupabaseService } from './services/supabase.service';
                     <span *ngIf="p.seller_id !== user?.id">❌ (NOT YOURS)</span>
                 </td>
                 <td>{{ p.id }}</td>
+                <td>
+                    {{ p.best_seller ? '⭐ YES' : 'NO' }}
+                </td>
             </tr>
         </table>
       </div>
@@ -264,5 +269,14 @@ WITH new_order AS (
 INSERT INTO public.order_items (order_id, product_id, quantity, price_per_item)
 SELECT id, '${productId}', 1, 999.00 FROM new_order;
 `;
+    }
+
+    generateBestSellerScript() {
+        if (!this.products || this.products.length === 0) return;
+        // Mark the first 3 products as best sellers
+        const ids = this.products.slice(0, 3).map(p => `'${p.id}'`).join(',');
+
+        this.fixScript = `-- MARK TOP 3 PRODUCTS AS BEST SELLERS\nUPDATE public.products SET best_seller = true WHERE id IN (${ids});`;
+        this.mockDataScript = null;
     }
 }

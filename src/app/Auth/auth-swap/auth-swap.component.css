@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1e88e5;
+  background: #f3f4f6;
   padding: 22px;
   overflow: hidden;
 }
@@ -42,7 +42,7 @@
   right: -54px;
   transform: translateY(-50%) rotate(180deg);
   writing-mode: vertical-rl;
-  background: #22c55e;
+  background: #60CED6;
   color: #ffffff;
   border: none;
   padding: 20px 14px;

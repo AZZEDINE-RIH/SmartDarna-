@@ -13,8 +13,8 @@ import { AuthService } from '../../../../services/auth.service';
         <div class="logo-icon">
           <span class="material-icons">hub</span>
         </div>
-        <div class="logo-text">
-          <h2>SmartDarna</h2>
+        <div class="subtitle">
+          <h1>SmartDarna</h1>
           <span class="subtitle">SUPER ADMIN</span>
         </div>
       </div>
@@ -78,12 +78,13 @@ import { AuthService } from '../../../../services/auth.service';
       color: white;
     }
 
-    .logo-text h2 {
+    .logo-text h1 {
       color: white;
       font-size: 1.1rem;
       font-weight: 600;
       margin: 0;
       line-height: 1.2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .subtitle {

@@ -35,8 +35,8 @@ export class BestSellersComponent implements OnInit {
                 this.isLoading = false;
             },
             error: (error) => {
-                console.error('Error loading best sellers:', error);
-                this.errorMessage = 'Failed to load best sellers.';
+                console.error('Error loading best sellings:', error);
+                this.errorMessage = 'Failed to load best sellings.';
                 this.isLoading = false;
             }
         });

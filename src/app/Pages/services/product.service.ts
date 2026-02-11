@@ -85,11 +85,16 @@ export class ProductService {
         console.log('🌟 ProductService: Fetching best sellers...');
         return this.getProducts().pipe(
             map(products => {
-                // Get the first 3 products
-                const bestSellers = products.slice(0, 3);
+                // Return exactly 4 items from the list (user requested simply displaying 4 products)
+                // This acts as a "Featured" or "Best Sellers" showcase
+                const bestSellers = products.slice(0, 4);
 
-                console.log('✅ ProductService: Found', bestSellers.length, 'best sellers');
+                console.log('✅ ProductService: Found', bestSellers.length, 'featured products');
                 return bestSellers;
+            }),
+            catchError(error => {
+                console.error('❌ ProductService: Failed to fetch best sellers:', error);
+                return of([]);
             })
         );
     }
