@@ -18,15 +18,15 @@ export class CollectionComponent implements OnInit {
     filteredProducts: Product[] = [];
     pagedProducts: Product[] = [];
 
-    // Filters
-    categories = ['All', 'Smart Hub', 'Thermostat', 'Doorbell', 'Lock', 'Smart Display', 'Speaker'];
+    // Filters - Dynamic
+    categories: string[] = ['All'];
     selectedCategory = 'All';
 
-    brands = ['Amazon', 'Google', 'Apple', 'Ecobee', 'Nest', 'Ring', 'Arlo', 'Yale'];
+    brands: string[] = [];
     selectedBrands: { [key: string]: boolean } = {};
 
-    maxPrice = 3500;
-    priceRange = 3500;
+    maxPrice = 10000; // Increased default
+    priceRange = 10000;
 
     // Pagination
     currentPage = 1;
@@ -37,17 +37,65 @@ export class CollectionComponent implements OnInit {
         private productService: ProductService,
         private cartService: CartService,
         private checkoutFlowService: CheckoutFlowService
-    ) {
-        this.brands.forEach(brand => this.selectedBrands[brand] = false);
-    }
+    ) { } // Removed initialization of selectedBrands here
 
     ngOnInit() {
         this.loadProducts();
+        this.fetchFilters();
+    }
+
+    fetchFilters() {
+        // Fetch categories from dedicated table
+        this.productService.getCategories().subscribe(cats => {
+            if (cats && cats.length > 0) {
+                // Assuming categories have a 'name' property
+                const catNames = cats.map(c => c.name || c.category_name).filter(n => n);
+                this.categories = ['All', ...new Set(catNames)].sort();
+            }
+        });
+
+        // Fetch brands from dedicated table
+        this.productService.getBrands().subscribe(brands => {
+            if (brands && brands.length > 0) {
+                const brandNames = brands.map(b => b.name || b.brand_name).filter(n => n);
+                this.brands = [...new Set(brandNames)].sort();
+
+                // Refresh brands filter checkboxes
+                this.selectedBrands = {};
+                this.brands.forEach(brand => this.selectedBrands[brand] = false);
+            }
+        });
     }
 
     loadProducts() {
         this.productService.getProducts().subscribe(data => {
             this.products = data;
+
+            // Fallback: If fetchFilters hasn't populated them yet, or tables are empty
+            if (this.categories.length <= 1) {
+                const uniqueCategories = Array.from(new Set(data.map(p => p.category).filter(c => c)));
+                this.categories = ['All', ...uniqueCategories.sort()];
+            }
+
+            if (this.brands.length === 0) {
+                const uniqueBrands = Array.from(new Set(data.map(p => p.brand).filter(b => b)));
+                this.brands = uniqueBrands.sort();
+                this.brands.forEach(brand => {
+                    if (this.selectedBrands[brand] === undefined) {
+                        this.selectedBrands[brand] = false;
+                    }
+                });
+            }
+
+            // Calculate max price for slider
+            if (data.length > 0) {
+                const max = Math.max(...data.map(p => p.price));
+                if (max > 0) {
+                    this.maxPrice = Math.ceil(max * 1.1);
+                    this.priceRange = this.maxPrice;
+                }
+            }
+
             this.applyFilters();
         });
     }
@@ -58,6 +106,7 @@ export class CollectionComponent implements OnInit {
             const matchPrice = p.price <= this.priceRange;
 
             const activeBrands = Object.keys(this.selectedBrands).filter(b => this.selectedBrands[b]);
+            // If no brands selected, show all. If brands selected, must match one.
             const matchBrand = activeBrands.length === 0 || activeBrands.includes(p.brand);
 
             return matchCategory && matchPrice && matchBrand;

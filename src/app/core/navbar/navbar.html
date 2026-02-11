@@ -24,17 +24,6 @@
     <div class="navbar-actions">
 
       <!-- Login/Logout Button -->
-       <ng-container *ngIf="isLoggedIn; else loginBtn">
-          <button (click)="logout()" class="auth-btn logout">
-            Logout
-          </button>
-       </ng-container>
-       <ng-template #loginBtn>
-          <a routerLink="/auth/login" class="auth-btn login">
-            Login
-          </a>
-       </ng-template>
-
       <!-- Cart -->
       <div class="cart-wrapper">
         <a routerLink="/cart" class="cart-button">
@@ -52,15 +41,28 @@
         </span>
       </div>
 
-      <!-- Login -->
-      <a routerLink="/login" class="login-button" aria-label="Login">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-          <polyline points="10,17 15,12 10,7"></polyline>
-          <line x1="15" y1="12" x2="3" y2="12"></line>
-        </svg>
-      </a>
+      <!-- Login/Logout Icon -->
+      <ng-container *ngIf="isLoggedIn; else loginIcon">
+        <button (click)="logout()" class="login-button" aria-label="Logout">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </ng-container>
+      
+      <ng-template #loginIcon>
+        <a routerLink="/auth/login" class="login-button" aria-label="Login">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10,17 15,12 10,7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+        </a>
+      </ng-template>
 
       <!-- Dark Mode Toggle (Switch) -->
       <button (click)="toggleDarkMode()" class="theme-toggle" [class.dark]="isDarkMode" aria-label="Toggle dark mode">

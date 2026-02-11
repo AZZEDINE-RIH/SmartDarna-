@@ -16,6 +16,7 @@ export interface Product {
     stock: number;
     bestSeller: boolean;
     description: string;
+    seller_id: string;
 }
 
 @Component({
@@ -31,7 +32,7 @@ export class ProductCardComponent {
     @Output() addToCart = new EventEmitter<Product>();
     @Output() buyNow = new EventEmitter<Product>();
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) { }
 
     onAddToCart() {
         this.addToCart.emit(this.product);

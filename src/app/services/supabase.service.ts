@@ -255,6 +255,24 @@ export class SupabaseService {
     return { data, error };
   }
 
+  // Tables operations - Categories
+  async getCategories() {
+    const { data, error } = await this.supabase
+      .from('categories')
+      .select('*');
+    if (error) console.error('Error fetching categories:', error);
+    return { data, error };
+  }
+
+  // Tables operations - Brands
+  async getBrands() {
+    const { data, error } = await this.supabase
+      .from('brands')
+      .select('*');
+    if (error) console.error('Error fetching brands:', error);
+    return { data, error };
+  }
+
   // Tables operations - Orders
   async getOrders() {
     const { data, error } = await this.supabase
@@ -278,8 +296,18 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('orders')
       .insert([order])
-      .select();
+      .select()
+      .single();
     if (error) console.error('Error creating order:', error);
+    return { data, error };
+  }
+
+  async createOrderItems(items: any[]) {
+    const { data, error } = await this.supabase
+      .from('order_items')
+      .insert(items)
+      .select();
+    if (error) console.error('Error creating order items:', error);
     return { data, error };
   }
 

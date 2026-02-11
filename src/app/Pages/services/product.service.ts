@@ -14,6 +14,38 @@ export class ProductService {
     constructor(private supabaseService: SupabaseService) { }
 
     /**
+     * Fetch all categories from the categories table
+     */
+    getCategories(): Observable<any[]> {
+        return from(this.supabaseService.getCategories()).pipe(
+            map(({ data, error }) => {
+                if (error) throw error;
+                return data || [];
+            }),
+            catchError(error => {
+                console.error('❌ ProductService: Error fetching categories:', error);
+                return of([]);
+            })
+        );
+    }
+
+    /**
+     * Fetch all brands from the brands table
+     */
+    getBrands(): Observable<any[]> {
+        return from(this.supabaseService.getBrands()).pipe(
+            map(({ data, error }) => {
+                if (error) throw error;
+                return data || [];
+            }),
+            catchError(error => {
+                console.error('❌ ProductService: Error fetching brands:', error);
+                return of([]);
+            })
+        );
+    }
+
+    /**
      * Fetch all products from Supabase
      */
     getProducts(): Observable<Product[]> {
@@ -161,7 +193,8 @@ export class ProductService {
             brand: supabaseProduct.brand || 'Unknown',
             stock: supabaseProduct.stock || 0,
             bestSeller: supabaseProduct.best_seller || false,
-            description: supabaseProduct.description || ''
+            description: supabaseProduct.description || '',
+            seller_id: supabaseProduct.seller_id || ''
         };
     }
 }

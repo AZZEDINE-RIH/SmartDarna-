@@ -21,6 +21,7 @@ import { SupabaseService } from './services/supabase.service';
         <button (click)="analyzeOrders()" style="padding: 10px; background: #e0f7fa; border: 1px solid #b2ebf2;">3. Check DB Orders</button>
         <button (click)="createTestOrder()" style="padding: 10px; background: #60CED6; color: white; border: none; font-weight: bold; cursor: pointer;">4. + Create Test Order</button>
         <button (click)="generateBestSellerScript()" style="padding: 10px; background: #ffeb3b; border: 1px solid #fdd835; cursor: pointer;">5. Fix Best Sellers</button>
+        <button (click)="checkCategories()" style="padding: 10px; background: #d1c4e9; border: 1px solid #b39ddb; cursor: pointer;">6. Check Categories</button>
       </div>
 
       <div *ngIf="fixScript" style="background: #eef; padding: 15px; border: 1px solid #ccf; margin-bottom: 20px;">
@@ -278,5 +279,24 @@ SELECT id, '${productId}', 1, 999.00 FROM new_order;
 
         this.fixScript = `-- MARK TOP 3 PRODUCTS AS BEST SELLERS\nUPDATE public.products SET best_seller = true WHERE id IN (${ids});`;
         this.mockDataScript = null;
+    }
+
+    async checkCategories() {
+        this.loading = true;
+        this.error = null;
+        console.log('🔍 DEBUG: Checking categories table...');
+
+        const { data, error } = await this.supabase.getClient().from('categories').select('*');
+
+        if (error) {
+            this.error = `Categories Table Error: ${error.message}`;
+            console.error('❌ DEBUG:', error);
+            this.analysis.push(`❌ Categories table check failed: ${error.message}`);
+        } else {
+            console.log('✅ DEBUG: Categories found:', data);
+            this.analysis.push(`✅ Categories table exists! Found ${data.length} categories.`);
+            this.analysis.push(`📋 Data: ${JSON.stringify(data)}`);
+        }
+        this.loading = false;
     }
 }
